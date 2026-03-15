@@ -1,4 +1,4 @@
-# Ticket 1: Grid Representation Decisions
+# Grid Representation Decisions
 
 ## Epic
 

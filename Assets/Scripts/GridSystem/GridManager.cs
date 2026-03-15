@@ -12,6 +12,7 @@ public class GridManager : MonoBehaviour
     [SerializeField] private int m_gridHeight = 10;
     [SerializeField] private float m_cellSize = 1.0f;
     [SerializeField] private bool m_generateOnStart = true;
+    [SerializeField] private bool m_showDebugGrid = true;
 
     // Stores generated tiles by grid coordinate for fast lookup.
     private readonly Dictionary<Vector2Int, GridTile> m_tiles = new();
@@ -42,8 +43,13 @@ public class GridManager : MonoBehaviour
     public void GenerateGrid()
     {
         m_tiles.Clear();
-
+        
         Vector3 origin = transform.position;
+
+        float gridWorldWidth = m_gridWidth * m_cellSize;
+        float gridWorldHeight = m_gridHeight * m_cellSize;
+
+        Vector3 startPosition = origin - new Vector3(gridWorldWidth * 0.5f, 0.0f, gridWorldHeight * 0.5f);
 
         for (int y = 0; y < m_gridHeight; y++)
         {
@@ -55,7 +61,7 @@ public class GridManager : MonoBehaviour
                 float xOffset = (x * m_cellSize) + (m_cellSize * 0.5f);
                 float zOffset = (y * m_cellSize) + (m_cellSize * 0.5f);
 
-                Vector3 worldPosition = origin + new Vector3(xOffset, 0.0f, zOffset);
+                Vector3 worldPosition = startPosition + new Vector3(xOffset, 0.0f, zOffset);
 
                 GridTile tile = new GridTile(coordinates, worldPosition);
                 m_tiles.Add(coordinates, tile);
@@ -98,12 +104,22 @@ public class GridManager : MonoBehaviour
     /// </summary>
     private void OnDrawGizmosSelected()
     {
+        if (!m_showDebugGrid)
+        {
+            return;
+        }
+        
         if (m_gridWidth <= 0 || m_gridHeight <= 0 || m_cellSize <= 0.0f)
         {
             return;
         }
 
         Vector3 origin = transform.position;
+
+        float gridWorldWidth = m_gridWidth * m_cellSize;
+        float gridWorldHeight = m_gridHeight * m_cellSize;
+
+        Vector3 startPosition = origin - new Vector3(gridWorldWidth * 0.5f, 0.0f, gridWorldHeight * 0.5f);
 
         for (int y = 0; y < m_gridHeight; y++)
         {
@@ -112,7 +128,7 @@ public class GridManager : MonoBehaviour
                 float xOffset = (x * m_cellSize) + (m_cellSize * 0.5f);
                 float zOffset = (y * m_cellSize) + (m_cellSize * 0.5f);
 
-                Vector3 worldPosition = origin + new Vector3(xOffset, 0.0f, zOffset);
+                Vector3 worldPosition = startPosition + new Vector3(xOffset, 0.0f, zOffset);
                 Vector3 tileSize = new Vector3(m_cellSize, 0.05f, m_cellSize);
 
                 Gizmos.color = Color.white;

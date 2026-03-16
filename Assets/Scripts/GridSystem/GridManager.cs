@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 /// <summary>
 /// Manages generation, storage, and debug visualization of a square grid.
@@ -14,13 +13,9 @@ public class GridManager : MonoBehaviour
     [SerializeField] private float m_cellSize = 1.0f;
     [SerializeField] private bool m_generateOnStart = true;
     [SerializeField] private bool m_showSceneDebugGrid = true;
-    [SerializeField] private bool m_logHoveredTileChanges = true;
 
     // Stores generated tiles by grid coordinate for fast lookup.
     private readonly Dictionary<Vector2Int, GridTile> m_tiles = new();
-
-    private bool m_hasHoveredTile = false;
-    private Vector2Int m_hoveredTileCoordinates = Vector2Int.zero;
 
     /// <summary>
     /// Provides read-only access to the generated tiles.
@@ -28,16 +23,6 @@ public class GridManager : MonoBehaviour
     public IReadOnlyDictionary<Vector2Int, GridTile> Tiles
     {
         get { return m_tiles; }
-    }
-
-    public bool HasHoveredTile
-    {
-        get { return m_hasHoveredTile; }
-    }
-
-    public Vector2Int HoveredTileCoordinates
-    {
-        get { return m_hoveredTileCoordinates; }
     }
 
     /// <summary>
@@ -48,75 +33,6 @@ public class GridManager : MonoBehaviour
         if (m_generateOnStart)
         {
             GenerateGrid();
-        }
-    }
-
-    private void Update()
-    {
-        UpdateHoveredTile();
-    }
-
-    private void UpdateHoveredTile()
-    {
-        bool hadHoveredTileBeforeUpdate = m_hasHoveredTile;
-        Vector2Int previousHoveredTile = m_hoveredTileCoordinates;
-
-        m_hasHoveredTile = false;
-        m_hoveredTileCoordinates = Vector2Int.zero;
-
-        if (Camera.main == null)
-        {
-            LogHoverStateChange(hadHoveredTileBeforeUpdate, previousHoveredTile);
-            return;
-        }
-
-        if (Mouse.current == null)
-        {
-            LogHoverStateChange(hadHoveredTileBeforeUpdate, previousHoveredTile);
-            return;
-        }
-
-        Ray mouseRay = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-
-        if (!Physics.Raycast(mouseRay, out RaycastHit hitInfo))
-        {
-            LogHoverStateChange(hadHoveredTileBeforeUpdate, previousHoveredTile);
-            return;
-        }
-
-        if (!TryGetCoordinatesFromWorldPosition(hitInfo.point, out Vector2Int hoveredCoordinates))
-        {
-            LogHoverStateChange(hadHoveredTileBeforeUpdate, previousHoveredTile);
-            return;
-        }
-
-        m_hasHoveredTile = true;
-        m_hoveredTileCoordinates = hoveredCoordinates;
-
-        LogHoverStateChange(hadHoveredTileBeforeUpdate, previousHoveredTile);
-    }
-
-    /// <summary>
-    /// Logs the current hovered tile only when the hovered state changes.
-    /// </summary>
-    private void LogHoverStateChange(bool hadHoveredTileBeforeUpdate, Vector2Int previousHoveredTile)
-    {
-        if (!m_logHoveredTileChanges)
-        {
-            return;
-        }
-
-        if (m_hasHoveredTile)
-        {
-            if (!hadHoveredTileBeforeUpdate || previousHoveredTile != m_hoveredTileCoordinates)
-            {
-                Vector3 worldPosition = GetWorldPosition(m_hoveredTileCoordinates);
-                Debug.Log("Currently hovered tile: " + m_hoveredTileCoordinates + " | World Position: " + worldPosition);
-            }
-        }
-        else if (hadHoveredTileBeforeUpdate)
-        {
-            Debug.Log("Currently hovered tile: none");
         }
     }
 
@@ -240,15 +156,7 @@ public class GridManager : MonoBehaviour
                 Vector3 worldPosition = GetWorldPosition(coordinates);
                 Vector3 tileSize = new Vector3(m_cellSize, 0.05f, m_cellSize);
 
-                if (m_hasHoveredTile && coordinates == m_hoveredTileCoordinates)
-                {
-                    Gizmos.color = Color.yellow;
-                }
-                else
-                {
-                    Gizmos.color = Color.white;
-                }
-
+                Gizmos.color = Color.white;
                 Gizmos.DrawWireCube(worldPosition, tileSize);
             }
         }

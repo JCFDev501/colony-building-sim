@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 /// <summary>
 /// Handles player interaction with the grid for the prototype.
-/// This controller will own hover and selection state while using
+/// This controller owns hover and selection state while using
 /// the GridManager for tile lookup and grid-related data.
 /// </summary>
 public class PlayerController : MonoBehaviour
@@ -21,12 +21,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool m_showHoveredTileDebug = true;
     [SerializeField] private bool m_showHoveredTileWorldPosition = true;
     [SerializeField] private bool m_logSelectedTileChanges = true;
-    
+
     [Header("Visual Feedback")]
     [SerializeField] private GameObject m_hoverHighlight;
     [SerializeField] private GameObject m_selectedHighlight;
     [SerializeField] private float m_selectedHighlightYOffset = 0.03f;
-    
+
     [Header("Selection State")]
     [SerializeField] private bool m_hasSelectedTile = false;
     [SerializeField] private Vector2Int m_selectedTileCoordinates = Vector2Int.zero;
@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour
     {
         get { return m_hoveredTileCoordinates; }
     }
-    
+
     /// <summary>
     /// Returns whether the player currently has a selected tile.
     /// </summary>
@@ -79,12 +79,12 @@ public class PlayerController : MonoBehaviour
         {
             Debug.LogError("PlayerController is missing a Camera reference.", this);
         }
-        
+
         if (m_hoverHighlight == null)
         {
             Debug.LogError("PlayerController is missing a hover highlight reference.", this);
         }
-        
+
         if (m_selectedHighlight == null)
         {
             Debug.LogError("PlayerController is missing a selected highlight reference.", this);
@@ -104,6 +104,8 @@ public class PlayerController : MonoBehaviour
 
     /// <summary>
     /// Updates hovered tile state from player input.
+    /// Uses the grid plane instead of Physics.Raycast so hover remains accurate
+    /// across camera movement, zoom, and rotation.
     /// </summary>
     private void UpdateHoveredTile()
     {
@@ -128,18 +130,12 @@ public class PlayerController : MonoBehaviour
         }
 
         Vector2 mouseScreenPosition = Mouse.current.position.ReadValue();
-        Ray mouseRay = m_playerCamera.ScreenPointToRay(mouseScreenPosition);
 
-        if (!Physics.Raycast(mouseRay, out RaycastHit hitInfo))
-        {
-            ClearHoveredTile();
-            LogHoverStateChange(hadHoveredTileBeforeUpdate, previousHoveredTileCoordinates);
-            return;
-        }
-
-        Vector3 hitWorldPosition = hitInfo.point;
-
-        if (!m_gridManager.TryGetCoordinatesFromWorldPosition(hitWorldPosition, out Vector2Int hoveredCoordinates))
+        if (!m_gridManager.TryGetCoordinatesFromScreenPoint(
+            m_playerCamera,
+            mouseScreenPosition,
+            out Vector2Int hoveredCoordinates,
+            out _))
         {
             ClearHoveredTile();
             LogHoverStateChange(hadHoveredTileBeforeUpdate, previousHoveredTileCoordinates);
@@ -151,7 +147,7 @@ public class PlayerController : MonoBehaviour
 
         LogHoverStateChange(hadHoveredTileBeforeUpdate, previousHoveredTileCoordinates);
     }
-    
+
     /// <summary>
     /// Updates the hover highlight visibility and position based on current hover state.
     /// </summary>
@@ -174,7 +170,7 @@ public class PlayerController : MonoBehaviour
         m_hoverHighlight.transform.position = hoverWorldPosition;
         m_hoverHighlight.SetActive(true);
     }
-    
+
     /// <summary>
     /// Updates the selected highlight visibility and position based on current selection state.
     /// </summary>
@@ -197,7 +193,7 @@ public class PlayerController : MonoBehaviour
         m_selectedHighlight.transform.position = selectedWorldPosition;
         m_selectedHighlight.SetActive(true);
     }
-    
+
     /// <summary>
     /// Updates tile selection input for the prototype.
     /// </summary>
@@ -226,7 +222,7 @@ public class PlayerController : MonoBehaviour
 
         LogSelectedTileChange(hadSelectedTileBeforeUpdate, previousSelectedTileCoordinates);
     }
-    
+
     /// <summary>
     /// Logs selected tile changes only when the selected state actually changes.
     /// </summary>
@@ -245,7 +241,7 @@ public class PlayerController : MonoBehaviour
         Vector3 worldPosition = m_gridManager.GetWorldPosition(m_selectedTileCoordinates);
         Debug.Log("Selected tile: " + m_selectedTileCoordinates + " | World Position: " + worldPosition);
     }
-    
+
     /// <summary>
     /// Returns whether the selected tile state changed during this update.
     /// </summary>

@@ -59,6 +59,22 @@ public class GridManager : MonoBehaviour
         Debug.Log("Generated grid with " + m_tiles.Count + " tiles.");
     }
 
+    /// <summary>
+    /// Returns the world-space position of the lower-left corner origin used for tile calculations.
+    /// </summary>
+    private Vector3 GetGridStartPosition()
+    {
+        Vector3 origin = transform.position;
+
+        float gridWorldWidth = m_gridWidth * m_cellSize;
+        float gridWorldHeight = m_gridHeight * m_cellSize;
+
+        return origin - new Vector3(gridWorldWidth * 0.5f, 0.0f, gridWorldHeight * 0.5f);
+    }
+
+    /// <summary>
+    /// Returns the world-space center position of the given tile coordinates.
+    /// </summary>
     public Vector3 GetWorldPosition(Vector2Int coordinates)
     {
         if (!IsInBounds(coordinates))
@@ -66,12 +82,7 @@ public class GridManager : MonoBehaviour
             return Vector3.zero;
         }
 
-        Vector3 origin = transform.position;
-
-        float gridWorldWidth = m_gridWidth * m_cellSize;
-        float gridWorldHeight = m_gridHeight * m_cellSize;
-
-        Vector3 startPosition = origin - new Vector3(gridWorldWidth * 0.5f, 0.0f, gridWorldHeight * 0.5f);
+        Vector3 startPosition = GetGridStartPosition();
 
         float xOffset = (coordinates.x * m_cellSize) + (m_cellSize * 0.5f);
         float zOffset = (coordinates.y * m_cellSize) + (m_cellSize * 0.5f);
@@ -79,16 +90,14 @@ public class GridManager : MonoBehaviour
         return startPosition + new Vector3(xOffset, 0.0f, zOffset);
     }
 
+    /// <summary>
+    /// Attempts to convert a world-space position into grid coordinates.
+    /// </summary>
     public bool TryGetCoordinatesFromWorldPosition(Vector3 worldPosition, out Vector2Int coordinates)
     {
         coordinates = Vector2Int.zero;
 
-        Vector3 origin = transform.position;
-
-        float gridWorldWidth = m_gridWidth * m_cellSize;
-        float gridWorldHeight = m_gridHeight * m_cellSize;
-
-        Vector3 startPosition = origin - new Vector3(gridWorldWidth * 0.5f, 0.0f, gridWorldHeight * 0.5f);
+        Vector3 startPosition = GetGridStartPosition();
         Vector3 localPosition = worldPosition - startPosition;
 
         int x = Mathf.FloorToInt(localPosition.x / m_cellSize);
@@ -103,6 +112,75 @@ public class GridManager : MonoBehaviour
         }
 
         return true;
+    }
+
+    /// <summary>
+    /// Attempts to intersect a ray with the grid plane.
+    /// The grid plane is assumed to lie flat on the XZ plane at this transform's Y level.
+    /// </summary>
+    public bool TryGetWorldPositionFromRay(Ray ray, out Vector3 worldPosition)
+    {
+        Plane gridPlane = new Plane(Vector3.up, new Vector3(0.0f, transform.position.y, 0.0f));
+
+        if (!gridPlane.Raycast(ray, out float enter))
+        {
+            worldPosition = Vector3.zero;
+            return false;
+        }
+
+        worldPosition = ray.GetPoint(enter);
+        return true;
+    }
+
+    /// <summary>
+    /// Attempts to convert a screen point into a world-space point on the grid plane using the provided camera.
+    /// </summary>
+    public bool TryGetWorldPositionFromScreenPoint(Camera cameraComponent, Vector2 screenPoint, out Vector3 worldPosition)
+    {
+        worldPosition = Vector3.zero;
+
+        if (cameraComponent == null)
+        {
+            return false;
+        }
+
+        Ray ray = cameraComponent.ScreenPointToRay(screenPoint);
+        return TryGetWorldPositionFromRay(ray, out worldPosition);
+    }
+
+    /// <summary>
+    /// Attempts to convert a screen point into grid coordinates using the provided camera.
+    /// </summary>
+    public bool TryGetCoordinatesFromScreenPoint(Camera cameraComponent, Vector2 screenPoint, out Vector2Int coordinates)
+    {
+        coordinates = Vector2Int.zero;
+
+        if (!TryGetWorldPositionFromScreenPoint(cameraComponent, screenPoint, out Vector3 worldPosition))
+        {
+            return false;
+        }
+
+        return TryGetCoordinatesFromWorldPosition(worldPosition, out coordinates);
+    }
+
+    /// <summary>
+    /// Attempts to convert a screen point into both a world-space position on the grid plane and grid coordinates.
+    /// </summary>
+    public bool TryGetCoordinatesFromScreenPoint(
+        Camera cameraComponent,
+        Vector2 screenPoint,
+        out Vector2Int coordinates,
+        out Vector3 worldPosition)
+    {
+        coordinates = Vector2Int.zero;
+        worldPosition = Vector3.zero;
+
+        if (!TryGetWorldPositionFromScreenPoint(cameraComponent, screenPoint, out worldPosition))
+        {
+            return false;
+        }
+
+        return TryGetCoordinatesFromWorldPosition(worldPosition, out coordinates);
     }
 
     /// <summary>

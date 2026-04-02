@@ -4,6 +4,7 @@ using UnityEngine;
 /// <summary>
 /// Manages generation, storage, and debug visualization of a square grid.
 /// The owning GameObject's transform position is used as the center of the grid.
+/// This class also provides helper methods for querying and updating tile gameplay state.
 /// </summary>
 public class GridManager : MonoBehaviour
 {
@@ -16,6 +17,15 @@ public class GridManager : MonoBehaviour
 
     // Stores generated tiles by grid coordinate for fast lookup.
     private readonly Dictionary<Vector2Int, GridTile> m_tiles = new();
+
+    // Cardinal neighbor offsets for prototype movement and pathfinding.
+    private static readonly Vector2Int[] s_cardinalNeighborOffsets =
+    {
+        new Vector2Int(0, 1),
+        new Vector2Int(1, 0),
+        new Vector2Int(0, -1),
+        new Vector2Int(-1, 0),
+    };
 
     /// <summary>
     /// Provides read-only access to the generated tiles.
@@ -192,6 +202,21 @@ public class GridManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Attempts to retrieve a tile from a world-space position.
+    /// </summary>
+    public bool TryGetTileFromWorldPosition(Vector3 worldPosition, out GridTile tile)
+    {
+        tile = null;
+
+        if (!TryGetCoordinatesFromWorldPosition(worldPosition, out Vector2Int coordinates))
+        {
+            return false;
+        }
+
+        return TryGetTile(coordinates, out tile);
+    }
+
+    /// <summary>
     /// Returns whether the provided coordinates fall within the current grid bounds.
     /// </summary>
     public bool IsInBounds(Vector2Int coordinates)
@@ -200,6 +225,327 @@ public class GridManager : MonoBehaviour
                coordinates.x < m_gridWidth &&
                coordinates.y >= 0 &&
                coordinates.y < m_gridHeight;
+    }
+
+    /// <summary>
+    /// Returns whether a tile exists at the provided coordinates.
+    /// </summary>
+    public bool HasTile(Vector2Int coordinates)
+    {
+        return m_tiles.ContainsKey(coordinates);
+    }
+
+    /// <summary>
+    /// Returns whether the tile at the given coordinates is currently walkable.
+    /// </summary>
+    public bool IsWalkable(Vector2Int coordinates)
+    {
+        if (!TryGetTile(coordinates, out GridTile tile))
+        {
+            return false;
+        }
+
+        return tile.IsWalkable;
+    }
+
+    /// <summary>
+    /// Returns whether the tile at the given coordinates is currently occupied.
+    /// </summary>
+    public bool IsOccupied(Vector2Int coordinates)
+    {
+        if (!TryGetTile(coordinates, out GridTile tile))
+        {
+            return false;
+        }
+
+        return tile.IsOccupied;
+    }
+
+    /// <summary>
+    /// Returns whether the tile at the given coordinates is currently reserved.
+    /// </summary>
+    public bool IsReserved(Vector2Int coordinates)
+    {
+        if (!TryGetTile(coordinates, out GridTile tile))
+        {
+            return false;
+        }
+
+        return tile.IsReserved;
+    }
+
+    /// <summary>
+    /// Returns the current content type for the tile at the given coordinates.
+    /// Invalid coordinates return Empty.
+    /// </summary>
+    public TileContentType GetContentType(Vector2Int coordinates)
+    {
+        if (!TryGetTile(coordinates, out GridTile tile))
+        {
+            return TileContentType.Empty;
+        }
+
+        return tile.ContentType;
+    }
+
+    /// <summary>
+    /// Returns whether the tile at the given coordinates currently contains no gameplay content.
+    /// </summary>
+    public bool IsEmpty(Vector2Int coordinates)
+    {
+        if (!TryGetTile(coordinates, out GridTile tile))
+        {
+            return false;
+        }
+
+        return tile.IsEmpty;
+    }
+
+    /// <summary>
+    /// Returns whether the tile can currently be entered based on simple prototype rules.
+    /// A tile must exist, be walkable, not be occupied, and not be reserved.
+    /// </summary>
+    public bool CanEnterTile(Vector2Int coordinates)
+    {
+        if (!TryGetTile(coordinates, out GridTile tile))
+        {
+            return false;
+        }
+
+        return tile.IsWalkable &&
+               !tile.IsOccupied &&
+               !tile.IsReserved;
+    }
+
+    /// <summary>
+    /// Sets whether the tile at the given coordinates is walkable.
+    /// Returns false if the tile does not exist.
+    /// </summary>
+    public bool SetWalkable(Vector2Int coordinates, bool isWalkable)
+    {
+        if (!TryGetTile(coordinates, out GridTile tile))
+        {
+            return false;
+        }
+
+        tile.IsWalkable = isWalkable;
+        return true;
+    }
+
+    /// <summary>
+    /// Sets whether the tile at the given coordinates is occupied.
+    /// Returns false if the tile does not exist.
+    /// </summary>
+    public bool SetOccupied(Vector2Int coordinates, bool isOccupied)
+    {
+        if (!TryGetTile(coordinates, out GridTile tile))
+        {
+            return false;
+        }
+
+        tile.IsOccupied = isOccupied;
+        return true;
+    }
+
+    /// <summary>
+    /// Sets whether the tile at the given coordinates is reserved.
+    /// Returns false if the tile does not exist.
+    /// </summary>
+    public bool SetReserved(Vector2Int coordinates, bool isReserved)
+    {
+        if (!TryGetTile(coordinates, out GridTile tile))
+        {
+            return false;
+        }
+
+        tile.IsReserved = isReserved;
+        return true;
+    }
+
+    /// <summary>
+    /// Sets the content type for the tile at the given coordinates.
+    /// Returns false if the tile does not exist.
+    /// </summary>
+    public bool SetContentType(Vector2Int coordinates, TileContentType contentType)
+    {
+        if (!TryGetTile(coordinates, out GridTile tile))
+        {
+            return false;
+        }
+
+        tile.ContentType = contentType;
+        return true;
+    }
+
+    /// <summary>
+    /// Clears the mutable state for the tile at the given coordinates.
+    /// Returns false if the tile does not exist.
+    /// </summary>
+    public bool ClearTileState(Vector2Int coordinates)
+    {
+        if (!TryGetTile(coordinates, out GridTile tile))
+        {
+            return false;
+        }
+
+        tile.ClearDynamicState();
+        return true;
+    }
+
+    /// <summary>
+    /// Applies a simple natural blocker state to the tile.
+    /// This is a prototype helper for future environment and PCG work.
+    /// </summary>
+    public bool SetNaturalBlocker(Vector2Int coordinates)
+    {
+        if (!TryGetTile(coordinates, out GridTile tile))
+        {
+            return false;
+        }
+
+        tile.ContentType = TileContentType.NaturalBlocker;
+        tile.IsWalkable = false;
+        tile.IsOccupied = false;
+        tile.IsReserved = false;
+        return true;
+    }
+
+    /// <summary>
+    /// Applies a simple resource state to the tile.
+    /// This keeps the tile walkability explicit instead of hardcoding one rule forever.
+    /// </summary>
+    public bool SetResourceTile(Vector2Int coordinates, bool isWalkable)
+    {
+        if (!TryGetTile(coordinates, out GridTile tile))
+        {
+            return false;
+        }
+
+        tile.ContentType = TileContentType.Resource;
+        tile.IsWalkable = isWalkable;
+        tile.IsOccupied = false;
+        tile.IsReserved = false;
+        return true;
+    }
+
+    /// <summary>
+    /// Applies a simple structure state to the tile.
+    /// Structures are treated as non-walkable in the prototype by default.
+    /// </summary>
+    public bool SetStructureTile(Vector2Int coordinates)
+    {
+        if (!TryGetTile(coordinates, out GridTile tile))
+        {
+            return false;
+        }
+
+        tile.ContentType = TileContentType.Structure;
+        tile.IsWalkable = false;
+        tile.IsOccupied = false;
+        tile.IsReserved = false;
+        return true;
+    }
+
+    /// <summary>
+    /// Returns the valid cardinal neighbor coordinates for the given tile.
+    /// Out-of-bounds neighbors are excluded.
+    /// </summary>
+    public List<Vector2Int> GetNeighborCoordinates(Vector2Int coordinates)
+    {
+        List<Vector2Int> neighbors = new List<Vector2Int>();
+
+        if (!IsInBounds(coordinates))
+        {
+            return neighbors;
+        }
+
+        foreach (Vector2Int offset in s_cardinalNeighborOffsets)
+        {
+            Vector2Int neighborCoordinates = coordinates + offset;
+
+            if (!IsInBounds(neighborCoordinates))
+            {
+                continue;
+            }
+
+            neighbors.Add(neighborCoordinates);
+        }
+
+        return neighbors;
+    }
+
+    /// <summary>
+    /// Returns the valid cardinal neighbor tiles for the given tile.
+    /// Out-of-bounds neighbors are excluded.
+    /// </summary>
+    public List<GridTile> GetNeighborTiles(Vector2Int coordinates)
+    {
+        List<GridTile> neighbors = new List<GridTile>();
+
+        foreach (Vector2Int neighborCoordinates in GetNeighborCoordinates(coordinates))
+        {
+            if (TryGetTile(neighborCoordinates, out GridTile tile))
+            {
+                neighbors.Add(tile);
+            }
+        }
+
+        return neighbors;
+    }
+
+    /// <summary>
+    /// Returns the valid cardinal neighbor coordinates that can currently be entered.
+    /// This is useful for future movement and pathfinding work.
+    /// </summary>
+    public List<Vector2Int> GetEnterableNeighborCoordinates(Vector2Int coordinates)
+    {
+        List<Vector2Int> neighbors = new List<Vector2Int>();
+
+        foreach (Vector2Int neighborCoordinates in GetNeighborCoordinates(coordinates))
+        {
+            if (CanEnterTile(neighborCoordinates))
+            {
+                neighbors.Add(neighborCoordinates);
+            }
+        }
+
+        return neighbors;
+    }
+
+    /// <summary>
+    /// Returns the valid cardinal neighbor tiles that can currently be entered.
+    /// This is useful for future movement and pathfinding work.
+    /// </summary>
+    public List<GridTile> GetEnterableNeighborTiles(Vector2Int coordinates)
+    {
+        List<GridTile> neighbors = new List<GridTile>();
+
+        foreach (Vector2Int neighborCoordinates in GetEnterableNeighborCoordinates(coordinates))
+        {
+            if (TryGetTile(neighborCoordinates, out GridTile tile))
+            {
+                neighbors.Add(tile);
+            }
+        }
+
+        return neighbors;
+    }
+
+    /// <summary>
+    /// Returns whether two tiles are cardinally adjacent.
+    /// Diagonals do not count as adjacent in the prototype rules.
+    /// </summary>
+    public bool AreTilesAdjacent(Vector2Int firstCoordinates, Vector2Int secondCoordinates)
+    {
+        if (!IsInBounds(firstCoordinates) || !IsInBounds(secondCoordinates))
+        {
+            return false;
+        }
+
+        Vector2Int delta = secondCoordinates - firstCoordinates;
+        int manhattanDistance = Mathf.Abs(delta.x) + Mathf.Abs(delta.y);
+
+        return manhattanDistance == 1;
     }
 
     /// <summary>

@@ -178,8 +178,10 @@ MonoBehaviour:
   m_hasHoveredTile: 0
   m_hoveredTileCoordinates: {x: 0, y: 0}
   m_logHoveredTileChanges: 0
-  m_showHoveredTileDebug: 1
-  m_showHoveredTileWorldPosition: 1
+  m_showTileDebugPanel: 1
+  m_showTileWorldPosition: 1
+  m_showTileState: 1
+  m_showTileNeighbors: 1
   m_logSelectedTileChanges: 1
   m_hoverHighlight: {fileID: 29343120}
   m_selectedHighlight: {fileID: 492931085}

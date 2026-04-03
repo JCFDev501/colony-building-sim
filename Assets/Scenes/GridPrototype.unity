@@ -139,6 +139,7 @@ GameObject:
   m_Component:
   - component: {fileID: 34012690}
   - component: {fileID: 34012691}
+  - component: {fileID: 34012692}
   m_Layer: 0
   m_Name: PlayerController
   m_TagString: Untagged
@@ -177,17 +178,30 @@ MonoBehaviour:
   m_playerCamera: {fileID: 330585545}
   m_hasHoveredTile: 0
   m_hoveredTileCoordinates: {x: 0, y: 0}
-  m_logHoveredTileChanges: 0
-  m_showTileDebugPanel: 1
-  m_showTileWorldPosition: 1
-  m_showTileState: 1
-  m_showTileNeighbors: 1
-  m_logSelectedTileChanges: 1
   m_hoverHighlight: {fileID: 29343120}
   m_selectedHighlight: {fileID: 492931085}
   m_selectedHighlightYOffset: 0.025
   m_hasSelectedTile: 0
   m_selectedTileCoordinates: {x: 0, y: 0}
+--- !u!114 &34012692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 34012689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f29f0818ed864fa40bd01718cc9e1cb7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerControllerDebug
+  m_playerController: {fileID: 34012691}
+  m_logHoveredTileChanges: 1
+  m_showTileDebugPanel: 1
+  m_showTileWorldPosition: 1
+  m_showTileState: 1
+  m_showTileNeighbors: 1
+  m_logSelectedTileChanges: 1
 --- !u!1 &330154396
 GameObject:
   m_ObjectHideFlags: 0

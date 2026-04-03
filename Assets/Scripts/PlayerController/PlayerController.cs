@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -18,14 +16,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool m_hasHoveredTile = false;
     [SerializeField] private Vector2Int m_hoveredTileCoordinates = Vector2Int.zero;
 
-    [Header("Debug")]
-    [SerializeField] private bool m_logHoveredTileChanges = true;
-    [SerializeField] private bool m_showTileDebugPanel = true;
-    [SerializeField] private bool m_showTileWorldPosition = true;
-    [SerializeField] private bool m_showTileState = true;
-    [SerializeField] private bool m_showTileNeighbors = true;
-    [SerializeField] private bool m_logSelectedTileChanges = true;
-
     [Header("Visual Feedback")]
     [SerializeField] private GameObject m_hoverHighlight;
     [SerializeField] private GameObject m_selectedHighlight;
@@ -34,6 +24,22 @@ public class PlayerController : MonoBehaviour
     [Header("Selection State")]
     [SerializeField] private bool m_hasSelectedTile = false;
     [SerializeField] private Vector2Int m_selectedTileCoordinates = Vector2Int.zero;
+
+    /// <summary>
+    /// Returns the grid manager used by this controller.
+    /// </summary>
+    public GridManager GridManager
+    {
+        get { return m_gridManager; }
+    }
+
+    /// <summary>
+    /// Returns the camera used by this controller.
+    /// </summary>
+    public Camera PlayerCamera
+    {
+        get { return m_playerCamera; }
+    }
 
     /// <summary>
     /// Returns whether the player is currently hovering a valid tile.
@@ -115,21 +121,19 @@ public class PlayerController : MonoBehaviour
     {
         if (m_gridManager == null)
         {
+            ClearHoveredTile();
             return;
         }
 
         if (m_playerCamera == null)
         {
+            ClearHoveredTile();
             return;
         }
-
-        bool hadHoveredTileBeforeUpdate = m_hasHoveredTile;
-        Vector2Int previousHoveredTileCoordinates = m_hoveredTileCoordinates;
 
         if (Mouse.current == null)
         {
             ClearHoveredTile();
-            LogHoverStateChange(hadHoveredTileBeforeUpdate, previousHoveredTileCoordinates);
             return;
         }
 
@@ -142,14 +146,11 @@ public class PlayerController : MonoBehaviour
             out _))
         {
             ClearHoveredTile();
-            LogHoverStateChange(hadHoveredTileBeforeUpdate, previousHoveredTileCoordinates);
             return;
         }
 
         m_hasHoveredTile = true;
         m_hoveredTileCoordinates = hoveredCoordinates;
-
-        LogHoverStateChange(hadHoveredTileBeforeUpdate, previousHoveredTileCoordinates);
     }
 
     /// <summary>
@@ -213,9 +214,6 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        bool hadSelectedTileBeforeUpdate = m_hasSelectedTile;
-        Vector2Int previousSelectedTileCoordinates = m_selectedTileCoordinates;
-
         if (!m_hasHoveredTile)
         {
             return;
@@ -223,269 +221,6 @@ public class PlayerController : MonoBehaviour
 
         m_hasSelectedTile = true;
         m_selectedTileCoordinates = m_hoveredTileCoordinates;
-
-        LogSelectedTileChange(hadSelectedTileBeforeUpdate, previousSelectedTileCoordinates);
-    }
-
-    /// <summary>
-    /// Logs selected tile changes only when the selected state actually changes.
-    /// </summary>
-    private void LogSelectedTileChange(bool hadSelectedTileBeforeUpdate, Vector2Int previousSelectedTileCoordinates)
-    {
-        if (!m_logSelectedTileChanges)
-        {
-            return;
-        }
-
-        if (!HasSelectedTileChanged(hadSelectedTileBeforeUpdate, previousSelectedTileCoordinates))
-        {
-            return;
-        }
-
-        Vector3 worldPosition = m_gridManager.GetWorldPosition(m_selectedTileCoordinates);
-        Debug.Log("Selected tile: " + m_selectedTileCoordinates + " | World Position: " + worldPosition);
-    }
-
-    /// <summary>
-    /// Returns whether the selected tile state changed during this update.
-    /// </summary>
-    private bool HasSelectedTileChanged(bool hadSelectedTileBeforeUpdate, Vector2Int previousSelectedTileCoordinates)
-    {
-        if (hadSelectedTileBeforeUpdate != m_hasSelectedTile)
-        {
-            return true;
-        }
-
-        if (!m_hasSelectedTile)
-        {
-            return false;
-        }
-
-        return previousSelectedTileCoordinates != m_selectedTileCoordinates;
-    }
-
-    /// <summary>
-    /// Draws formatted hovered and selected tile debug information on screen.
-    /// </summary>
-    private void OnGUI()
-    {
-        if (!m_showTileDebugPanel)
-        {
-            return;
-        }
-
-        const float panelX = 10.0f;
-        const float panelY = 10.0f;
-        const float panelWidth = 460.0f;
-        const float lineHeight = 20.0f;
-        const float padding = 10.0f;
-
-        float panelHeight = CalculateDebugPanelHeight(lineHeight);
-        GUI.Box(new Rect(panelX, panelY, panelWidth, panelHeight), "Tile Debug");
-
-        float currentY = panelY + 25.0f;
-
-        DrawTileDebugSection(
-            "Hovered Tile",
-            m_hasHoveredTile,
-            m_hoveredTileCoordinates,
-            panelX + padding,
-            ref currentY,
-            lineHeight);
-
-        currentY += 10.0f;
-
-        DrawTileDebugSection(
-            "Selected Tile",
-            m_hasSelectedTile,
-            m_selectedTileCoordinates,
-            panelX + padding,
-            ref currentY,
-            lineHeight);
-    }
-
-    /// <summary>
-    /// Draws a formatted debug section for a hovered or selected tile.
-    /// </summary>
-    private void DrawTileDebugSection(
-        string title,
-        bool hasTile,
-        Vector2Int tileCoordinates,
-        float x,
-        ref float y,
-        float lineHeight)
-    {
-        GUI.Label(new Rect(x, y, 420.0f, lineHeight), title + ":");
-        y += lineHeight;
-
-        if (!hasTile)
-        {
-            GUI.Label(new Rect(x + 10.0f, y, 420.0f, lineHeight), "None");
-            y += lineHeight;
-            return;
-        }
-
-        GUI.Label(new Rect(x + 10.0f, y, 420.0f, lineHeight), "Coordinates: " + tileCoordinates);
-        y += lineHeight;
-
-        if (m_showTileWorldPosition)
-        {
-            Vector3 worldPosition = m_gridManager.GetWorldPosition(tileCoordinates);
-            GUI.Label(new Rect(x + 10.0f, y, 420.0f, lineHeight), "World: " + worldPosition);
-            y += lineHeight;
-        }
-
-        if (m_showTileState)
-        {
-            GUI.Label(new Rect(x + 10.0f, y, 420.0f, lineHeight), "Walkable: " + m_gridManager.IsWalkable(tileCoordinates));
-            y += lineHeight;
-
-            GUI.Label(new Rect(x + 10.0f, y, 420.0f, lineHeight), "Occupied: " + m_gridManager.IsOccupied(tileCoordinates));
-            y += lineHeight;
-
-            GUI.Label(new Rect(x + 10.0f, y, 420.0f, lineHeight), "Reserved: " + m_gridManager.IsReserved(tileCoordinates));
-            y += lineHeight;
-
-            GUI.Label(new Rect(x + 10.0f, y, 420.0f, lineHeight), "Content: " + m_gridManager.GetContentType(tileCoordinates));
-            y += lineHeight;
-        }
-
-        if (m_showTileNeighbors)
-        {
-            List<Vector2Int> neighbors = m_gridManager.GetNeighborCoordinates(tileCoordinates);
-            List<Vector2Int> enterableNeighbors = m_gridManager.GetEnterableNeighborCoordinates(tileCoordinates);
-
-            GUI.Label(new Rect(x + 10.0f, y, 420.0f, lineHeight), "Neighbor Count: " + neighbors.Count);
-            y += lineHeight;
-
-            GUI.Label(new Rect(x + 10.0f, y, 420.0f, lineHeight), "Neighbors: " + BuildCoordinateListString(neighbors));
-            y += lineHeight;
-
-            GUI.Label(new Rect(x + 10.0f, y, 420.0f, lineHeight), "Enterable Count: " + enterableNeighbors.Count);
-            y += lineHeight;
-
-            GUI.Label(new Rect(x + 10.0f, y, 420.0f, lineHeight), "Enterable: " + BuildCoordinateListString(enterableNeighbors));
-            y += lineHeight;
-        }
-    }
-
-    /// <summary>
-    /// Calculates the debug panel height based on which sections are enabled.
-    /// </summary>
-    private float CalculateDebugPanelHeight(float lineHeight)
-    {
-        float sectionHeight = lineHeight + lineHeight;
-
-        if (m_showTileWorldPosition)
-        {
-            sectionHeight += lineHeight;
-        }
-
-        if (m_showTileState)
-        {
-            sectionHeight += lineHeight * 4.0f;
-        }
-
-        if (m_showTileNeighbors)
-        {
-            sectionHeight += lineHeight * 4.0f;
-        }
-
-        float totalHeight = 25.0f;
-        totalHeight += sectionHeight;
-        totalHeight += 10.0f;
-        totalHeight += sectionHeight;
-        totalHeight += 10.0f;
-
-        return totalHeight;
-    }
-
-    /// <summary>
-    /// Builds a readable coordinate list string for debug display.
-    /// </summary>
-    private string BuildCoordinateListString(List<Vector2Int> coordinates)
-    {
-        if (coordinates == null || coordinates.Count == 0)
-        {
-            return "None";
-        }
-
-        StringBuilder builder = new StringBuilder();
-
-        for (int i = 0; i < coordinates.Count; i++)
-        {
-            builder.Append(coordinates[i]);
-
-            if (i < coordinates.Count - 1)
-            {
-                builder.Append(", ");
-            }
-        }
-
-        return builder.ToString();
-    }
-
-    /// <summary>
-    /// Logs hovered tile changes only when the hovered state actually changes.
-    /// </summary>
-    private void LogHoverStateChange(bool hadHoveredTileBeforeUpdate, Vector2Int previousHoveredTileCoordinates)
-    {
-        if (!m_logHoveredTileChanges)
-        {
-            return;
-        }
-
-        if (!HasHoverChanged(hadHoveredTileBeforeUpdate, previousHoveredTileCoordinates))
-        {
-            return;
-        }
-
-        if (m_hasHoveredTile)
-        {
-            Vector3 worldPosition = m_gridManager.GetWorldPosition(m_hoveredTileCoordinates);
-            string logMessage = "Currently hovered tile: " + m_hoveredTileCoordinates + " | World Position: " + worldPosition;
-
-            if (m_showTileState)
-            {
-                logMessage += " | Walkable: " + m_gridManager.IsWalkable(m_hoveredTileCoordinates);
-                logMessage += " | Occupied: " + m_gridManager.IsOccupied(m_hoveredTileCoordinates);
-                logMessage += " | Reserved: " + m_gridManager.IsReserved(m_hoveredTileCoordinates);
-                logMessage += " | Content: " + m_gridManager.GetContentType(m_hoveredTileCoordinates);
-            }
-
-            if (m_showTileNeighbors)
-            {
-                List<Vector2Int> neighbors = m_gridManager.GetNeighborCoordinates(m_hoveredTileCoordinates);
-                List<Vector2Int> enterableNeighbors = m_gridManager.GetEnterableNeighborCoordinates(m_hoveredTileCoordinates);
-
-                logMessage += " | Neighbor Count: " + neighbors.Count;
-                logMessage += " | Enterable Count: " + enterableNeighbors.Count;
-            }
-
-            Debug.Log(logMessage);
-        }
-        else
-        {
-            Debug.Log("Currently hovered tile: none");
-        }
-    }
-
-    /// <summary>
-    /// Returns whether the hovered tile state changed during this update.
-    /// </summary>
-    private bool HasHoverChanged(bool hadHoveredTileBeforeUpdate, Vector2Int previousHoveredTileCoordinates)
-    {
-        if (hadHoveredTileBeforeUpdate != m_hasHoveredTile)
-        {
-            return true;
-        }
-
-        if (!m_hasHoveredTile)
-        {
-            return false;
-        }
-
-        return previousHoveredTileCoordinates != m_hoveredTileCoordinates;
     }
 
     /// <summary>

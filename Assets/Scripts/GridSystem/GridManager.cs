@@ -18,13 +18,35 @@ public class GridManager : MonoBehaviour
     // Stores generated tiles by grid coordinate for fast lookup.
     private readonly Dictionary<Vector2Int, GridTile> m_tiles = new();
 
-    // Cardinal neighbor offsets for prototype movement and pathfinding.
-    private static readonly Vector2Int[] s_cardinalNeighborOffsets =
+    // Orthogonal neighbor offsets for prototype movement and pathfinding.
+    private static readonly Vector2Int[] s_orthogonalNeighborOffsets =
     {
         new Vector2Int(0, 1),
         new Vector2Int(1, 0),
         new Vector2Int(0, -1),
         new Vector2Int(-1, 0),
+    };
+
+    // Diagonal neighbor offsets for prototype movement and pathfinding.
+    private static readonly Vector2Int[] s_diagonalNeighborOffsets =
+    {
+        new Vector2Int(-1, 1),
+        new Vector2Int(1, 1),
+        new Vector2Int(1, -1),
+        new Vector2Int(-1, -1),
+    };
+
+    // All neighbor offsets for 8-directional adjacency.
+    private static readonly Vector2Int[] s_allNeighborOffsets =
+    {
+        new Vector2Int(0, 1),
+        new Vector2Int(1, 0),
+        new Vector2Int(0, -1),
+        new Vector2Int(-1, 0),
+        new Vector2Int(-1, 1),
+        new Vector2Int(1, 1),
+        new Vector2Int(1, -1),
+        new Vector2Int(-1, -1),
     };
 
     /// <summary>
@@ -447,10 +469,9 @@ public class GridManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Returns the valid cardinal neighbor coordinates for the given tile.
-    /// Out-of-bounds neighbors are excluded.
+    /// Returns valid in-bounds neighbor coordinates using the provided offset set.
     /// </summary>
-    public List<Vector2Int> GetNeighborCoordinates(Vector2Int coordinates)
+    private List<Vector2Int> GetNeighborCoordinatesForOffsets(Vector2Int coordinates, Vector2Int[] offsets)
     {
         List<Vector2Int> neighbors = new List<Vector2Int>();
 
@@ -459,7 +480,7 @@ public class GridManager : MonoBehaviour
             return neighbors;
         }
 
-        foreach (Vector2Int offset in s_cardinalNeighborOffsets)
+        foreach (Vector2Int offset in offsets)
         {
             Vector2Int neighborCoordinates = coordinates + offset;
 
@@ -475,14 +496,40 @@ public class GridManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Returns the valid cardinal neighbor tiles for the given tile.
+    /// Returns the valid orthogonal neighbor coordinates for the given tile.
     /// Out-of-bounds neighbors are excluded.
     /// </summary>
-    public List<GridTile> GetNeighborTiles(Vector2Int coordinates)
+    public List<Vector2Int> GetOrthogonalNeighborCoordinates(Vector2Int coordinates)
+    {
+        return GetNeighborCoordinatesForOffsets(coordinates, s_orthogonalNeighborOffsets);
+    }
+
+    /// <summary>
+    /// Returns the valid diagonal neighbor coordinates for the given tile.
+    /// Out-of-bounds neighbors are excluded.
+    /// </summary>
+    public List<Vector2Int> GetDiagonalNeighborCoordinates(Vector2Int coordinates)
+    {
+        return GetNeighborCoordinatesForOffsets(coordinates, s_diagonalNeighborOffsets);
+    }
+
+    /// <summary>
+    /// Returns all valid in-bounds neighbor coordinates for the given tile, up to 8 total.
+    /// </summary>
+    public List<Vector2Int> GetAllNeighborCoordinates(Vector2Int coordinates)
+    {
+        return GetNeighborCoordinatesForOffsets(coordinates, s_allNeighborOffsets);
+    }
+
+    /// <summary>
+    /// Returns the valid orthogonal neighbor tiles for the given tile.
+    /// Out-of-bounds neighbors are excluded.
+    /// </summary>
+    public List<GridTile> GetOrthogonalNeighborTiles(Vector2Int coordinates)
     {
         List<GridTile> neighbors = new List<GridTile>();
 
-        foreach (Vector2Int neighborCoordinates in GetNeighborCoordinates(coordinates))
+        foreach (Vector2Int neighborCoordinates in GetOrthogonalNeighborCoordinates(coordinates))
         {
             if (TryGetTile(neighborCoordinates, out GridTile tile))
             {
@@ -494,14 +541,51 @@ public class GridManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Returns the valid cardinal neighbor coordinates that can currently be entered.
-    /// This is useful for future movement and pathfinding work.
+    /// Returns the valid diagonal neighbor tiles for the given tile.
+    /// Out-of-bounds neighbors are excluded.
     /// </summary>
-    public List<Vector2Int> GetEnterableNeighborCoordinates(Vector2Int coordinates)
+    public List<GridTile> GetDiagonalNeighborTiles(Vector2Int coordinates)
+    {
+        List<GridTile> neighbors = new List<GridTile>();
+
+        foreach (Vector2Int neighborCoordinates in GetDiagonalNeighborCoordinates(coordinates))
+        {
+            if (TryGetTile(neighborCoordinates, out GridTile tile))
+            {
+                neighbors.Add(tile);
+            }
+        }
+
+        return neighbors;
+    }
+
+    /// <summary>
+    /// Returns all valid in-bounds neighbor tiles for the given tile, up to 8 total.
+    /// </summary>
+    public List<GridTile> GetAllNeighborTiles(Vector2Int coordinates)
+    {
+        List<GridTile> neighbors = new List<GridTile>();
+
+        foreach (Vector2Int neighborCoordinates in GetAllNeighborCoordinates(coordinates))
+        {
+            if (TryGetTile(neighborCoordinates, out GridTile tile))
+            {
+                neighbors.Add(tile);
+            }
+        }
+
+        return neighbors;
+    }
+
+    /// <summary>
+    /// Returns the valid orthogonal neighbor coordinates that can currently be entered.
+    /// This is useful for prototype movement before diagonal traversal rules are applied.
+    /// </summary>
+    public List<Vector2Int> GetEnterableOrthogonalNeighborCoordinates(Vector2Int coordinates)
     {
         List<Vector2Int> neighbors = new List<Vector2Int>();
 
-        foreach (Vector2Int neighborCoordinates in GetNeighborCoordinates(coordinates))
+        foreach (Vector2Int neighborCoordinates in GetOrthogonalNeighborCoordinates(coordinates))
         {
             if (CanEnterTile(neighborCoordinates))
             {
@@ -513,14 +597,14 @@ public class GridManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Returns the valid cardinal neighbor tiles that can currently be entered.
-    /// This is useful for future movement and pathfinding work.
+    /// Returns the valid orthogonal neighbor tiles that can currently be entered.
+    /// This is useful for prototype movement before diagonal traversal rules are applied.
     /// </summary>
-    public List<GridTile> GetEnterableNeighborTiles(Vector2Int coordinates)
+    public List<GridTile> GetEnterableOrthogonalNeighborTiles(Vector2Int coordinates)
     {
         List<GridTile> neighbors = new List<GridTile>();
 
-        foreach (Vector2Int neighborCoordinates in GetEnterableNeighborCoordinates(coordinates))
+        foreach (Vector2Int neighborCoordinates in GetEnterableOrthogonalNeighborCoordinates(coordinates))
         {
             if (TryGetTile(neighborCoordinates, out GridTile tile))
             {
@@ -532,20 +616,116 @@ public class GridManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Returns whether two tiles are cardinally adjacent.
-    /// Diagonals do not count as adjacent in the prototype rules.
+    /// Returns whether the step between two coordinates is orthogonal.
     /// </summary>
-    public bool AreTilesAdjacent(Vector2Int firstCoordinates, Vector2Int secondCoordinates)
+    public bool IsOrthogonalStep(Vector2Int fromCoordinates, Vector2Int toCoordinates)
     {
-        if (!IsInBounds(firstCoordinates) || !IsInBounds(secondCoordinates))
+        if (!IsInBounds(fromCoordinates) || !IsInBounds(toCoordinates))
         {
             return false;
         }
 
-        Vector2Int delta = secondCoordinates - firstCoordinates;
+        Vector2Int delta = toCoordinates - fromCoordinates;
         int manhattanDistance = Mathf.Abs(delta.x) + Mathf.Abs(delta.y);
 
         return manhattanDistance == 1;
+    }
+
+    /// <summary>
+    /// Returns whether the step between two coordinates is diagonal.
+    /// </summary>
+    public bool IsDiagonalStep(Vector2Int fromCoordinates, Vector2Int toCoordinates)
+    {
+        if (!IsInBounds(fromCoordinates) || !IsInBounds(toCoordinates))
+        {
+            return false;
+        }
+
+        Vector2Int delta = toCoordinates - fromCoordinates;
+
+        return Mathf.Abs(delta.x) == 1 && Mathf.Abs(delta.y) == 1;
+    }
+
+    /// <summary>
+    /// Returns whether a diagonal move is valid based on prototype corner-cutting rules.
+    /// The target tile must be enterable, and both touching orthogonal side tiles must also be enterable.
+    /// </summary>
+    public bool IsDiagonalTraversalValid(Vector2Int fromCoordinates, Vector2Int toCoordinates)
+    {
+        if (!IsDiagonalStep(fromCoordinates, toCoordinates))
+        {
+            return false;
+        }
+
+        if (!CanEnterTile(toCoordinates))
+        {
+            return false;
+        }
+
+        Vector2Int delta = toCoordinates - fromCoordinates;
+
+        Vector2Int horizontalSideCoordinates = fromCoordinates + new Vector2Int(delta.x, 0);
+        Vector2Int verticalSideCoordinates = fromCoordinates + new Vector2Int(0, delta.y);
+
+        return CanEnterTile(horizontalSideCoordinates) &&
+               CanEnterTile(verticalSideCoordinates);
+    }
+
+    /// <summary>
+    /// Returns the valid neighboring coordinates that can currently be traversed.
+    /// Orthogonal neighbors must be enterable.
+    /// Diagonal neighbors must also pass the corner-cutting rule.
+    /// </summary>
+    public List<Vector2Int> GetTraversableNeighborCoordinates(Vector2Int coordinates)
+    {
+        List<Vector2Int> neighbors = new List<Vector2Int>();
+
+        foreach (Vector2Int neighborCoordinates in GetOrthogonalNeighborCoordinates(coordinates))
+        {
+            if (CanEnterTile(neighborCoordinates))
+            {
+                neighbors.Add(neighborCoordinates);
+            }
+        }
+
+        foreach (Vector2Int neighborCoordinates in GetDiagonalNeighborCoordinates(coordinates))
+        {
+            if (IsDiagonalTraversalValid(coordinates, neighborCoordinates))
+            {
+                neighbors.Add(neighborCoordinates);
+            }
+        }
+
+        return neighbors;
+    }
+
+    /// <summary>
+    /// Returns the valid neighboring tiles that can currently be traversed.
+    /// Orthogonal neighbors must be enterable.
+    /// Diagonal neighbors must also pass the corner-cutting rule.
+    /// </summary>
+    public List<GridTile> GetTraversableNeighborTiles(Vector2Int coordinates)
+    {
+        List<GridTile> neighbors = new List<GridTile>();
+
+        foreach (Vector2Int neighborCoordinates in GetTraversableNeighborCoordinates(coordinates))
+        {
+            if (TryGetTile(neighborCoordinates, out GridTile tile))
+            {
+                neighbors.Add(tile);
+            }
+        }
+
+        return neighbors;
+    }
+
+    /// <summary>
+    /// Returns whether two tiles are orthogonally adjacent.
+    /// Diagonals do not count as adjacent in this helper.
+    /// </summary>
+    public bool AreTilesAdjacent(Vector2Int firstCoordinates, Vector2Int secondCoordinates)
+    {
+        return IsOrthogonalStep(firstCoordinates, secondCoordinates);
     }
 
     /// <summary>

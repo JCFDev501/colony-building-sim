@@ -144,11 +144,11 @@ public class PlayerControllerDebug : MonoBehaviour
 
             if (m_showTileNeighbors)
             {
-                List<Vector2Int> neighbors = gridManager.GetNeighborCoordinates(hoveredTileCoordinates);
-                List<Vector2Int> enterableNeighbors = gridManager.GetEnterableNeighborCoordinates(hoveredTileCoordinates);
+                List<Vector2Int> neighbors = gridManager.GetAllNeighborCoordinates(hoveredTileCoordinates);
+                List<Vector2Int> traversableNeighbors = gridManager.GetTraversableNeighborCoordinates(hoveredTileCoordinates);
 
                 logMessage += " | Neighbor Count: " + neighbors.Count;
-                logMessage += " | Enterable Count: " + enterableNeighbors.Count;
+                logMessage += " | Traversable Count: " + traversableNeighbors.Count;
             }
 
             Debug.Log(logMessage);
@@ -240,8 +240,8 @@ public class PlayerControllerDebug : MonoBehaviour
 
         if (m_showTileNeighbors)
         {
-            List<Vector2Int> neighbors = gridManager.GetNeighborCoordinates(tileCoordinates);
-            List<Vector2Int> enterableNeighbors = gridManager.GetEnterableNeighborCoordinates(tileCoordinates);
+            List<Vector2Int> neighbors = gridManager.GetAllNeighborCoordinates(tileCoordinates);
+            List<Vector2Int> traversableNeighbors = gridManager.GetTraversableNeighborCoordinates(tileCoordinates);
 
             GUI.Label(new Rect(x + 10.0f, y, 420.0f, lineHeight), "Neighbor Count: " + neighbors.Count);
             y += lineHeight;
@@ -249,10 +249,10 @@ public class PlayerControllerDebug : MonoBehaviour
             GUI.Label(new Rect(x + 10.0f, y, 420.0f, lineHeight), "Neighbors: " + BuildCoordinateListString(neighbors));
             y += lineHeight;
 
-            GUI.Label(new Rect(x + 10.0f, y, 420.0f, lineHeight), "Enterable Count: " + enterableNeighbors.Count);
+            GUI.Label(new Rect(x + 10.0f, y, 420.0f, lineHeight), "Traversable Count: " + traversableNeighbors.Count);
             y += lineHeight;
 
-            GUI.Label(new Rect(x + 10.0f, y, 420.0f, lineHeight), "Enterable: " + BuildCoordinateListString(enterableNeighbors));
+            GUI.Label(new Rect(x + 10.0f, y, 420.0f, lineHeight), "Traversable: " + BuildCoordinateListString(traversableNeighbors));
             y += lineHeight;
         }
     }

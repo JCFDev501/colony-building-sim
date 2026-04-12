@@ -340,6 +340,22 @@ public class GridManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Returns whether the tile can currently be entered while ignoring pawn
+    /// occupancy and reservation. This is useful for the prototype pass where
+    /// pawns are allowed to move through each other but should still respect
+    /// walkability and world blockers.
+    /// </summary>
+    public bool CanEnterTileIgnoringPawns(Vector2Int coordinates)
+    {
+        if (!TryGetTile(coordinates, out GridTile tile))
+        {
+            return false;
+        }
+
+        return tile.IsWalkable;
+    }
+
+    /// <summary>
     /// Sets whether the tile at the given coordinates is walkable.
     /// Returns false if the tile does not exist.
     /// </summary>

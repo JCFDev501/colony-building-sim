@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92b7d09b57987514d879653b564d0807, type: 3}
+  m_Name: TreeDefinition
+  m_EditorClassIdentifier: ColonyBuildingSim::WorldObjectDefinition
+  m_worldObjectType: 1
+  m_displayName: Tree
+  m_prefab: {fileID: 1370301679886224268, guid: d2a8828a0291722468155b701262c001, type: 3}
+  m_blocksMovement: 1
+  m_blocksBuilding: 1
+  m_isCuttable: 1
+  m_isHarvestable: 0
+  m_contentType: 1

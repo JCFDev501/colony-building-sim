@@ -57,15 +57,38 @@ public class GridManager : MonoBehaviour
         get { return m_tiles; }
     }
 
+    public int GridWidth
+    {
+        get { return m_gridWidth; }
+    }
+
+    public int GridHeight
+    {
+        get { return m_gridHeight; }
+    }
+
+    public float CellSize
+    {
+        get { return m_cellSize; }
+    }
+
     /// <summary>
     /// Generates the grid automatically when play begins if enabled.
+    /// If the grid already exists, it is not regenerated.
     /// </summary>
     private void Start()
     {
-        if (m_generateOnStart)
+        if (!m_generateOnStart)
         {
-            GenerateGrid();
+            return;
         }
+
+        if (m_tiles.Count > 0)
+        {
+            return;
+        }
+
+        GenerateGrid();
     }
 
     /// <summary>
@@ -258,6 +281,88 @@ public class GridManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Returns the current terrain type for the tile at the given coordinates.
+    /// Invalid coordinates return Grass as the default prototype terrain.
+    /// </summary>
+    public TileTerrainType GetTerrainType(Vector2Int coordinates)
+    {
+        if (!TryGetTile(coordinates, out GridTile tile))
+        {
+            return TileTerrainType.Grass;
+        }
+
+        return tile.TerrainType;
+    }
+
+    /// <summary>
+    /// Returns the current water-distance band for the tile at the given coordinates.
+    /// Invalid coordinates return None.
+    /// </summary>
+    public TileWaterDistanceBand GetWaterDistanceBand(Vector2Int coordinates)
+    {
+        if (!TryGetTile(coordinates, out GridTile tile))
+        {
+            return TileWaterDistanceBand.None;
+        }
+
+        return tile.WaterDistanceBand;
+    }
+
+    /// <summary>
+    /// Returns the current structural block type for the tile at the given coordinates.
+    /// Invalid coordinates return None.
+    /// </summary>
+    public BlockType GetBlockType(Vector2Int coordinates)
+    {
+        if (!TryGetTile(coordinates, out GridTile tile))
+        {
+            return BlockType.None;
+        }
+
+        return tile.BlockType;
+    }
+
+    /// <summary>
+    /// Returns the current specific world object type for the tile at the given coordinates.
+    /// Invalid coordinates return None.
+    /// </summary>
+    public WorldObjectType GetWorldObjectType(Vector2Int coordinates)
+    {
+        if (!TryGetTile(coordinates, out GridTile tile))
+        {
+            return WorldObjectType.None;
+        }
+
+        return tile.WorldObjectType;
+    }
+
+    /// <summary>
+    /// Returns whether the tile at the given coordinates currently contains a structural block.
+    /// </summary>
+    public bool HasBlock(Vector2Int coordinates)
+    {
+        if (!TryGetTile(coordinates, out GridTile tile))
+        {
+            return false;
+        }
+
+        return tile.BlockType != BlockType.None;
+    }
+
+    /// <summary>
+    /// Returns whether the tile at the given coordinates currently contains a specific world object.
+    /// </summary>
+    public bool HasWorldObject(Vector2Int coordinates)
+    {
+        if (!TryGetTile(coordinates, out GridTile tile))
+        {
+            return false;
+        }
+
+        return tile.WorldObjectType != WorldObjectType.None;
+    }
+
+    /// <summary>
     /// Returns whether the tile at the given coordinates is currently walkable.
     /// </summary>
     public bool IsWalkable(Vector2Int coordinates)
@@ -353,6 +458,66 @@ public class GridManager : MonoBehaviour
         }
 
         return tile.IsWalkable;
+    }
+
+    /// <summary>
+    /// Sets the terrain type for the tile at the given coordinates.
+    /// Returns false if the tile does not exist.
+    /// </summary>
+    public bool SetTerrainType(Vector2Int coordinates, TileTerrainType terrainType)
+    {
+        if (!TryGetTile(coordinates, out GridTile tile))
+        {
+            return false;
+        }
+
+        tile.TerrainType = terrainType;
+        return true;
+    }
+
+    /// <summary>
+    /// Sets the water-distance band for the tile at the given coordinates.
+    /// Returns false if the tile does not exist.
+    /// </summary>
+    public bool SetWaterDistanceBand(Vector2Int coordinates, TileWaterDistanceBand waterDistanceBand)
+    {
+        if (!TryGetTile(coordinates, out GridTile tile))
+        {
+            return false;
+        }
+
+        tile.WaterDistanceBand = waterDistanceBand;
+        return true;
+    }
+
+    /// <summary>
+    /// Sets the structural block type for the tile at the given coordinates.
+    /// Returns false if the tile does not exist.
+    /// </summary>
+    public bool SetBlockType(Vector2Int coordinates, BlockType blockType)
+    {
+        if (!TryGetTile(coordinates, out GridTile tile))
+        {
+            return false;
+        }
+
+        tile.BlockType = blockType;
+        return true;
+    }
+
+    /// <summary>
+    /// Sets the specific world object type for the tile at the given coordinates.
+    /// Returns false if the tile does not exist.
+    /// </summary>
+    public bool SetWorldObjectType(Vector2Int coordinates, WorldObjectType worldObjectType)
+    {
+        if (!TryGetTile(coordinates, out GridTile tile))
+        {
+            return false;
+        }
+
+        tile.WorldObjectType = worldObjectType;
+        return true;
     }
 
     /// <summary>

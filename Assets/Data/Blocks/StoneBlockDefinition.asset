@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5b8d9709a55b8641a9262301b98dc62, type: 3}
+  m_Name: StoneBlockDefinition
+  m_EditorClassIdentifier: ColonyBuildingSim::BlockDefinition
+  m_blockType: 1
+  m_displayName: Stone
+  m_material: {fileID: 2100000, guid: dc4343123c4206f4ca8a2211faa89522, type: 2}
+  m_fallbackColor: {r: 1, g: 0, b: 0.8756151, a: 1}
+  m_maxHitPoints: 100
+  m_blocksMovement: 1
+  m_blocksBuilding: 1

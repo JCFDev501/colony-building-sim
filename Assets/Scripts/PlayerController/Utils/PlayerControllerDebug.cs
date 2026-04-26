@@ -136,6 +136,10 @@ public class PlayerControllerDebug : MonoBehaviour
 
             if (m_showTileState)
             {
+                logMessage += " | Terrain: " + gridManager.GetTerrainType(hoveredTileCoordinates);
+                logMessage += " | Water Distance: " + gridManager.GetWaterDistanceBand(hoveredTileCoordinates);
+                logMessage += " | Block: " + gridManager.GetBlockType(hoveredTileCoordinates);
+                logMessage += " | World Object: " + gridManager.GetWorldObjectType(hoveredTileCoordinates);
                 logMessage += " | Walkable: " + gridManager.IsWalkable(hoveredTileCoordinates);
                 logMessage += " | Occupied: " + gridManager.IsOccupied(hoveredTileCoordinates);
                 logMessage += " | Reserved: " + gridManager.IsReserved(hoveredTileCoordinates);
@@ -225,6 +229,18 @@ public class PlayerControllerDebug : MonoBehaviour
 
         if (m_showTileState)
         {
+            GUI.Label(new Rect(x + 10.0f, y, 420.0f, lineHeight), "Terrain: " + gridManager.GetTerrainType(tileCoordinates));
+            y += lineHeight;
+
+            GUI.Label(new Rect(x + 10.0f, y, 420.0f, lineHeight), "Water Distance: " + gridManager.GetWaterDistanceBand(tileCoordinates));
+            y += lineHeight;
+
+            GUI.Label(new Rect(x + 10.0f, y, 420.0f, lineHeight), "Block: " + gridManager.GetBlockType(tileCoordinates));
+            y += lineHeight;
+
+            GUI.Label(new Rect(x + 10.0f, y, 420.0f, lineHeight), "World Object: " + gridManager.GetWorldObjectType(tileCoordinates));
+            y += lineHeight;
+
             GUI.Label(new Rect(x + 10.0f, y, 420.0f, lineHeight), "Walkable: " + gridManager.IsWalkable(tileCoordinates));
             y += lineHeight;
 
@@ -271,7 +287,7 @@ public class PlayerControllerDebug : MonoBehaviour
 
         if (m_showTileState)
         {
-            sectionHeight += lineHeight * 4.0f;
+            sectionHeight += lineHeight * 8.0f;
         }
 
         if (m_showTileNeighbors)

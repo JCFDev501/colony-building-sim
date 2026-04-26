@@ -24,7 +24,9 @@ public class PlayerController : MonoBehaviour
     [Header("Visual Feedback")]
     [SerializeField] private GameObject m_hoverHighlight;
     [SerializeField] private GameObject m_selectedHighlight;
+    [SerializeField] private float m_hoverHighlightYOffset = 0.02f;
     [SerializeField] private float m_selectedHighlightYOffset = 0.03f;
+    [SerializeField] private float m_blockHighlightBaseYOffset = 2.0f;
 
     [Header("Selection State")]
     [SerializeField] private bool m_hasSelectedTile = false;
@@ -176,7 +178,7 @@ public class PlayerController : MonoBehaviour
 
     /// <summary>
     /// Updates hovered tile state from player input.
-    /// Pawn hover takes priority over grid-plane hover so the hovered tile
+    /// Pawn hover takes priority over scene/world hover so the hovered tile
     /// matches the tile the pawn is actually standing on.
     /// </summary>
     private void UpdateHoveredTile()
@@ -206,20 +208,14 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        Vector2 mouseScreenPosition = Mouse.current.position.ReadValue();
-
-        if (!m_gridManager.TryGetCoordinatesFromScreenPoint(
-                m_playerCamera,
-                mouseScreenPosition,
-                out Vector2Int hoveredCoordinates,
-                out _))
+        if (TryGetHoveredGridCoordinates(out Vector2Int hoveredCoordinates))
         {
-            ClearHoveredTile();
+            m_hasHoveredTile = true;
+            m_hoveredTileCoordinates = hoveredCoordinates;
             return;
         }
 
-        m_hasHoveredTile = true;
-        m_hoveredTileCoordinates = hoveredCoordinates;
+        ClearHoveredTile();
     }
 
     /// <summary>
@@ -552,9 +548,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        Vector3 hoverWorldPosition = m_gridManager.GetWorldPosition(m_hoveredTileCoordinates);
-        hoverWorldPosition.y += 0.02f;
-
+        Vector3 hoverWorldPosition = GetTileHighlightWorldPosition(m_hoveredTileCoordinates, m_hoverHighlightYOffset);
         m_hoverHighlight.transform.position = hoverWorldPosition;
         m_hoverHighlight.SetActive(true);
     }
@@ -575,11 +569,58 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        Vector3 selectedWorldPosition = m_gridManager.GetWorldPosition(m_selectedTileCoordinates);
-        selectedWorldPosition.y += m_selectedHighlightYOffset;
-
+        Vector3 selectedWorldPosition = GetTileHighlightWorldPosition(m_selectedTileCoordinates, m_selectedHighlightYOffset);
         m_selectedHighlight.transform.position = selectedWorldPosition;
         m_selectedHighlight.SetActive(true);
+    }
+
+    /// <summary>
+    /// Returns the world position used for tile highlights.
+    /// Highlights stay slightly above normal ground tiles and are raised to the
+    /// top surface of first-pass structural blocks when a block is present.
+    /// </summary>
+    private Vector3 GetTileHighlightWorldPosition(Vector2Int tileCoordinates, float extraYOffset)
+    {
+        Vector3 worldPosition = m_gridManager.GetWorldPosition(tileCoordinates);
+
+        if (m_gridManager.GetBlockType(tileCoordinates) != BlockType.None)
+        {
+            worldPosition.y += m_blockHighlightBaseYOffset;
+        }
+
+        worldPosition.y += extraYOffset;
+        return worldPosition;
+    }
+
+    /// <summary>
+    /// Attempts to find hovered grid coordinates from the current mouse position.
+    /// Scene hits are checked first so raised block tiles can be hovered accurately.
+    /// If nothing in the scene is hit, this falls back to the flat grid plane.
+    /// </summary>
+    private bool TryGetHoveredGridCoordinates(out Vector2Int hoveredCoordinates)
+    {
+        hoveredCoordinates = Vector2Int.zero;
+
+        if (m_playerCamera == null || Mouse.current == null)
+        {
+            return false;
+        }
+
+        Vector2 mouseScreenPosition = Mouse.current.position.ReadValue();
+        Ray ray = m_playerCamera.ScreenPointToRay(mouseScreenPosition);
+
+        if (Physics.Raycast(ray, out RaycastHit hitInfo))
+        {
+            if (m_gridManager.TryGetCoordinatesFromWorldPosition(hitInfo.point, out hoveredCoordinates))
+            {
+                return true;
+            }
+        }
+
+        return m_gridManager.TryGetCoordinatesFromScreenPoint(
+            m_playerCamera,
+            mouseScreenPosition,
+            out hoveredCoordinates);
     }
 
     /// <summary>

@@ -6,7 +6,7 @@ This document defines the first-pass design for the World Context Manager, which
 
 The purpose of this system is to create a single source of truth for world state over time so that future systems such as pawn AI, tasking, survival mechanics, and environmental systems can operate consistently.
 
-This system does not implement gameplay behavior.
+This system does not implement gameplay behavior.  
 It only provides context that other systems will read from.
 
 ---
@@ -16,9 +16,9 @@ It only provides context that other systems will read from.
 The World Context Manager should:
 
 - advance time continuously during play
-- track date and calendar progression
+- track date and simplified calendar progression
 - determine current season
-- determine day/night state
+- determine time-of-day phase
 - calculate temperature
 - expose this data to other systems
 - support time scaling and pause controls
@@ -48,35 +48,65 @@ The World Context Manager is the only system that owns time.
 
 ### Calendar
 
+V1 uses a simplified, game-friendly calendar:
+
 - 60 minutes per hour
 - 24 hours per day
-- 30 days per month
-- 12 months per year
+- 15 days per month
+- 4 months per year
+- 60 days per year
+
+Each month represents a season.
 
 ---
 
-### Season
+### Month & Season
 
-- Spring → months 3, 4, 5
-- Summer → months 6, 7, 8
-- Fall → months 9, 10, 11
-- Winter → months 12, 1, 2
+The world uses named months that represent seasonal cycles:
+
+- **Bloomtide** → Spring
+- **Suncrest** → Summer
+- **Harvestfall** → Fall
+- **Frostwane** → Winter
+
+Month progression represents seasonal progression.
+
+Example:
+
+- Day 3, Suncrest → Early Summer
+- Day 14, Frostwane → Late Winter
+
+Season is derived from the current month and must not be set independently.
 
 ---
 
-### Day/Night State
+### Time of Day Phase
 
-- Day → 06:00 to 19:59
-- Night → 20:00 to 05:59
+Time is divided into phases for better AI and visual control:
+
+- EarlyMorning → 05:00 - 07:59
+- Morning → 08:00 - 11:59
+- Afternoon → 12:00 - 16:59
+- Evening → 17:00 - 20:59
+- Night → 21:00 - 23:59
+- LateNight → 00:00 - 04:59
+
+This replaces simple day/night state.
 
 ---
 
 ### Temperature
 
-Derived from:
+Temperature is derived from:
 
-- season
-- time of day
+- current season
+- time of day phase
+
+General rules:
+
+- warmer during day phases
+- cooler during night phases
+- each season has its own baseline range
 
 ---
 
@@ -92,6 +122,8 @@ Derived from:
 
 ### World Pause Behavior
 
+World pause affects simulation only.
+
 Simulation systems stop:
 
 - time progression
@@ -99,6 +131,7 @@ Simulation systems stop:
 - task evaluation
 - movement
 - work progress
+- environmental updates
 
 Player interaction continues:
 
@@ -111,65 +144,94 @@ Player interaction continues:
 
 ### Command Behavior While Paused
 
-- commands can be issued
+- commands can be issued while paused
 - commands are stored
 - execution happens when unpaused
+
+This allows pause to function as a planning mode.
 
 ---
 
 ## Visual System Integration
 
-Separate system: WorldVisualController
+Separate system: **WorldVisualController**
 
 Responsibilities:
 
-- lighting updates
-- ambient color
-- global tint
-- day/night transitions
+- update directional lighting
+- update ambient lighting
+- apply global color tint
+- respond to time-of-day phase changes
+- handle smooth transitions between phases
 
 ---
 
 ## Time Scale
 
-- 1 day = 20 minutes (normal)
-- Debug: 2 minutes
-- Stress: 30 seconds
+**Normal:**
+
+- 1 in-game day = 20 real minutes
+
+**Debug:**
+
+- 1 day = 2 minutes
+
+**Stress Test:**
+
+- 1 day = 30 seconds
 
 ---
 
 ## Included in V1
 
 - time progression
-- calendar
-- season
-- day/night
-- temperature
-- pause/play
+- simplified calendar
+- season calculation
+- time-of-day phase system
+- temperature calculation
+- pause/play system
 - time scaling
+- visual hooks
 
 ---
 
 ## Out of Scope
 
-- weather
-- pawn needs
+- weather systems
+- pawn needs (hunger, tiredness, health)
 - farming systems
-- advanced lighting
-- events
+- AI scheduling/sleep systems
+- advanced lighting systems
+- biome simulation
+- event systems
 
 ---
 
 ## Architecture
 
-World Layer:
+**World Layer**
 
-- Grid
+- Grid System
 - World Generator
 - World Context Manager
 
-Gameplay Layer:
+**Gameplay Layer**
 
 - Work Orders
 - Tasks
 - Pawn Brain
+
+---
+
+## Why This System Matters
+
+This system becomes the foundation for all time-based simulation.
+
+It enables:
+
+- consistent AI decision-making
+- scalable environmental systems
+- proper colony simulation pacing
+- future survival and seasonal systems
+
+Without it, time logic becomes fragmented and difficult to maintain.

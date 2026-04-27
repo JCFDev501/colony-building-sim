@@ -1,0 +1,247 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &837758684426520813
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2177576183653239482}
+  - component: {fileID: 8908495093796507695}
+  m_Layer: 0
+  m_Name: WorldGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2177576183653239482
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837758684426520813}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8521635228346422424}
+  - {fileID: 8213840411631983232}
+  - {fileID: 1323327752862259603}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8908495093796507695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837758684426520813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21622735b96833d4c87e95f9bf3571d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColonyBuildingSim::WorldGenerator
+  m_gridManager: {fileID: 0}
+  m_worldTerrainRenderer: {fileID: 735659291562260469}
+  m_blockRenderer: {fileID: 804997060057669772}
+  m_worldObjectRenderer: {fileID: 2492087732579487887}
+  m_generateOnStart: 1
+  m_seed: 12345
+  m_useRandomSeed: 1
+  m_enableDebugRegenerateInput: 1
+  m_logTemporaryGenerationPipeline: 1
+  m_logGenerationTimings: 1
+  m_riverCount: 1
+  m_riverMinWidth: 1
+  m_riverMaxWidth: 4
+  m_riverMeanderChance: 0.3
+  m_riverDirectionBiasStrength: 2.5
+  m_riverWidenChance: 0.205
+  m_riverWidenRadiusMin: 1
+  m_riverWidenRadiusMax: 2
+  m_pondCount: 4
+  m_pondMinRadius: 2
+  m_pondMaxRadius: 8
+  m_pondMinDistanceFromRiver: 5
+  m_mapEdgeBuffer: 2
+  m_nearWaterMaxDistance: 3
+  m_midWaterMaxDistance: 10
+  m_terrainNoiseScale: 0.08
+  m_terrainNoiseStrength: 0.35
+  m_nearDirtBias: 0.6
+  m_nearGrassBias: 0.4
+  m_midGrassBias: 0.6
+  m_midDirtBias: 0.2
+  m_midForestFloorBias: 0.2
+  m_farForestFloorBias: 0.7
+  m_farGrassBias: 0.3
+  m_mountainClusterCount: 20
+  m_mountainMinClusterSize: 200
+  m_mountainMaxClusterSize: 300
+  m_forestFloorTreeChance: 0.096
+  m_grassTreeChance: 0.018
+  m_enableGenerationValidation: 1
+  m_maxBlockedTilePercentage: 0.45
+  m_minOpenTilePercentage: 0.4
+  m_logValidationFailures: 1
+--- !u!1 &4286845352969413719
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1323327752862259603}
+  - component: {fileID: 2492087732579487887}
+  m_Layer: 0
+  m_Name: WorldObjectRenderer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1323327752862259603
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4286845352969413719}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2177576183653239482}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2492087732579487887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4286845352969413719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97ee9df312c3f614c9a88c6cc31a8408, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColonyBuildingSim::WorldObjectRenderer
+  m_gridManager: {fileID: 0}
+  m_worldObjectDefinitions:
+  - {fileID: 11400000, guid: d758d7a86328bc243a5486a9caa3d5d9, type: 2}
+--- !u!1 &4367321886344852674
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8213840411631983232}
+  - component: {fileID: 804997060057669772}
+  m_Layer: 0
+  m_Name: BlockRenderer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8213840411631983232
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4367321886344852674}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2177576183653239482}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &804997060057669772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4367321886344852674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e56adca38e001f42bea665a1289f72a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColonyBuildingSim::BlockRenderer
+  m_gridManager: {fileID: 0}
+  m_blockPrefab: {fileID: 269691601318029059, guid: 30f9dd5f0ff13804f9b268d50f337048, type: 3}
+  m_blockDefinitions:
+  - {fileID: 11400000, guid: 059f677a6056a5d40815d6752e3a2548, type: 2}
+--- !u!1 &8185577921020822035
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8521635228346422424}
+  - component: {fileID: 735659291562260469}
+  m_Layer: 0
+  m_Name: WorldTerrainRenderer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8521635228346422424
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8185577921020822035}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2177576183653239482}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &735659291562260469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8185577921020822035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8237949c76ac264ca13fa868acaa7d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColonyBuildingSim::WorldTerrainRenderer
+  m_gridManager: {fileID: 0}
+  m_targetRenderer: {fileID: 0}
+  m_pixelsPerTile: 16
+  m_renderOnStart: 1
+  m_autoRefresh: 0
+  m_generateGridIfMissing: 1
+  m_fitTargetPlaneToGrid: 0
+  m_assumeUnityBuiltInPlane: 1
+  m_grassTexture: {fileID: 2800000, guid: 9c37f19ba3a1a9044a1cf025fabd6884, type: 3}
+  m_dirtTexture: {fileID: 2800000, guid: a7c02bab705904a4c861d9dc7ef01968, type: 3}
+  m_forestFloorTexture: {fileID: 2800000, guid: 5dc6d075b21b95449ace215a6cf2f787, type: 3}
+  m_waterTexture: {fileID: 2800000, guid: aa701e5be2dbcd24aad4fb9c3ca284da, type: 3}
+  m_missingGrassColor: {r: 0.35, g: 0.7, b: 0.35, a: 1}
+  m_missingDirtColor: {r: 0.55, g: 0.4, b: 0.25, a: 1}
+  m_missingForestFloorColor: {r: 0.2, g: 0.45, b: 0.2, a: 1}
+  m_missingWaterColor: {r: 0.2, g: 0.45, b: 0.85, a: 1}

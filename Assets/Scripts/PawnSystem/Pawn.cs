@@ -263,6 +263,21 @@ public class Pawn : MonoBehaviour
 
         m_pMovementController.StopMovement();
     }
+    
+    /// <summary>
+    /// Cancels current movement without snapping the pawn to a tile center.
+    /// </summary>
+    public void CancelMovementInPlace()
+    {
+        EnsureMovementController();
+
+        if (m_pMovementController == null)
+        {
+            return;
+        }
+
+        m_pMovementController.CancelMovementInPlace();
+    }
 
     /// <summary>
     /// Updates the pawn's grid coordinate using its current world position.

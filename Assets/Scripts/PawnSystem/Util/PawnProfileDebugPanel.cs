@@ -13,6 +13,7 @@ public class PawnProfileDebugPanel : MonoBehaviour
 
     [Header("Debug Panel")]
     [SerializeField] private bool m_showPawnProfilePanel = true;
+    [SerializeField] private bool m_showBrain = true;
     [SerializeField] private bool m_showIdentity = true;
     [SerializeField] private bool m_showBackgroundAndTraits = true;
     [SerializeField] private bool m_showSkills = true;
@@ -74,6 +75,12 @@ public class PawnProfileDebugPanel : MonoBehaviour
         if (focusedPawn == null)
         {
             return;
+        }
+
+        if (m_showBrain)
+        {
+            DrawBrainSection(focusedPawn, contentX, contentWidth, ref currentY);
+            currentY += 5.0f;
         }
 
         PawnProfile profile = focusedPawn.Profile;
@@ -174,6 +181,30 @@ public class PawnProfileDebugPanel : MonoBehaviour
         {
             DrawLine(x + 10.0f, ref y, width, "Showing first selected pawn profile.");
         }
+    }
+
+    /// <summary>
+    /// Draws autonomous brain information for the selected pawn.
+    /// </summary>
+    private void DrawBrainSection(Pawn pawn, float x, float width, ref float y)
+    {
+        DrawLine(x, ref y, width, "Brain");
+
+        if (pawn == null)
+        {
+            DrawLine(x + 10.0f, ref y, width, "Activity: None");
+            return;
+        }
+
+        PawnBrain brain = pawn.GetComponent<PawnBrain>();
+
+        if (brain == null)
+        {
+            DrawLine(x + 10.0f, ref y, width, "Activity: No PawnBrain");
+            return;
+        }
+
+        DrawLine(x + 10.0f, ref y, width, "Activity: " + brain.CurrentActivityLabel);
     }
 
     /// <summary>
@@ -309,6 +340,12 @@ public class PawnProfileDebugPanel : MonoBehaviour
         }
 
         totalHeight += 5.0f;
+
+        if (m_showBrain)
+        {
+            totalHeight += m_lineHeight * 2.0f;
+            totalHeight += 5.0f;
+        }
 
         if (focusedPawn.Profile == null)
         {

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using ColonyBuildingSim.WorldContext;
 using UnityEngine;
 
 /// <summary>
@@ -13,7 +14,7 @@ public class PawnMovementController : MonoBehaviour
 
     [Header("Pawn Setup")]
     [SerializeField] private bool m_snapToGridOnAwake = true;
-    [SerializeField] private float m_visualHeightOffset = 0.5f;
+    [SerializeField] private float m_visualHeightOffset = 1.0f;
 
     [Header("Pawn Movement")]
     [SerializeField] private float m_moveSpeed = 3.0f;
@@ -22,6 +23,7 @@ public class PawnMovementController : MonoBehaviour
     private Pawn m_pOwnerPawn;
     private GridManager m_pGridManager;
     private PawnPathfinder m_pPawnPathfinder;
+    private WorldContextManager m_pWorldContextManager;
     private Coroutine m_pStartupOccupancyRoutine;
 
     private readonly List<Vector2Int> m_activePath = new();
@@ -188,6 +190,22 @@ public class PawnMovementController : MonoBehaviour
 
         OccupyCurrentTile();
     }
+    
+    /// <summary>
+    /// Cancels the current movement immediately without snapping the pawn.
+    /// The pawn keeps its current world position and claims the tile under that position.
+    /// </summary>
+    public void CancelMovementInPlace()
+    {
+        m_activePath.Clear();
+        m_currentPathIndex = -1;
+        m_isMoving = false;
+        m_hasMovementDestination = false;
+        m_movementDestinationCoordinates = Vector2Int.zero;
+
+        UpdateGridCoordinateFromWorldPosition();
+        OccupyCurrentTile();
+    }
 
     /// <summary>
     /// Updates the pawn's grid coordinate using its current world position.
@@ -300,7 +318,7 @@ public class PawnMovementController : MonoBehaviour
     }
 
     /// <summary>
-    /// Caches scene references needed for grid movement and pathfinding.
+    /// Caches scene references needed for grid movement, pathfinding, and world pause state.
     /// </summary>
     private void CacheSceneReferences()
     {
@@ -312,6 +330,11 @@ public class PawnMovementController : MonoBehaviour
         if (m_pPawnPathfinder == null)
         {
             m_pPawnPathfinder = FindFirstObjectByType<PawnPathfinder>();
+        }
+
+        if (m_pWorldContextManager == null)
+        {
+            m_pWorldContextManager = FindFirstObjectByType<WorldContextManager>();
         }
     }
 
@@ -343,6 +366,11 @@ public class PawnMovementController : MonoBehaviour
     private void UpdateMovement()
     {
         if (!m_isMoving)
+        {
+            return;
+        }
+
+        if (m_pWorldContextManager != null && m_pWorldContextManager.IsWorldPaused)
         {
             return;
         }

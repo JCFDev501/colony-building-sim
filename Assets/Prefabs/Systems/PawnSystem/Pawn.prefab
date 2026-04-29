@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8790745814206655966}
   - component: {fileID: 5201234600269863918}
   - component: {fileID: 5149102500944439452}
+  - component: {fileID: 980673464702420270}
   m_Layer: 0
   m_Name: Pawn
   m_TagString: Untagged
@@ -130,11 +131,42 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Pawn
   m_pawnId: Pawn001
+  m_profile:
+    m_pawnId: 
+    m_firstName: 
+    m_lastName: 
+    m_displayName: 
+    m_age: 18
+    m_ageBand: 0
+    m_gender: 2
+    m_backgroundDefinition: {fileID: 0}
+    m_backgroundId: 
+    m_traitDefinitions: []
+    m_traitIds: []
+    m_skills:
+      m_plant: 0
+      m_cut: 0
+      m_construct: 0
+      m_cook: 0
+      m_craft: 0
+    m_workPriorities:
+      m_plantPriority: 4
+      m_cutPriority: 4
+      m_constructPriority: 4
+      m_cookPriority: 4
+      m_craftPriority: 4
+    m_condition:
+      m_mobility: 0
+      m_food: 100
+      m_sleep: 100
+      m_temperature: 0
+      m_health: 0
+    m_baseMoveSpeed: 3
+    m_finalMoveSpeed: 3
+    m_finalWorkSpeedModifier: 0
+    m_finalCraftQualityModifier: 0
   m_isSelected: 0
   m_isDeputized: 0
-  m_gridCoordinate: {x: 0, y: 0}
-  m_snapToGridOnAwake: 1
-  m_visualHeightOffset: 1
   m_stateIndicator: {fileID: 7964510187968750387}
   m_stateIndicatorRenderer: {fileID: 1592784025125655767}
   m_selectedMaterial: {fileID: 2100000, guid: 60334ee4042b79f4fab83ea049971e41, type: 2}
@@ -144,6 +176,28 @@ MonoBehaviour:
   m_destinationPreviewRenderer: {fileID: 4402255665217241568}
   m_destinationPreviewMaterial: {fileID: 2100000, guid: a47123e063271404da9ede71bbb71055, type: 2}
   m_anchorDestinationPreviewMaterial: {fileID: 2100000, guid: 289430e6e08782c4a872cac26326d1c6, type: 2}
+--- !u!114 &980673464702420270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4363377204090426836}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4641fda53dc86744e9633eb71b7becfe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColonyBuildingSim::PawnBrain
+  m_pPawn: {fileID: 0}
+  m_pGridManager: {fileID: 0}
+  m_pPawnPathfinder: {fileID: 0}
+  m_pWorldContextManager: {fileID: 0}
+  m_currentState: 1
+  m_enableIdleWandering: 1
+  m_thinkIntervalSeconds: 2
+  m_localWanderRadius: 4
+  m_maxWanderTargetAttempts: 12
+  m_logWanderTargetSearch: 1
 --- !u!1 &7964510187968750387
 GameObject:
   m_ObjectHideFlags: 0

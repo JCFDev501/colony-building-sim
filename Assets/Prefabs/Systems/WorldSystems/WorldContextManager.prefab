@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3085222111910536159
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 779822249410605857}
+  - component: {fileID: 7612379903138023552}
+  - component: {fileID: 898386571969922759}
+  m_Layer: 0
+  m_Name: WorldContextManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &779822249410605857
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3085222111910536159}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7612379903138023552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3085222111910536159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f15014a236b80d54c971af8c4b49a450, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColonyBuildingSim::ColonyBuildingSim.WorldContext.WorldContextManager
+  m_startMinute: 0
+  m_startHour: 5
+  m_startDay: 1
+  m_startMonth: 4
+  m_startYear: 1
+  m_debugPreset: 0
+  m_worldTimeScale: 0
+  m_isWorldPaused: 0
+  m_worldEventTemperatureModifier: 0
+  m_temperatureChangeRatePerGameMinute: 0.05
+--- !u!114 &898386571969922759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3085222111910536159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46734a9fa48e77c4eb8bcb1f1961508b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColonyBuildingSim::ColonyBuildingSim.WorldContext.WorldContextDebug
+  m_worldContextManager: {fileID: 7612379903138023552}
+  m_showWorldContextPanel: 1

@@ -19,7 +19,6 @@ public class WorldGenerator : MonoBehaviour
     [SerializeField] private WorldObjectRenderer m_worldObjectRenderer;
 
     [Header("Generation Settings")]
-    [SerializeField] private bool m_generateOnStart = true;
     [SerializeField] private int m_seed = 12345;
     [SerializeField] private bool m_useRandomSeed = false;
 
@@ -76,19 +75,6 @@ public class WorldGenerator : MonoBehaviour
     private bool m_isGenerating = false;
 
     /// <summary>
-    /// Runs generation automatically on play if enabled.
-    /// </summary>
-    private void Start()
-    {
-        if (!m_generateOnStart)
-        {
-            return;
-        }
-
-        GenerateWorld();
-    }
-
-    /// <summary>
     /// Supports simple debug regeneration during play for faster iteration.
     /// Uses F5 through Unity's Input System package.
     /// </summary>
@@ -111,13 +97,22 @@ public class WorldGenerator : MonoBehaviour
 
         GenerateWorld();
     }
+    
+    /// <summary>
+    /// Fire-and-forget generation entry point used by debug controls.
+    /// GameFlowManager should call GenerateWorldAsync so it can wait for completion.
+    /// </summary>
+    public async void GenerateWorld()
+    {
+        await GenerateWorldAsync();
+    }
 
     /// <summary>
     /// Runs the staged world-generation pipeline against the current grid.
     /// Pure generation work runs on a worker thread and produces a temporary result model first.
     /// The completed result is then applied back onto live GridTile state on the main thread.
     /// </summary>
-    public async void GenerateWorld()
+    public async Task GenerateWorldAsync()
     {
         if (m_isGenerating)
         {

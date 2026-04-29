@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e267ef9b0bf6ddb41999e2786b93b9c6, type: 3}
+  m_Name: QuartermasterBackground
+  m_EditorClassIdentifier: ColonyBuildingSim::PawnBackgroundDefinition
+  m_backgroundId: quartermaster
+  m_displayName: Quartermaster
+  m_description: Managed supplies, repaired gear, and made limited resources last
+    longer.
+  m_generationWeight: 1
+  m_skillModifiers:
+    m_plant: 0
+    m_cut: 0
+    m_construct: 0
+    m_cook: 1
+    m_craft: 2

@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 164e75af142145d4bb32028f100cb7c6, type: 3}
+  m_Name: SicklyTrait
+  m_EditorClassIdentifier: ColonyBuildingSim::PawnTraitDefinition
+  m_traitId: sickly
+  m_displayName: Sickly
+  m_description: Has weaker overall condition and may struggle with demanding survival
+    pressure later.
+  m_traitCategory: 1
+  m_generationWeight: 1
+  m_skillModifiers:
+    m_plant: 0
+    m_cut: 0
+    m_construct: 0
+    m_cook: 0
+    m_craft: 0
+  m_workSpeedModifier: -0.05
+  m_moveSpeedModifier: -0.05
+  m_craftQualityModifier: 0
+  m_conflictingTraits: []

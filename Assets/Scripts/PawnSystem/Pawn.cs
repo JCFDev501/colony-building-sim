@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,21 +9,11 @@ public class Pawn : MonoBehaviour
 {
     [Header("Pawn Identity")]
     [SerializeField] private string m_pawnId = "Pawn";
+    [SerializeField] private PawnProfile m_profile;
 
     [Header("Pawn State")]
     [SerializeField] private bool m_isSelected = false;
     [SerializeField] private bool m_isDeputized = false;
-
-    [Header("Pawn Grid Position")]
-    [SerializeField] private Vector2Int m_gridCoordinate = Vector2Int.zero;
-
-    [Header("Pawn Setup")]
-    [SerializeField] private bool m_snapToGridOnAwake = true;
-    [SerializeField] private float m_visualHeightOffset = 0.5f;
-
-    [Header("Pawn Movement")]
-    [SerializeField] private float m_moveSpeed = 3.0f;
-    [SerializeField] private float m_arrivalThreshold = 0.02f;
 
     [Header("Pawn Visuals")]
     [SerializeField] private GameObject m_stateIndicator;
@@ -40,19 +29,7 @@ public class Pawn : MonoBehaviour
     [SerializeField] private Material m_anchorDestinationPreviewMaterial;
 
     private PawnManager m_pPawnManager;
-    private GridManager m_pGridManager;
-    private PawnPathfinder m_pPawnPathfinder;
-    private Coroutine m_pStartupOccupancyRoutine;
-
-    private readonly List<Vector2Int> m_activePath = new();
-    private int m_currentPathIndex = -1;
-    private bool m_isMoving = false;
-
-    private bool m_hasMovementDestination = false;
-    private Vector2Int m_movementDestinationCoordinates = Vector2Int.zero;
-
-    private bool m_hasOccupiedTile = false;
-    private Vector2Int m_occupiedTileCoordinates = Vector2Int.zero;
+    private PawnMovementController m_pMovementController;
 
     /// <summary>
     /// Gets the pawn's ID/reference string.
@@ -60,6 +37,14 @@ public class Pawn : MonoBehaviour
     public string PawnId
     {
         get { return m_pawnId; }
+    }
+
+    /// <summary>
+    /// Gets the generated pawn profile assigned to this runtime pawn.
+    /// </summary>
+    public PawnProfile Profile
+    {
+        get { return m_profile; }
     }
 
     /// <summary>
@@ -83,7 +68,17 @@ public class Pawn : MonoBehaviour
     /// </summary>
     public Vector2Int GridCoordinate
     {
-        get { return m_gridCoordinate; }
+        get
+        {
+            EnsureMovementController();
+
+            if (m_pMovementController == null)
+            {
+                return Vector2Int.zero;
+            }
+
+            return m_pMovementController.GridCoordinate;
+        }
     }
 
     /// <summary>
@@ -99,7 +94,17 @@ public class Pawn : MonoBehaviour
     /// </summary>
     public bool IsMoving
     {
-        get { return m_isMoving; }
+        get
+        {
+            EnsureMovementController();
+
+            if (m_pMovementController == null)
+            {
+                return false;
+            }
+
+            return m_pMovementController.IsMoving;
+        }
     }
 
     /// <summary>
@@ -107,7 +112,17 @@ public class Pawn : MonoBehaviour
     /// </summary>
     public bool HasMovementDestination
     {
-        get { return m_hasMovementDestination; }
+        get
+        {
+            EnsureMovementController();
+
+            if (m_pMovementController == null)
+            {
+                return false;
+            }
+
+            return m_pMovementController.HasMovementDestination;
+        }
     }
 
     /// <summary>
@@ -116,19 +131,29 @@ public class Pawn : MonoBehaviour
     /// </summary>
     public Vector2Int MovementDestinationCoordinates
     {
-        get { return m_movementDestinationCoordinates; }
+        get
+        {
+            EnsureMovementController();
+
+            if (m_pMovementController == null)
+            {
+                return Vector2Int.zero;
+            }
+
+            return m_pMovementController.MovementDestinationCoordinates;
+        }
     }
 
     private void Awake()
     {
         m_pPawnManager = FindFirstObjectByType<PawnManager>();
-        m_pGridManager = FindFirstObjectByType<GridManager>();
-        m_pPawnPathfinder = FindFirstObjectByType<PawnPathfinder>();
 
-        if (m_snapToGridOnAwake)
+        EnsureMovementController();
+
+        if (m_pMovementController != null)
         {
-            UpdateGridCoordinateFromWorldPosition();
-            SnapToGridCoordinate();
+            m_pMovementController.Initialize(this);
+            m_pMovementController.HandlePawnAwake();
         }
 
         HideDestinationPreview();
@@ -142,27 +167,18 @@ public class Pawn : MonoBehaviour
             m_pPawnManager = FindFirstObjectByType<PawnManager>();
         }
 
-        if (m_pGridManager == null)
-        {
-            m_pGridManager = FindFirstObjectByType<GridManager>();
-        }
-
-        if (m_pPawnPathfinder == null)
-        {
-            m_pPawnPathfinder = FindFirstObjectByType<PawnPathfinder>();
-        }
+        EnsureMovementController();
 
         if (m_pPawnManager != null)
         {
             m_pPawnManager.RegisterPawn(this);
         }
 
-        if (m_pStartupOccupancyRoutine != null)
+        if (m_pMovementController != null)
         {
-            StopCoroutine(m_pStartupOccupancyRoutine);
+            m_pMovementController.Initialize(this);
+            m_pMovementController.HandlePawnEnabled();
         }
-
-        m_pStartupOccupancyRoutine = StartCoroutine(InitializeOccupancyWhenGridIsReady());
 
         HideDestinationPreview();
         UpdateStateIndicator();
@@ -170,15 +186,12 @@ public class Pawn : MonoBehaviour
 
     private void OnDisable()
     {
-        if (m_pStartupOccupancyRoutine != null)
+        if (m_pMovementController != null)
         {
-            StopCoroutine(m_pStartupOccupancyRoutine);
-            m_pStartupOccupancyRoutine = null;
+            m_pMovementController.HandlePawnDisabled();
         }
 
-        StopMovement();
         HideDestinationPreview();
-        ClearOccupiedTile();
 
         if (m_pPawnManager != null)
         {
@@ -188,79 +201,67 @@ public class Pawn : MonoBehaviour
 
     private void Update()
     {
-        UpdateMovement();
+        if (m_pMovementController != null)
+        {
+            m_pMovementController.HandlePawnUpdate();
+        }
     }
 
     /// <summary>
-    /// Waits until the grid has generated tiles before syncing grid coordinate state
-    /// and claiming the pawn's starting tile occupancy.
+    /// Assigns generated profile data to this runtime pawn.
+    /// This does not generate profile data and does not modify the generation pipeline.
     /// </summary>
-    private IEnumerator InitializeOccupancyWhenGridIsReady()
+    public void InitializeFromProfile(PawnProfile profile)
     {
-        if (m_pGridManager == null)
+        if (profile == null)
         {
-            yield break;
+            return;
         }
 
-        while (m_pGridManager.Tiles.Count == 0)
+        m_profile = profile;
+        m_pawnId = profile.PawnId;
+
+        EnsureMovementController();
+
+        if (m_pMovementController != null)
         {
-            yield return null;
+            m_pMovementController.SetMoveSpeed(profile.FinalMoveSpeed);
         }
 
-        UpdateGridCoordinateFromWorldPosition();
-        OccupyCurrentTile();
-        m_pStartupOccupancyRoutine = null;
+        if (!string.IsNullOrWhiteSpace(profile.DisplayName))
+        {
+            Debug.Log("Initialized pawn from profile: " + profile.DisplayName, this);
+        }
     }
 
     /// <summary>
-    /// Starts movement along the provided path.
-    /// The path is expected to begin at the pawn's current tile.
-    /// While moving, the pawn no longer occupies any tile.
+    /// Starts movement along the provided path by forwarding to the movement controller.
     /// </summary>
     public bool TryStartPathMovement(List<Vector2Int> path)
     {
-        if (path == null || path.Count == 0)
+        EnsureMovementController();
+
+        if (m_pMovementController == null)
         {
             return false;
         }
 
-        if (m_pGridManager == null)
-        {
-            return false;
-        }
-
-        ClearOccupiedTile();
-
-        m_activePath.Clear();
-        m_activePath.AddRange(path);
-
-        m_currentPathIndex = 0;
-        m_isMoving = true;
-
-        m_hasMovementDestination = true;
-        m_movementDestinationCoordinates = path[path.Count - 1];
-
-        if (m_activePath.Count == 1)
-        {
-            StopMovement();
-        }
-
-        return true;
+        return m_pMovementController.TryStartPathMovement(path);
     }
 
     /// <summary>
-    /// Stops the current path movement and clears movement state.
-    /// Once stopped, the pawn occupies its current tile again.
+    /// Stops the current path movement by forwarding to the movement controller.
     /// </summary>
     public void StopMovement()
     {
-        m_activePath.Clear();
-        m_currentPathIndex = -1;
-        m_isMoving = false;
-        m_hasMovementDestination = false;
-        m_movementDestinationCoordinates = Vector2Int.zero;
+        EnsureMovementController();
 
-        OccupyCurrentTile();
+        if (m_pMovementController == null)
+        {
+            return;
+        }
+
+        m_pMovementController.StopMovement();
     }
 
     /// <summary>
@@ -268,36 +269,29 @@ public class Pawn : MonoBehaviour
     /// </summary>
     public void UpdateGridCoordinateFromWorldPosition()
     {
-        if (m_pGridManager == null)
+        EnsureMovementController();
+
+        if (m_pMovementController == null)
         {
             return;
         }
 
-        if (m_pGridManager.TryGetCoordinatesFromWorldPosition(transform.position, out Vector2Int gridCoordinate))
-        {
-            m_gridCoordinate = gridCoordinate;
-        }
+        m_pMovementController.UpdateGridCoordinateFromWorldPosition();
     }
 
     /// <summary>
     /// Snaps the pawn to the world-space center of its current grid coordinate.
-    /// A small vertical offset keeps the visual above the grid plane.
     /// </summary>
     public void SnapToGridCoordinate()
     {
-        if (m_pGridManager == null)
+        EnsureMovementController();
+
+        if (m_pMovementController == null)
         {
             return;
         }
 
-        if (!m_pGridManager.IsInBounds(m_gridCoordinate))
-        {
-            return;
-        }
-
-        Vector3 worldPosition = m_pGridManager.GetWorldPosition(m_gridCoordinate);
-        worldPosition.y += m_visualHeightOffset;
-        transform.position = worldPosition;
+        m_pMovementController.SnapToGridCoordinate();
     }
 
     /// <summary>
@@ -319,12 +313,18 @@ public class Pawn : MonoBehaviour
     }
 
     /// <summary>
-    /// Sets the pawn's current grid coordinate.
-    /// This does not yet handle movement transitions. It only updates the stored coordinate.
+    /// Sets the pawn's current grid coordinate through the movement controller.
     /// </summary>
     public void SetGridCoordinate(Vector2Int gridCoordinate)
     {
-        m_gridCoordinate = gridCoordinate;
+        EnsureMovementController();
+
+        if (m_pMovementController == null)
+        {
+            return;
+        }
+
+        m_pMovementController.SetGridCoordinate(gridCoordinate);
     }
 
     /// <summary>
@@ -375,40 +375,47 @@ public class Pawn : MonoBehaviour
 
     /// <summary>
     /// Returns whether the provided tile is this pawn's currently occupied tile.
-    /// Occupancy only applies while the pawn is not moving.
     /// </summary>
     public bool IsCurrentOccupiedTile(Vector2Int tileCoordinates)
     {
-        return m_hasOccupiedTile && m_occupiedTileCoordinates == tileCoordinates;
+        EnsureMovementController();
+
+        if (m_pMovementController == null)
+        {
+            return false;
+        }
+
+        return m_pMovementController.IsCurrentOccupiedTile(tileCoordinates);
     }
 
     /// <summary>
     /// Returns whether the provided tile is this pawn's currently reserved next tile.
-    /// Reservation blocking is intentionally disabled for this prototype pass.
     /// </summary>
     public bool IsReservedNextTile(Vector2Int tileCoordinates)
     {
-        return false;
+        EnsureMovementController();
+
+        if (m_pMovementController == null)
+        {
+            return false;
+        }
+
+        return m_pMovementController.IsReservedNextTile(tileCoordinates);
     }
 
     /// <summary>
     /// Returns whether this pawn can treat the tile as enterable for preview/path purposes.
-    /// For this prototype pass, pawns can move through each other, so pawn occupancy
-    /// and reservation are intentionally ignored here.
     /// </summary>
     public bool CanTreatTileAsEnterable(Vector2Int tileCoordinates)
     {
-        if (m_pGridManager == null)
+        EnsureMovementController();
+
+        if (m_pMovementController == null)
         {
             return false;
         }
 
-        if (!m_pGridManager.IsInBounds(tileCoordinates))
-        {
-            return false;
-        }
-
-        return m_pGridManager.CanEnterTileIgnoringPawns(tileCoordinates);
+        return m_pMovementController.CanTreatTileAsEnterable(tileCoordinates);
     }
 
     /// <summary>
@@ -416,160 +423,33 @@ public class Pawn : MonoBehaviour
     /// </summary>
     public Vector2Int GetPathStartCoordinates()
     {
-        if (m_currentPathIndex >= 0 && m_currentPathIndex < m_activePath.Count)
+        EnsureMovementController();
+
+        if (m_pMovementController == null)
         {
-            return m_activePath[m_currentPathIndex];
+            return Vector2Int.zero;
         }
 
-        return m_gridCoordinate;
+        return m_pMovementController.GetPathStartCoordinates();
     }
 
     /// <summary>
-    /// Updates smooth movement along the active path.
-    /// In this prototype pass, pawns do not reserve tiles and do not block each other.
+    /// Ensures this pawn has a movement controller component available.
+    /// Existing prefabs are supported by adding the component at runtime when missing.
     /// </summary>
-    private void UpdateMovement()
+    private void EnsureMovementController()
     {
-        if (!m_isMoving)
+        if (m_pMovementController != null)
         {
             return;
         }
 
-        if (m_pGridManager == null)
+        m_pMovementController = GetComponent<PawnMovementController>();
+
+        if (m_pMovementController == null)
         {
-            StopMovement();
-            return;
+            m_pMovementController = gameObject.AddComponent<PawnMovementController>();
         }
-
-        if (m_currentPathIndex < 0 || m_currentPathIndex >= m_activePath.Count)
-        {
-            StopMovement();
-            return;
-        }
-
-        Vector2Int targetCoordinates = m_activePath[m_currentPathIndex];
-
-        Vector3 targetWorldPosition = m_pGridManager.GetWorldPosition(targetCoordinates);
-        targetWorldPosition.y += m_visualHeightOffset;
-
-        transform.position = Vector3.MoveTowards(
-            transform.position,
-            targetWorldPosition,
-            m_moveSpeed * Time.deltaTime);
-
-        if (Vector3.Distance(transform.position, targetWorldPosition) > m_arrivalThreshold)
-        {
-            return;
-        }
-
-        transform.position = targetWorldPosition;
-        OnArrivedAtPathTile(targetCoordinates);
-
-        ++m_currentPathIndex;
-
-        if (m_currentPathIndex >= m_activePath.Count)
-        {
-            StopMovement();
-        }
-    }
-
-    /// <summary>
-    /// Attempts to rerun A* from the pawn's best current movement start tile
-    /// to its tracked movement destination. Returns true if a new path was found and applied.
-    /// </summary>
-    private bool TryRepathToCurrentDestination()
-    {
-        if (m_pPawnPathfinder == null || m_pGridManager == null)
-        {
-            return false;
-        }
-
-        if (!m_hasMovementDestination)
-        {
-            return false;
-        }
-
-        Vector2Int repathStartCoordinates = GetPathStartCoordinates();
-
-        if (!m_pPawnPathfinder.TryFindPath(
-                this,
-                m_pGridManager,
-                repathStartCoordinates,
-                m_movementDestinationCoordinates,
-                out List<Vector2Int> repath))
-        {
-            return false;
-        }
-
-        if (repath.Count == 0)
-        {
-            return false;
-        }
-
-        m_activePath.Clear();
-        m_activePath.AddRange(repath);
-        m_currentPathIndex = 0;
-        return true;
-    }
-
-    /// <summary>
-    /// Updates pawn tile state after arriving at a path tile.
-    /// While moving, the pawn updates its current coordinate but does not occupy the tile yet.
-    /// </summary>
-    private void OnArrivedAtPathTile(Vector2Int arrivedCoordinates)
-    {
-        m_gridCoordinate = arrivedCoordinates;
-    }
-
-    /// <summary>
-    /// Marks the pawn's current tile as occupied, but only while stationary.
-    /// </summary>
-    private void OccupyCurrentTile()
-    {
-        if (m_pGridManager == null)
-        {
-            return;
-        }
-
-        if (m_isMoving)
-        {
-            return;
-        }
-
-        if (!m_pGridManager.IsInBounds(m_gridCoordinate))
-        {
-            return;
-        }
-
-        ClearOccupiedTile();
-
-        if (!m_pGridManager.SetOccupied(m_gridCoordinate, true))
-        {
-            return;
-        }
-
-        m_hasOccupiedTile = true;
-        m_occupiedTileCoordinates = m_gridCoordinate;
-    }
-
-    /// <summary>
-    /// Clears the tile currently occupied by this pawn, if any.
-    /// </summary>
-    private void ClearOccupiedTile()
-    {
-        if (m_pGridManager == null)
-        {
-            return;
-        }
-
-        if (!m_hasOccupiedTile)
-        {
-            return;
-        }
-
-        m_pGridManager.SetOccupied(m_occupiedTileCoordinates, false);
-        m_hasOccupiedTile = false;
-        m_occupiedTileCoordinates = Vector2Int.zero;
     }
 
     /// <summary>

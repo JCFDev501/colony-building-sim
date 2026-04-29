@@ -1,5 +1,454 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &340852101148406600
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6254815888817239423}
+  - component: {fileID: 548066275588719575}
+  m_Layer: 0
+  m_Name: PawnGenerationManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6254815888817239423
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340852101148406600}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3182673909703491633}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &548066275588719575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340852101148406600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e76897a41d159644bfb67a6f538dd6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColonyBuildingSim::PawnGenerationManager
+  m_availableBackgroundDefinitions:
+  - {fileID: 11400000, guid: d9aaa00dd1074644e9b0a0ee0218e2a3, type: 2}
+  - {fileID: 11400000, guid: c83a3c4b9f8b895438432a4503750c38, type: 2}
+  - {fileID: 11400000, guid: f28e3e93927de3947a58e02ac7b3bc9b, type: 2}
+  - {fileID: 11400000, guid: a557988eb6d547c4f91c1c7a8d0de161, type: 2}
+  - {fileID: 11400000, guid: f39ecdd93d576364babaaa2e9718403c, type: 2}
+  - {fileID: 11400000, guid: d4de5d4d1c651aa48a6f2a7ef5d2640f, type: 2}
+  - {fileID: 11400000, guid: 5638d2238e670f244923647d7ae5aba6, type: 2}
+  - {fileID: 11400000, guid: 9782a53fec37ca44eaa4e21f05e052a9, type: 2}
+  - {fileID: 11400000, guid: 4e8a29e9953bcb74e81b1938c35ba4f9, type: 2}
+  - {fileID: 11400000, guid: 4c3f6c44a5fad6840ae276e638f70cbe, type: 2}
+  - {fileID: 11400000, guid: 73c9cb7bd39e51047bec66d8658db474, type: 2}
+  - {fileID: 11400000, guid: 15f5249a85a97714b88e4f5a7238e614, type: 2}
+  - {fileID: 11400000, guid: 4ff7e93d62c1a344aa86f12db119dc7f, type: 2}
+  - {fileID: 11400000, guid: 0cbcdbd56a232df49af1715717ac0808, type: 2}
+  - {fileID: 11400000, guid: 8e656097d0ddee2438cf560d8951f00d, type: 2}
+  - {fileID: 11400000, guid: ec1738e3dede4054aa1e37351ea1be82, type: 2}
+  m_availableTraitDefinitions:
+  - {fileID: 11400000, guid: 077bf9a5d6d201348b533a1a7463a113, type: 2}
+  - {fileID: 11400000, guid: 9cf6b54a7709cfe4d89051690bebe80a, type: 2}
+  - {fileID: 11400000, guid: e329d5c7e44b60647af89c4d314dfaae, type: 2}
+  - {fileID: 11400000, guid: f77dae5444f21244fb844c41e281cc7e, type: 2}
+  - {fileID: 11400000, guid: 46ba6b37ecce43f46b38af8793878d87, type: 2}
+  - {fileID: 11400000, guid: a3f9b43242c98154abb6e88821d81758, type: 2}
+  - {fileID: 11400000, guid: 8e6b8f4e6c8851243a96dd930370c1ae, type: 2}
+  - {fileID: 11400000, guid: 8e35d317fb9623742a3e04f335978f52, type: 2}
+  - {fileID: 11400000, guid: c24470b628252344bbbec11e584d0740, type: 2}
+  - {fileID: 11400000, guid: 82224fc45f704344291f0ba92554123a, type: 2}
+  m_debugStarterPawnCount: 4
+  m_generatedCandidateCount: 8
+  m_baseMoveSpeedMin: 2.75
+  m_baseMoveSpeedMax: 3.25
+  m_baseSkillMin: 0
+  m_baseSkillMax: 4
+  m_standoutSkillChance: 0.35
+  m_standoutSkillMin: 4
+  m_standoutSkillMax: 6
+  m_negativeOrMixedTraitChance: 0.45
+  m_additionalTraitChance: 0.35
+  m_generatedCandidateProfiles:
+  - m_pawnId: 2d5dbb47-aa6f-4f04-a610-6241e9cb1ed2
+    m_firstName: Silasper
+    m_lastName: Ross
+    m_displayName: Silasper Ross
+    m_age: 30
+    m_ageBand: 1
+    m_gender: 0
+    m_backgroundDefinition: {fileID: 11400000, guid: f28e3e93927de3947a58e02ac7b3bc9b, type: 2}
+    m_backgroundId: carpenter
+    m_traitDefinitions:
+    - {fileID: 11400000, guid: a3f9b43242c98154abb6e88821d81758, type: 2}
+    m_traitIds:
+    - hard_worker
+    m_skills:
+      m_plant: 1
+      m_cut: 5
+      m_construct: 9
+      m_cook: 1
+      m_craft: 3
+    m_condition:
+      m_mobility: 0
+      m_food: 95
+      m_sleep: 72
+      m_temperature: 0
+      m_health: 0
+    m_baseMoveSpeed: 2.912892
+    m_finalMoveSpeed: 2.912892
+    m_finalWorkSpeedModifier: 0.15
+    m_finalCraftQualityModifier: 0
+  - m_pawnId: 1006e6e6-b299-4618-af57-4c0989bc03aa
+    m_firstName: Willara
+    m_lastName: Black
+    m_displayName: Willara Black
+    m_age: 54
+    m_ageBand: 2
+    m_gender: 1
+    m_backgroundDefinition: {fileID: 11400000, guid: 9782a53fec37ca44eaa4e21f05e052a9, type: 2}
+    m_backgroundId: gardener
+    m_traitDefinitions:
+    - {fileID: 11400000, guid: a3f9b43242c98154abb6e88821d81758, type: 2}
+    - {fileID: 11400000, guid: c24470b628252344bbbec11e584d0740, type: 2}
+    m_traitIds:
+    - hard_worker
+    - sickly
+    m_skills:
+      m_plant: 4
+      m_cut: 2
+      m_construct: 4
+      m_cook: 4
+      m_craft: 1
+    m_condition:
+      m_mobility: 0
+      m_food: 96
+      m_sleep: 97
+      m_temperature: 0
+      m_health: 0
+    m_baseMoveSpeed: 2.979739
+    m_finalMoveSpeed: 2.929739
+    m_finalWorkSpeedModifier: 0.10000001
+    m_finalCraftQualityModifier: 0
+  - m_pawnId: 7137691b-ca73-4996-9919-0b43e01b9c52
+    m_firstName: Maris
+    m_lastName: Crookwood
+    m_displayName: Maris Crookwood
+    m_age: 45
+    m_ageBand: 2
+    m_gender: 1
+    m_backgroundDefinition: {fileID: 11400000, guid: 4ff7e93d62c1a344aa86f12db119dc7f, type: 2}
+    m_backgroundId: scavenger
+    m_traitDefinitions:
+    - {fileID: 11400000, guid: 46ba6b37ecce43f46b38af8793878d87, type: 2}
+    m_traitIds:
+    - handy
+    m_skills:
+      m_plant: 6
+      m_cut: 2
+      m_construct: 5
+      m_cook: 2
+      m_craft: 3
+    m_condition:
+      m_mobility: 0
+      m_food: 77
+      m_sleep: 81
+      m_temperature: 0
+      m_health: 0
+    m_baseMoveSpeed: 2.9659
+    m_finalMoveSpeed: 2.9659
+    m_finalWorkSpeedModifier: 0
+    m_finalCraftQualityModifier: 0.1
+  - m_pawnId: 603f8a6a-8fe5-40ec-a570-b692800d09c9
+    m_firstName: Rowane
+    m_lastName: Irood
+    m_displayName: Rowane Irood
+    m_age: 24
+    m_ageBand: 0
+    m_gender: 2
+    m_backgroundDefinition: {fileID: 11400000, guid: 4c3f6c44a5fad6840ae276e638f70cbe, type: 2}
+    m_backgroundId: laborer
+    m_traitDefinitions:
+    - {fileID: 11400000, guid: 8e35d317fb9623742a3e04f335978f52, type: 2}
+    m_traitIds:
+    - quick
+    m_skills:
+      m_plant: 2
+      m_cut: 1
+      m_construct: 6
+      m_cook: 4
+      m_craft: 3
+    m_condition:
+      m_mobility: 0
+      m_food: 91
+      m_sleep: 78
+      m_temperature: 0
+      m_health: 0
+    m_baseMoveSpeed: 2.997881
+    m_finalMoveSpeed: 3.147881
+    m_finalWorkSpeedModifier: 0
+    m_finalCraftQualityModifier: 0
+  - m_pawnId: 595d99af-8966-4016-af0a-40057777e9dc
+    m_firstName: Finn
+    m_lastName: Hord
+    m_displayName: Finn Hord
+    m_age: 23
+    m_ageBand: 0
+    m_gender: 2
+    m_backgroundDefinition: {fileID: 11400000, guid: d4de5d4d1c651aa48a6f2a7ef5d2640f, type: 2}
+    m_backgroundId: farmer
+    m_traitDefinitions:
+    - {fileID: 11400000, guid: 8e35d317fb9623742a3e04f335978f52, type: 2}
+    m_traitIds:
+    - quick
+    m_skills:
+      m_plant: 6
+      m_cut: 0
+      m_construct: 4
+      m_cook: 2
+      m_craft: 1
+    m_condition:
+      m_mobility: 1
+      m_food: 92
+      m_sleep: 96
+      m_temperature: 0
+      m_health: 0
+    m_baseMoveSpeed: 2.8440084
+    m_finalMoveSpeed: 2.7440085
+    m_finalWorkSpeedModifier: 0
+    m_finalCraftQualityModifier: 0
+  - m_pawnId: b3da3bed-88f2-49c6-b2ab-d971b328e903
+    m_firstName: Tessalin
+    m_lastName: Marshford
+    m_displayName: Tessalin Marshford
+    m_age: 44
+    m_ageBand: 2
+    m_gender: 1
+    m_backgroundDefinition: {fileID: 11400000, guid: a557988eb6d547c4f91c1c7a8d0de161, type: 2}
+    m_backgroundId: cook
+    m_traitDefinitions:
+    - {fileID: 11400000, guid: f77dae5444f21244fb844c41e281cc7e, type: 2}
+    - {fileID: 11400000, guid: 82224fc45f704344291f0ba92554123a, type: 2}
+    m_traitIds:
+    - green_thumb
+    - slow
+    m_skills:
+      m_plant: 7
+      m_cut: 2
+      m_construct: 3
+      m_cook: 5
+      m_craft: 4
+    m_condition:
+      m_mobility: 0
+      m_food: 84
+      m_sleep: 80
+      m_temperature: 0
+      m_health: 0
+    m_baseMoveSpeed: 3.2211733
+    m_finalMoveSpeed: 3.0711732
+    m_finalWorkSpeedModifier: 0
+    m_finalCraftQualityModifier: 0
+  - m_pawnId: 23281fb1-eb41-4700-836c-056b27bcd3c5
+    m_firstName: Rowane
+    m_lastName: Cale
+    m_displayName: Rowane Cale
+    m_age: 38
+    m_ageBand: 1
+    m_gender: 2
+    m_backgroundDefinition: {fileID: 11400000, guid: c83a3c4b9f8b895438432a4503750c38, type: 2}
+    m_backgroundId: camp_hand
+    m_traitDefinitions:
+    - {fileID: 11400000, guid: a3f9b43242c98154abb6e88821d81758, type: 2}
+    - {fileID: 11400000, guid: c24470b628252344bbbec11e584d0740, type: 2}
+    - {fileID: 11400000, guid: 82224fc45f704344291f0ba92554123a, type: 2}
+    m_traitIds:
+    - hard_worker
+    - sickly
+    - slow
+    m_skills:
+      m_plant: 7
+      m_cut: 5
+      m_construct: 3
+      m_cook: 3
+      m_craft: 0
+    m_condition:
+      m_mobility: 0
+      m_food: 80
+      m_sleep: 84
+      m_temperature: 0
+      m_health: 0
+    m_baseMoveSpeed: 2.9080315
+    m_finalMoveSpeed: 2.7080314
+    m_finalWorkSpeedModifier: 0.10000001
+    m_finalCraftQualityModifier: 0
+  - m_pawnId: 9ef1a917-d0bf-4918-b982-3ab26e2d353f
+    m_firstName: Rowane
+    m_lastName: Blackwookwoo
+    m_displayName: Rowane Blackwookwoo
+    m_age: 30
+    m_ageBand: 1
+    m_gender: 2
+    m_backgroundDefinition: {fileID: 11400000, guid: 4c3f6c44a5fad6840ae276e638f70cbe, type: 2}
+    m_backgroundId: laborer
+    m_traitDefinitions:
+    - {fileID: 11400000, guid: a3f9b43242c98154abb6e88821d81758, type: 2}
+    - {fileID: 11400000, guid: 82224fc45f704344291f0ba92554123a, type: 2}
+    m_traitIds:
+    - hard_worker
+    - slow
+    m_skills:
+      m_plant: 1
+      m_cut: 3
+      m_construct: 6
+      m_cook: 6
+      m_craft: 1
+    m_condition:
+      m_mobility: 1
+      m_food: 97
+      m_sleep: 76
+      m_temperature: 0
+      m_health: 0
+    m_baseMoveSpeed: 3.0146437
+    m_finalMoveSpeed: 2.6146436
+    m_finalWorkSpeedModifier: 0.15
+    m_finalCraftQualityModifier: 0
+  m_selectedStarterProfiles:
+  - m_pawnId: e3892586-5623-4fda-a4a5-520faa31ee5e
+    m_firstName: Ren
+    m_lastName: Froway
+    m_displayName: Ren Froway
+    m_age: 45
+    m_ageBand: 2
+    m_gender: 2
+    m_backgroundDefinition: {fileID: 11400000, guid: 4ff7e93d62c1a344aa86f12db119dc7f, type: 2}
+    m_backgroundId: scavenger
+    m_traitDefinitions:
+    - {fileID: 11400000, guid: f77dae5444f21244fb844c41e281cc7e, type: 2}
+    m_traitIds:
+    - green_thumb
+    m_skills:
+      m_plant: 2
+      m_cut: 2
+      m_construct: 4
+      m_cook: 2
+      m_craft: 5
+    m_condition:
+      m_mobility: 0
+      m_food: 97
+      m_sleep: 75
+      m_temperature: 0
+      m_health: 0
+    m_baseMoveSpeed: 2.7829876
+    m_finalMoveSpeed: 2.7829876
+    m_finalWorkSpeedModifier: 0
+    m_finalCraftQualityModifier: 0
+  - m_pawnId: 0566d765-442c-4d06-b778-3fc14d99ce16
+    m_firstName: Ren
+    m_lastName: Fiell
+    m_displayName: Ren Fiell
+    m_age: 24
+    m_ageBand: 0
+    m_gender: 2
+    m_backgroundDefinition: {fileID: 11400000, guid: f39ecdd93d576364babaaa2e9718403c, type: 2}
+    m_backgroundId: crafter
+    m_traitDefinitions:
+    - {fileID: 11400000, guid: a3f9b43242c98154abb6e88821d81758, type: 2}
+    - {fileID: 11400000, guid: 077bf9a5d6d201348b533a1a7463a113, type: 2}
+    m_traitIds:
+    - hard_worker
+    - careful
+    m_skills:
+      m_plant: 4
+      m_cut: 0
+      m_construct: 2
+      m_cook: 3
+      m_craft: 7
+    m_condition:
+      m_mobility: 0
+      m_food: 80
+      m_sleep: 97
+      m_temperature: 0
+      m_health: 0
+    m_baseMoveSpeed: 2.7778275
+    m_finalMoveSpeed: 2.7778275
+    m_finalWorkSpeedModifier: 0.10000001
+    m_finalCraftQualityModifier: 0.15
+  - m_pawnId: d04b8e6c-12e5-4319-8e54-bd1c4c301173
+    m_firstName: Cassalin
+    m_lastName: Cronwookwood
+    m_displayName: Cassalin Cronwookwood
+    m_age: 27
+    m_ageBand: 1
+    m_gender: 1
+    m_backgroundDefinition: {fileID: 11400000, guid: 9782a53fec37ca44eaa4e21f05e052a9, type: 2}
+    m_backgroundId: gardener
+    m_traitDefinitions:
+    - {fileID: 11400000, guid: a3f9b43242c98154abb6e88821d81758, type: 2}
+    m_traitIds:
+    - hard_worker
+    m_skills:
+      m_plant: 9
+      m_cut: 2
+      m_construct: 1
+      m_cook: 3
+      m_craft: 3
+    m_condition:
+      m_mobility: 0
+      m_food: 70
+      m_sleep: 96
+      m_temperature: 0
+      m_health: 0
+    m_baseMoveSpeed: 3.131366
+    m_finalMoveSpeed: 3.131366
+    m_finalWorkSpeedModifier: 0.15
+    m_finalCraftQualityModifier: 0
+  - m_pawnId: fae346d5-7050-4a3a-9d03-24c9e2c02d51
+    m_firstName: Irin
+    m_lastName: Black
+    m_displayName: Irin Black
+    m_age: 64
+    m_ageBand: 3
+    m_gender: 1
+    m_backgroundDefinition: {fileID: 11400000, guid: ec1738e3dede4054aa1e37351ea1be82, type: 2}
+    m_backgroundId: woodcutter
+    m_traitDefinitions:
+    - {fileID: 11400000, guid: e329d5c7e44b60647af89c4d314dfaae, type: 2}
+    m_traitIds:
+    - good_cook
+    m_skills:
+      m_plant: 1
+      m_cut: 6
+      m_construct: 7
+      m_cook: 3
+      m_craft: 0
+    m_condition:
+      m_mobility: 0
+      m_food: 77
+      m_sleep: 76
+      m_temperature: 0
+      m_health: 0
+    m_baseMoveSpeed: 3.1054845
+    m_finalMoveSpeed: 3.1054845
+    m_finalWorkSpeedModifier: 0
+    m_finalCraftQualityModifier: 0
+  m_logGeneratedPawnProfiles: 1
+  m_logSelectedBackground: 0
+  m_logSelectedTraits: 0
+  m_logRejectedTraitConflicts: 0
 --- !u!1 &854975283577581171
 GameObject:
   m_ObjectHideFlags: 0
@@ -181,6 +630,7 @@ Transform:
   - {fileID: 2939772690780482837}
   - {fileID: 6397407965413204246}
   - {fileID: 737071256624625457}
+  - {fileID: 6254815888817239423}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4533315602795237548
@@ -435,7 +885,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 8943569166201477683}
   m_Father: {fileID: 3182673909703491633}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1684923538790590789
@@ -450,7 +901,71 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e093a3210391a94c900908b47e7dfe8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ColonyBuildingSim::PawnManager
-  m_logRegistrationEvents: 1
+  m_gridManager: {fileID: 0}
+  m_starterPawnPrefab: {fileID: 5149102500944439452, guid: d9062450443e5cc419f8902833e8ef97, type: 3}
+  m_pawnRoot: {fileID: 0}
+  m_starterPawnCount: 4
+  m_spawnSearchRadius: 6
+  m_spawnHeightOffset: 0
+  m_logRegistrationEvents: 0
+  m_logSpawnEvents: 1
+  m_logProfileSpawnEvents: 1
+--- !u!1 &8026437872819760585
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8943569166201477683}
+  - component: {fileID: 8473344696523072197}
+  m_Layer: 0
+  m_Name: PawnProfileDebugPanel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8943569166201477683
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8026437872819760585}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6924107133801782459}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8473344696523072197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8026437872819760585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5d3c6abd600dfa4591d5e249811340c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColonyBuildingSim::PawnProfileDebugPanel
+  m_pawnManager: {fileID: 1684923538790590789}
+  m_showPawnProfilePanel: 1
+  m_showIdentity: 1
+  m_showBackgroundAndTraits: 1
+  m_showSkills: 1
+  m_showCondition: 1
+  m_showMovement: 1
+  m_panelX: 1400
+  m_panelY: 10
+  m_panelWidth: 460
+  m_lineHeight: 20
+  m_padding: 10
 --- !u!1 &9212018961322794149
 GameObject:
   m_ObjectHideFlags: 0

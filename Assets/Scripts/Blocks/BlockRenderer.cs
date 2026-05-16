@@ -16,7 +16,7 @@ public class BlockRenderer : MonoBehaviour
     [SerializeField] private List<BlockDefinition> m_blockDefinitions = new List<BlockDefinition>();
 
     private readonly Dictionary<BlockType, BlockDefinition> m_blockDefinitionLookup = new();
-    private readonly List<GameObject> m_spawnedBlocks = new List<GameObject>();
+    private readonly Dictionary<Vector2Int, GameObject> m_spawnedBlocksByCoordinates = new();
 
     private void Awake()
     {
@@ -62,21 +62,39 @@ public class BlockRenderer : MonoBehaviour
     }
 
     /// <summary>
+    /// Removes the block visual at the requested coordinates if one exists.
+    /// </summary>
+    public void RemoveBlockAt(Vector2Int coordinates)
+    {
+        if (!m_spawnedBlocksByCoordinates.TryGetValue(coordinates, out GameObject spawnedBlock))
+        {
+            return;
+        }
+
+        if (spawnedBlock != null)
+        {
+            Destroy(spawnedBlock);
+        }
+
+        m_spawnedBlocksByCoordinates.Remove(coordinates);
+    }
+
+    /// <summary>
     /// Clears all currently spawned block visuals.
     /// </summary>
     public void ClearBlocks()
     {
-        for (int i = 0; i < m_spawnedBlocks.Count; i++)
+        foreach (KeyValuePair<Vector2Int, GameObject> spawnedBlockPair in m_spawnedBlocksByCoordinates)
         {
-            if (m_spawnedBlocks[i] == null)
+            if (spawnedBlockPair.Value == null)
             {
                 continue;
             }
 
-            Destroy(m_spawnedBlocks[i]);
+            Destroy(spawnedBlockPair.Value);
         }
 
-        m_spawnedBlocks.Clear();
+        m_spawnedBlocksByCoordinates.Clear();
     }
 
     /// <summary>
@@ -108,10 +126,20 @@ public class BlockRenderer : MonoBehaviour
     /// </summary>
     private void SpawnBlockForTile(GridTile tile)
     {
+        if (tile == null)
+        {
+            return;
+        }
+
         if (!m_blockDefinitionLookup.TryGetValue(tile.BlockType, out BlockDefinition blockDefinition))
         {
             Debug.LogWarning("No BlockDefinition found for BlockType: " + tile.BlockType, this);
             return;
+        }
+
+        if (m_spawnedBlocksByCoordinates.ContainsKey(tile.Coordinates))
+        {
+            RemoveBlockAt(tile.Coordinates);
         }
 
         Vector3 spawnPosition = tile.WorldPosition;
@@ -135,6 +163,6 @@ public class BlockRenderer : MonoBehaviour
         }
 
         blockInstance.Initialize(blockDefinition, tile.Coordinates);
-        m_spawnedBlocks.Add(spawnedBlock);
+        m_spawnedBlocksByCoordinates.Add(tile.Coordinates, spawnedBlock);
     }
 }

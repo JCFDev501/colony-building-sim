@@ -13,6 +13,7 @@ public class PawnSkillModifier
     [SerializeField] private int m_construct = 0;
     [SerializeField] private int m_cook = 0;
     [SerializeField] private int m_craft = 0;
+    [SerializeField] private int m_mine = 0;
 
     public int Plant
     {
@@ -37,5 +38,10 @@ public class PawnSkillModifier
     public int Craft
     {
         get { return m_craft; }
+    }
+
+    public int Mine
+    {
+        get { return m_mine; }
     }
 }

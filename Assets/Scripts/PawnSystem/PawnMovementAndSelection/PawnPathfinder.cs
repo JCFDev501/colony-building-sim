@@ -122,7 +122,7 @@ public class PawnPathfinder : MonoBehaviour
                     continue;
                 }
 
-                int stepCost = GetStepCost(currentNode.Coordinates, neighborCoordinates);
+                int stepCost = GetStepCost(pGridManager, currentNode.Coordinates, neighborCoordinates);
                 int tentativeGCost = currentNode.GCost + stepCost;
 
                 if (!openNodes.TryGetValue(neighborCoordinates, out PathNode neighborNode))
@@ -318,16 +318,28 @@ public class PawnPathfinder : MonoBehaviour
     /// Returns the movement cost between two adjacent tiles.
     /// Orthogonal steps cost 10 and diagonal steps cost 14.
     /// </summary>
-    private int GetStepCost(Vector2Int fromCoordinates, Vector2Int toCoordinates)
+    /// <summary>
+    /// Returns the movement cost between two adjacent tiles.
+    /// Orthogonal steps cost 10 and diagonal steps cost 14 before terrain traversal cost is applied.
+    /// </summary>
+    private int GetStepCost(GridManager pGridManager, Vector2Int fromCoordinates, Vector2Int toCoordinates)
     {
         Vector2Int delta = toCoordinates - fromCoordinates;
+        int baseStepCost = 10;
 
         if (Mathf.Abs(delta.x) == 1 && Mathf.Abs(delta.y) == 1)
         {
-            return 14;
+            baseStepCost = 14;
         }
 
-        return 10;
+        float terrainCostMultiplier = 1.0f;
+
+        if (pGridManager != null)
+        {
+            terrainCostMultiplier = pGridManager.GetTerrainTraversalCostMultiplier(toCoordinates);
+        }
+
+        return Mathf.RoundToInt(baseStepCost * terrainCostMultiplier);
     }
 
     /// <summary>

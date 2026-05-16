@@ -8,5 +8,6 @@ public enum WorkType
     Cut = 1,
     Construct = 2,
     Cook = 3,
-    Craft = 4
+    Craft = 4,
+    Mine = 5
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Text;
+using ColonyBuildingSim.WorldContext;
 using UnityEngine;
 
 /// <summary>
@@ -10,6 +11,7 @@ public class PawnProfileDebugPanel : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private PawnManager m_pawnManager;
+    [SerializeField] private WorldContextManager m_worldContextManager;
 
     [Header("Debug Panel")]
     [SerializeField] private bool m_showPawnProfilePanel = true;
@@ -20,6 +22,7 @@ public class PawnProfileDebugPanel : MonoBehaviour
     [SerializeField] private bool m_showWorkPriorities = true;
     [SerializeField] private bool m_showCondition = true;
     [SerializeField] private bool m_showMovement = true;
+    [SerializeField] private bool m_showSimulation = true;
 
     [Header("Panel Layout")]
     [SerializeField] private float m_panelX = 480.0f;
@@ -36,6 +39,11 @@ public class PawnProfileDebugPanel : MonoBehaviour
         if (m_pawnManager == null)
         {
             m_pawnManager = FindFirstObjectByType<PawnManager>();
+        }
+
+        if (m_worldContextManager == null)
+        {
+            m_worldContextManager = FindFirstObjectByType<WorldContextManager>();
         }
 
         if (m_pawnManager == null)
@@ -71,6 +79,12 @@ public class PawnProfileDebugPanel : MonoBehaviour
 
         DrawSelectionSummary(selectedPawns, focusedPawn, contentX, contentWidth, ref currentY);
         currentY += 5.0f;
+
+        if (m_showSimulation)
+        {
+            DrawSimulationSection(contentX, contentWidth, ref currentY);
+            currentY += 5.0f;
+        }
 
         if (focusedPawn == null)
         {
@@ -123,7 +137,7 @@ public class PawnProfileDebugPanel : MonoBehaviour
 
         if (m_showMovement)
         {
-            DrawMovementSection(profile, contentX, contentWidth, ref currentY);
+            DrawMovementSection(focusedPawn, profile, contentX, contentWidth, ref currentY);
         }
     }
 
@@ -137,7 +151,7 @@ public class PawnProfileDebugPanel : MonoBehaviour
 
         IReadOnlyList<Pawn> activePawns = m_pawnManager.ActivePawns;
 
-        for (int i = 0; i < activePawns.Count; i++)
+        for (int i = 0; i < activePawns.Count; ++i)
         {
             Pawn pawn = activePawns[i];
 
@@ -184,6 +198,25 @@ public class PawnProfileDebugPanel : MonoBehaviour
     }
 
     /// <summary>
+    /// Draws world simulation timing information.
+    /// </summary>
+    private void DrawSimulationSection(float x, float width, ref float y)
+    {
+        DrawLine(x, ref y, width, "World Simulation");
+
+        if (m_worldContextManager == null)
+        {
+            DrawLine(x + 10.0f, ref y, width, "World Context: None");
+            return;
+        }
+
+        DrawLine(x + 10.0f, ref y, width, "Paused: " + m_worldContextManager.IsWorldPaused);
+        DrawLine(x + 10.0f, ref y, width, "Time Scale: " + m_worldContextManager.TimeScale);
+        DrawLine(x + 10.0f, ref y, width, "Scale Multiplier: " + m_worldContextManager.WorldTimeScaleMultiplier.ToString("F2"));
+        DrawLine(x + 10.0f, ref y, width, "Simulation Delta: " + m_worldContextManager.SimulationDeltaTime.ToString("F4"));
+    }
+
+    /// <summary>
     /// Draws autonomous brain information for the selected pawn.
     /// </summary>
     private void DrawBrainSection(Pawn pawn, float x, float width, ref float y)
@@ -193,6 +226,7 @@ public class PawnProfileDebugPanel : MonoBehaviour
         if (pawn == null)
         {
             DrawLine(x + 10.0f, ref y, width, "Activity: None");
+            DrawLine(x + 10.0f, ref y, width, "Utility Goal: None");
             return;
         }
 
@@ -201,10 +235,12 @@ public class PawnProfileDebugPanel : MonoBehaviour
         if (brain == null)
         {
             DrawLine(x + 10.0f, ref y, width, "Activity: No PawnBrain");
+            DrawLine(x + 10.0f, ref y, width, "Utility Goal: None");
             return;
         }
 
         DrawLine(x + 10.0f, ref y, width, "Activity: " + brain.CurrentActivityLabel);
+        DrawLine(x + 10.0f, ref y, width, "Utility Goal: " + brain.CurrentUtilityGoal);
     }
 
     /// <summary>
@@ -232,6 +268,9 @@ public class PawnProfileDebugPanel : MonoBehaviour
     /// <summary>
     /// Draws skill information for the selected pawn profile.
     /// </summary>
+    /// <summary>
+    /// Draws skill information for the selected pawn profile.
+    /// </summary>
     private void DrawSkillsSection(PawnProfile profile, float x, float width, ref float y)
     {
         PawnSkills skills = profile.Skills;
@@ -249,6 +288,7 @@ public class PawnProfileDebugPanel : MonoBehaviour
         DrawLine(x + 10.0f, ref y, width, "Construct: " + skills.Construct);
         DrawLine(x + 10.0f, ref y, width, "Cook: " + skills.Cook);
         DrawLine(x + 10.0f, ref y, width, "Craft: " + skills.Craft);
+        DrawLine(x + 10.0f, ref y, width, "Mine: " + skills.Mine);
     }
 
     /// <summary>
@@ -272,6 +312,7 @@ public class PawnProfileDebugPanel : MonoBehaviour
         DrawLine(x + 10.0f, ref y, width, "Construct: " + workPriorities.ConstructPriority);
         DrawLine(x + 10.0f, ref y, width, "Cook: " + workPriorities.CookPriority);
         DrawLine(x + 10.0f, ref y, width, "Craft: " + workPriorities.CraftPriority);
+        DrawLine(x + 10.0f, ref y, width, "Mine: " + workPriorities.MinePriority);
     }
 
     /// <summary>
@@ -290,8 +331,8 @@ public class PawnProfileDebugPanel : MonoBehaviour
         }
 
         DrawLine(x + 10.0f, ref y, width, "Mobility: " + condition.Mobility);
-        DrawLine(x + 10.0f, ref y, width, "Food: " + condition.Food + " (" + condition.FoodState + ")");
-        DrawLine(x + 10.0f, ref y, width, "Sleep: " + condition.Sleep + " (" + condition.SleepState + ")");
+        DrawLine(x + 10.0f, ref y, width, "Food: " + condition.Food + " / 100 (" + condition.FoodState + ")");
+        DrawLine(x + 10.0f, ref y, width, "Sleep: " + condition.Sleep + " / 100 (" + condition.SleepState + ")");
         DrawLine(x + 10.0f, ref y, width, "Temperature: " + condition.Temperature);
         DrawLine(x + 10.0f, ref y, width, "Health: " + condition.Health);
     }
@@ -299,13 +340,23 @@ public class PawnProfileDebugPanel : MonoBehaviour
     /// <summary>
     /// Draws movement and derived modifier information for the selected pawn profile.
     /// </summary>
-    private void DrawMovementSection(PawnProfile profile, float x, float width, ref float y)
+    private void DrawMovementSection(Pawn pawn, PawnProfile profile, float x, float width, ref float y)
     {
         DrawLine(x, ref y, width, "Movement / Derived Modifiers");
         DrawLine(x + 10.0f, ref y, width, "Base Move Speed: " + profile.BaseMoveSpeed.ToString("F2"));
         DrawLine(x + 10.0f, ref y, width, "Final Move Speed: " + profile.FinalMoveSpeed.ToString("F2"));
-        DrawLine(x + 10.0f, ref y, width, "Work Speed Modifier: " + profile.FinalWorkSpeedModifier.ToString("F2"));
+        DrawLine(x + 10.0f, ref y, width, "Profile Work Speed Modifier: " + profile.FinalWorkSpeedModifier.ToString("F2"));
         DrawLine(x + 10.0f, ref y, width, "Craft Quality Modifier: " + profile.FinalCraftQualityModifier.ToString("F2"));
+
+        if (pawn == null)
+        {
+            DrawLine(x + 10.0f, ref y, width, "Need Move Multiplier: 1.00");
+            DrawLine(x + 10.0f, ref y, width, "Need Work Multiplier: 1.00");
+            return;
+        }
+
+        DrawLine(x + 10.0f, ref y, width, "Need Move Multiplier: " + pawn.NeedMoveSpeedMultiplier.ToString("F2"));
+        DrawLine(x + 10.0f, ref y, width, "Need Work Multiplier: " + pawn.NeedWorkSpeedMultiplier.ToString("F2"));
     }
 
     /// <summary>
@@ -329,6 +380,13 @@ public class PawnProfileDebugPanel : MonoBehaviour
         if (focusedPawn == null)
         {
             totalHeight += m_lineHeight;
+
+            if (m_showSimulation)
+            {
+                totalHeight += m_lineHeight * 5.0f;
+                totalHeight += 5.0f;
+            }
+
             return totalHeight;
         }
 
@@ -341,9 +399,15 @@ public class PawnProfileDebugPanel : MonoBehaviour
 
         totalHeight += 5.0f;
 
+        if (m_showSimulation)
+        {
+            totalHeight += m_lineHeight * 5.0f;
+            totalHeight += 5.0f;
+        }
+
         if (m_showBrain)
         {
-            totalHeight += m_lineHeight * 2.0f;
+            totalHeight += m_lineHeight * 3.0f;
             totalHeight += 5.0f;
         }
 
@@ -367,13 +431,13 @@ public class PawnProfileDebugPanel : MonoBehaviour
 
         if (m_showSkills)
         {
-            totalHeight += m_lineHeight * 6.0f;
+            totalHeight += m_lineHeight * 7.0f;
             totalHeight += 5.0f;
         }
 
         if (m_showWorkPriorities)
         {
-            totalHeight += m_lineHeight * 6.0f;
+            totalHeight += m_lineHeight * 7.0f;
             totalHeight += 5.0f;
         }
 
@@ -385,7 +449,7 @@ public class PawnProfileDebugPanel : MonoBehaviour
 
         if (m_showMovement)
         {
-            totalHeight += m_lineHeight * 5.0f;
+            totalHeight += m_lineHeight * 7.0f;
         }
 
         return totalHeight;
@@ -434,7 +498,7 @@ public class PawnProfileDebugPanel : MonoBehaviour
 
         StringBuilder builder = new StringBuilder();
 
-        for (int i = 0; i < profile.TraitDefinitions.Count; i++)
+        for (int i = 0; i < profile.TraitDefinitions.Count; ++i)
         {
             PawnTraitDefinition traitDefinition = profile.TraitDefinitions[i];
 

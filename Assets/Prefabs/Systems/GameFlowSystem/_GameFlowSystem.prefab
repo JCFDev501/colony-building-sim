@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 36880047559676815}
   m_Layer: 0
-  m_Name: GameFlowSystem
+  m_Name: _GameFlowSystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

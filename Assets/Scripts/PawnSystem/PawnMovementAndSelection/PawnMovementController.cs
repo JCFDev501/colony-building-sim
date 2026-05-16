@@ -190,7 +190,7 @@ public class PawnMovementController : MonoBehaviour
 
         OccupyCurrentTile();
     }
-    
+
     /// <summary>
     /// Cancels the current movement immediately without snapping the pawn.
     /// The pawn keeps its current world position and claims the tile under that position.
@@ -339,6 +339,33 @@ public class PawnMovementController : MonoBehaviour
     }
 
     /// <summary>
+    /// Gets delta time for pawn movement from world context when available.
+    /// This keeps movement aligned with world pause and world speed.
+    /// </summary>
+    private float GetMovementDeltaTime()
+    {
+        if (m_pWorldContextManager == null)
+        {
+            return Time.deltaTime;
+        }
+
+        return m_pWorldContextManager.SimulationDeltaTime;
+    }
+
+    /// <summary>
+    /// Gets the owner's need-based movement multiplier.
+    /// </summary>
+    private float GetNeedMoveSpeedMultiplier()
+    {
+        if (m_pOwnerPawn == null)
+        {
+            return 1.0f;
+        }
+
+        return m_pOwnerPawn.NeedMoveSpeedMultiplier;
+    }
+
+    /// <summary>
     /// Waits until the grid has generated tiles before syncing grid coordinate state
     /// and claiming the pawn's starting tile occupancy.
     /// </summary>
@@ -370,11 +397,6 @@ public class PawnMovementController : MonoBehaviour
             return;
         }
 
-        if (m_pWorldContextManager != null && m_pWorldContextManager.IsWorldPaused)
-        {
-            return;
-        }
-
         if (m_pGridManager == null)
         {
             StopMovement();
@@ -387,15 +409,25 @@ public class PawnMovementController : MonoBehaviour
             return;
         }
 
+        float movementDeltaTime = GetMovementDeltaTime();
+
+        if (movementDeltaTime <= 0.0f)
+        {
+            return;
+        }
+
         Vector2Int targetCoordinates = m_activePath[m_currentPathIndex];
 
         Vector3 targetWorldPosition = m_pGridManager.GetWorldPosition(targetCoordinates);
         targetWorldPosition.y += m_visualHeightOffset;
 
+        float terrainSpeedMultiplier = m_pGridManager.GetTerrainMovementSpeedMultiplier(targetCoordinates);
+        float needMoveSpeedMultiplier = GetNeedMoveSpeedMultiplier();
+
         transform.position = Vector3.MoveTowards(
             transform.position,
             targetWorldPosition,
-            m_moveSpeed * Time.deltaTime);
+            m_moveSpeed * terrainSpeedMultiplier * needMoveSpeedMultiplier * movementDeltaTime);
 
         if (Vector3.Distance(transform.position, targetWorldPosition) > m_arrivalThreshold)
         {

@@ -192,12 +192,13 @@ MonoBehaviour:
   m_pGridManager: {fileID: 0}
   m_pPawnPathfinder: {fileID: 0}
   m_pWorldContextManager: {fileID: 0}
+  m_pTaskManager: {fileID: 0}
   m_currentState: 1
   m_enableIdleWandering: 1
   m_thinkIntervalSeconds: 2
   m_localWanderRadius: 4
   m_maxWanderTargetAttempts: 12
-  m_logWanderTargetSearch: 1
+  m_logWanderTargetSearch: 0
 --- !u!1 &7964510187968750387
 GameObject:
   m_ObjectHideFlags: 0

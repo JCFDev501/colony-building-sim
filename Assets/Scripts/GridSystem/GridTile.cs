@@ -25,16 +25,17 @@ public enum TileWaterDistanceBand
 }
 
 /// <summary>
-/// Defines the broad kind of gameplay content currently associated with a tile.
+/// Describes what gameplay content currently occupies a tile.
 /// This stays intentionally simple for the prototype so tiles can change state
 /// without requiring many specialized tile classes.
 /// </summary>
 public enum TileContentType
 {
-    Empty,
-    NaturalBlocker,
-    Resource,
-    Structure
+    Empty = 0,
+    NaturalBlocker = 1,
+    Resource = 2,
+    Structure = 3,
+    Crop = 4
 }
 
 /// <summary>

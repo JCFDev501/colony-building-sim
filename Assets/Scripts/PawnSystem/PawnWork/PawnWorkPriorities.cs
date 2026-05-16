@@ -16,6 +16,7 @@ public class PawnWorkPriorities
     [SerializeField] private int m_constructPriority = kLowestPriority;
     [SerializeField] private int m_cookPriority = kLowestPriority;
     [SerializeField] private int m_craftPriority = kLowestPriority;
+    [SerializeField] private int m_minePriority = kLowestPriority;
 
     /// <summary>
     /// Gets or sets the Plant work priority.
@@ -63,6 +64,15 @@ public class PawnWorkPriorities
     }
 
     /// <summary>
+    /// Gets or sets the Mine work priority.
+    /// </summary>
+    public int MinePriority
+    {
+        get { return m_minePriority; }
+        set { m_minePriority = ClampPriority(value); }
+    }
+
+    /// <summary>
     /// Gets the priority value for the provided work type.
     /// Lower numbers are better.
     /// </summary>
@@ -84,6 +94,9 @@ public class PawnWorkPriorities
 
             case WorkType.Craft:
                 return m_craftPriority;
+
+            case WorkType.Mine:
+                return m_minePriority;
 
             default:
                 return kLowestPriority;
@@ -118,6 +131,10 @@ public class PawnWorkPriorities
 
             case WorkType.Craft:
                 m_craftPriority = clampedPriority;
+                break;
+
+            case WorkType.Mine:
+                m_minePriority = clampedPriority;
                 break;
         }
     }

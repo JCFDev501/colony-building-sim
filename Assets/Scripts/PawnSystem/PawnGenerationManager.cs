@@ -286,6 +286,7 @@ public class PawnGenerationManager : MonoBehaviour
             Construct = m_random.Next(skillMin, skillMax + 1),
             Cook = m_random.Next(skillMin, skillMax + 1),
             Craft = m_random.Next(skillMin, skillMax + 1),
+            Mine = m_random.Next(skillMin, skillMax + 1),
         };
 
         return skills;
@@ -310,7 +311,7 @@ public class PawnGenerationManager : MonoBehaviour
         int standoutMin = Mathf.Clamp(m_standoutSkillMin, 0, 10);
         int standoutMax = Mathf.Clamp(m_standoutSkillMax, standoutMin, 10);
         int standoutValue = m_random.Next(standoutMin, standoutMax + 1);
-        int skillIndex = m_random.Next(0, 5);
+        int skillIndex = m_random.Next(0, 6);
 
         switch (skillIndex)
         {
@@ -330,8 +331,12 @@ public class PawnGenerationManager : MonoBehaviour
                 skills.Cook = Mathf.Max(skills.Cook, standoutValue);
                 break;
 
-            default:
+            case 4:
                 skills.Craft = Mathf.Max(skills.Craft, standoutValue);
+                break;
+
+            default:
+                skills.Mine = Mathf.Max(skills.Mine, standoutValue);
                 break;
         }
     }
@@ -409,7 +414,8 @@ public class PawnGenerationManager : MonoBehaviour
                 " | Cut " + backgroundDefinition.SkillModifiers.Cut +
                 " | Construct " + backgroundDefinition.SkillModifiers.Construct +
                 " | Cook " + backgroundDefinition.SkillModifiers.Cook +
-                " | Craft " + backgroundDefinition.SkillModifiers.Craft,
+                " | Craft " + backgroundDefinition.SkillModifiers.Craft +
+                " | Mine " + backgroundDefinition.SkillModifiers.Mine,
                 this);
         }
     }
@@ -949,6 +955,7 @@ public class PawnGenerationManager : MonoBehaviour
             " | Construct " + pawnProfile.Skills.Construct +
             " | Cook " + pawnProfile.Skills.Cook +
             " | Craft " + pawnProfile.Skills.Craft +
+            " | Mine " + pawnProfile.Skills.Mine +
             "\nWork Priorities: " + GetWorkPrioritiesDebugText(pawnProfile) +
             "\nCondition: Mobility " + pawnProfile.Condition.Mobility +
             " | Food " + pawnProfile.Condition.Food + " (" + pawnProfile.Condition.FoodState + ")" +
@@ -1023,7 +1030,8 @@ public class PawnGenerationManager : MonoBehaviour
                " | Cut " + workPriorities.CutPriority +
                " | Construct " + workPriorities.ConstructPriority +
                " | Cook " + workPriorities.CookPriority +
-               " | Craft " + workPriorities.CraftPriority;
+               " | Craft " + workPriorities.CraftPriority +
+               " | Mine " + workPriorities.MinePriority;
     }
 
     /// <summary>
@@ -1041,6 +1049,7 @@ public class PawnGenerationManager : MonoBehaviour
         skills.Construct = Mathf.Clamp(skills.Construct + skillModifier.Construct, 0, 10);
         skills.Cook = Mathf.Clamp(skills.Cook + skillModifier.Cook, 0, 10);
         skills.Craft = Mathf.Clamp(skills.Craft + skillModifier.Craft, 0, 10);
+        skills.Mine = Mathf.Clamp(skills.Mine + skillModifier.Mine, 0, 10);
     }
 
     /// <summary>

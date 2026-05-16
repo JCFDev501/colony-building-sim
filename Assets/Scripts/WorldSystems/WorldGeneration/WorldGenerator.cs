@@ -1655,7 +1655,7 @@ public class WorldGenerator : MonoBehaviour
 
     /// <summary>
     /// Result-model version of water marking.
-    /// Water is treated as non-walkable and cleared of dynamic pawn state.
+    /// Water is walkable in V1, but movement speed is reduced by terrain movement rules.
     /// </summary>
     private bool SetWaterTile(WorldGenerationResult generationResult, Vector2Int coordinates)
     {
@@ -1665,7 +1665,7 @@ public class WorldGenerator : MonoBehaviour
         }
 
         generationResult.SetTerrainType(coordinates, TileTerrainType.Water);
-        generationResult.SetWalkable(coordinates, false);
+        generationResult.SetWalkable(coordinates, true);
         generationResult.SetOccupied(coordinates, false);
         generationResult.SetReserved(coordinates, false);
         return true;

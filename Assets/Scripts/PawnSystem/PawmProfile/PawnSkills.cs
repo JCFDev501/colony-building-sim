@@ -13,6 +13,7 @@ public class PawnSkills
     [SerializeField] [Range(0, 10)] private int m_construct = 0;
     [SerializeField] [Range(0, 10)] private int m_cook = 0;
     [SerializeField] [Range(0, 10)] private int m_craft = 0;
+    [SerializeField] [Range(0, 10)] private int m_mine = 0;
 
     public int Plant
     {
@@ -42,5 +43,11 @@ public class PawnSkills
     {
         get { return m_craft; }
         set { m_craft = Mathf.Clamp(value, 0, 10); }
+    }
+
+    public int Mine
+    {
+        get { return m_mine; }
+        set { m_mine = Mathf.Clamp(value, 0, 10); }
     }
 }

@@ -15,6 +15,7 @@ public class WorldObjectRenderer : MonoBehaviour
     [SerializeField] private List<WorldObjectDefinition> m_worldObjectDefinitions = new List<WorldObjectDefinition>();
 
     private readonly Dictionary<WorldObjectType, WorldObjectDefinition> m_worldObjectDefinitionLookup = new();
+    private readonly Dictionary<Vector2Int, GameObject> m_spawnedWorldObjectLookup = new();
     private readonly List<GameObject> m_spawnedWorldObjects = new List<GameObject>();
 
     private void Awake()
@@ -55,6 +56,26 @@ public class WorldObjectRenderer : MonoBehaviour
     }
 
     /// <summary>
+    /// Removes the spawned world object visual at the requested tile coordinates.
+    /// This is intended for runtime gameplay changes such as cutting one tree.
+    /// </summary>
+    public void RemoveWorldObjectAt(Vector2Int coordinates)
+    {
+        if (!m_spawnedWorldObjectLookup.TryGetValue(coordinates, out GameObject spawnedWorldObject))
+        {
+            return;
+        }
+
+        if (spawnedWorldObject != null)
+        {
+            Destroy(spawnedWorldObject);
+        }
+
+        m_spawnedWorldObjectLookup.Remove(coordinates);
+        m_spawnedWorldObjects.Remove(spawnedWorldObject);
+    }
+
+    /// <summary>
     /// Clears all currently spawned world object visuals.
     /// </summary>
     public void ClearWorldObjects()
@@ -70,6 +91,7 @@ public class WorldObjectRenderer : MonoBehaviour
         }
 
         m_spawnedWorldObjects.Clear();
+        m_spawnedWorldObjectLookup.Clear();
     }
 
     /// <summary>
@@ -127,5 +149,6 @@ public class WorldObjectRenderer : MonoBehaviour
 
         worldObjectInstance.Initialize(worldObjectDefinition, tile.Coordinates);
         m_spawnedWorldObjects.Add(spawnedWorldObject);
+        m_spawnedWorldObjectLookup[tile.Coordinates] = spawnedWorldObject;
     }
 }

@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bb1206db6f84924f96f9e24a2fe29b7, type: 3}
+  m_Name: BerryBushDefinition
+  m_EditorClassIdentifier: ColonyBuildingSim::ColonyBuildingSim.Crops.CropDefinition
+  m_cropType: 0
+  m_displayName: Berry Bush
+  m_growingPrefab: {fileID: 3961048508442685911, guid: 04093a213647e634984ec03d26fabb7e, type: 3}
+  m_maturePrefab: {fileID: 6813219139310645592, guid: 0aa638357fde19f469dcb1a116acb22e, type: 3}
+  m_placementOffset: {x: 0, y: 0, z: 0}
+  m_plantWorkDuration: 3
+  m_harvestWorkDuration: 3
+  m_growthDuration: 45
+  m_foodYield: 3
+  m_blocksMovement: 0

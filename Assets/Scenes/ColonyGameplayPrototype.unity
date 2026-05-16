@@ -130,6 +130,151 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8a7eb256302d4b45a506eac008a92ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ColonyBuildingSim::PawnPathfinder
+--- !u!114 &160653006 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2492087732579487887, guid: 92cd38ca6e188904586d4d7e3bb51e69, type: 3}
+  m_PrefabInstance: {fileID: 3004448818345010158}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97ee9df312c3f614c9a88c6cc31a8408, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColonyBuildingSim::WorldObjectRenderer
+--- !u!1 &197990036
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 197990037}
+  m_Layer: 0
+  m_Name: Work
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &197990037
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 197990036}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1648504936}
+  - {fileID: 591581045}
+  m_Father: {fileID: 1883169320}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &591581044
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 591581045}
+  - component: {fileID: 591581046}
+  m_Layer: 0
+  m_Name: WorkTaskDebugPanel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &591581045
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 591581044}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 197990037}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &591581046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 591581044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bcfca9710f5a364bb2c049e69249a5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColonyBuildingSim::ColonyBuildingSim.Work.WorkTaskDebugPanel
+  m_workOrderManager: {fileID: 1648504937}
+  m_taskManager: {fileID: 1648504939}
+  m_showWorkTaskPanel: 1
+  m_showWorkOrders: 1
+  m_showTasks: 1
+  m_maxRowsPerSection: 8
+  m_panelX: 865
+  m_panelY: 10
+  m_panelWidth: 520
+  m_lineHeight: 20
+  m_padding: 10
+--- !u!1 &598480230
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 598480231}
+  - component: {fileID: 598480232}
+  m_Layer: 0
+  m_Name: BuildManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &598480231
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 598480230}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1725762882}
+  m_Father: {fileID: 1883169320}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &598480232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 598480230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a8ec2c900da3784aa15ae005fc11415, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColonyBuildingSim::ColonyBuildingSim.Buildables.StructureRegistry
+  m_structures: []
 --- !u!1 &618441718
 GameObject:
   m_ObjectHideFlags: 0
@@ -184,6 +329,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 36880047559676815, guid: 548d7b630f4dd7847b2b93371623d81d, type: 3}
   m_PrefabInstance: {fileID: 4496229461997698}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &799596090
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 799596091}
+  m_Layer: 0
+  m_Name: _BuildSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &799596091
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 799596090}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 921610415}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &823752999
 GameObject:
   m_ObjectHideFlags: 0
@@ -264,6 +440,77 @@ Transform:
   - {fileID: 925051709}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &895069510
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 895069511}
+  - component: {fileID: 895069512}
+  - component: {fileID: 895069513}
+  m_Layer: 0
+  m_Name: ColonyInventoryManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &895069511
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 895069510}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1870528458}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &895069512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 895069510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5642e5f36d5c3934c9ffb9be0a35c701, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColonyBuildingSim::ColonyBuildingSim.Inventory.ColonyInventoryManager
+  m_resourceAmounts:
+  - m_resourceType: 0
+    m_amount: 0
+  - m_resourceType: 1
+    m_amount: 0
+  - m_resourceType: 2
+    m_amount: 0
+--- !u!114 &895069513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 895069510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 065b7019c7535954e8a51949697dea8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColonyBuildingSim::ColonyBuildingSim.Inventory.ColonyInventoryDebugPanel
+  m_colonyInventoryManager: {fileID: 895069512}
+  m_showInventoryPanel: 1
+  m_panelX: 950
+  m_panelY: 230
+  m_panelWidth: 260
+  m_lineHeight: 20
+  m_padding: 10
 --- !u!1 &921610414
 GameObject:
   m_ObjectHideFlags: 0
@@ -297,6 +544,8 @@ Transform:
   - {fileID: 1673762724}
   - {fileID: 1166097011}
   - {fileID: 760679512}
+  - {fileID: 1883169320}
+  - {fileID: 799596091}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &925051708
@@ -585,6 +834,52 @@ MonoBehaviour:
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
+--- !u!1 &1267577035
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1267577036}
+  - component: {fileID: 1267577037}
+  m_Layer: 0
+  m_Name: CropDefinitionLibrary
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1267577036
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1267577035}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1841883526}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1267577037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1267577035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0062c7c7e5c12f468a7a16e32aa520c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColonyBuildingSim::ColonyBuildingSim.Crops.CropDefinitionLibrary
+  m_cropDefinitions:
+  - {fileID: 11400000, guid: bb2b5ced8c8672f43a352a4191df055b, type: 2}
 --- !u!114 &1280477670 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8908495093796507695, guid: 92cd38ca6e188904586d4d7e3bb51e69, type: 3}
@@ -765,6 +1060,100 @@ Transform:
   - {fileID: 2132561818}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1648504935
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1648504936}
+  - component: {fileID: 1648504937}
+  - component: {fileID: 1648504938}
+  - component: {fileID: 1648504939}
+  m_Layer: 0
+  m_Name: WorkOrderManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1648504936
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1648504935}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 197990037}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1648504937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1648504935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7ddb5a0bee73fd4e9cedf987dd24f8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColonyBuildingSim::ColonyBuildingSim.Work.WorkOrderManager
+  m_workOrders: []
+--- !u!114 &1648504938
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1648504935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96f044dc2a6ae224fb7af52cac877eef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColonyBuildingSim::ColonyBuildingSim.Work.WorkOrderMarkerRenderer
+  m_gridManager: {fileID: 2116594060}
+  m_workOrderManager: {fileID: 1648504937}
+  m_cutMarkerPrefab: {fileID: 146507241479567755, guid: b9cfeb820c41a754ab7fee17391b8259, type: 3}
+  m_constructMarkerPrefab: {fileID: 6807648937261853312, guid: dce8c1c56a6a3ac4cb0c69ae25bcc052, type: 3}
+  m_plantMarkerPrefab: {fileID: 2872003436256747433, guid: fd0e79188459ecb439772fcea292313f, type: 3}
+  m_mineMarkerPrefab: {fileID: 146507241479567755, guid: b9cfeb820c41a754ab7fee17391b8259, type: 3}
+  m_markerYOffset: 0.08
+  m_blockMarkerBaseYOffset: 2
+--- !u!114 &1648504939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1648504935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b71607e7865fa542b928d427337c890, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColonyBuildingSim::ColonyBuildingSim.Work.TaskManager
+  m_tasks: []
+  m_defaultCutWorkDuration: 3
+  m_defaultMineWorkDuration: 4
+  m_woodPerTree: 5
+  m_stonePerBlock: 4
+  m_cookWorkDuration: 4
+  m_foodPerMeal: 2
+  m_gridManager: {fileID: 2116594060}
+  m_workOrderManager: {fileID: 1648504937}
+  m_worldObjectRenderer: {fileID: 160653006}
+  m_colonyInventoryManager: {fileID: 895069512}
+  m_buildableDefinitionLibrary: {fileID: 1725762883}
+  m_structureRegistry: {fileID: 598480232}
+  m_cropManager: {fileID: 1841883527}
+  m_cropDefinitionLibrary: {fileID: 1267577037}
 --- !u!1001 &1673762722
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -813,6 +1202,10 @@ PrefabInstance:
       propertyPath: m_dragSelectionBox
       value: 
       objectReference: {fileID: 1407188671}
+    - target: {fileID: 1858566920104599518, guid: 52ca45a5eddcf3648bdd0352c2dd251a, type: 3}
+      propertyPath: m_workOrderManager
+      value: 
+      objectReference: {fileID: 1648504937}
     - target: {fileID: 1858566920104599518, guid: 52ca45a5eddcf3648bdd0352c2dd251a, type: 3}
       propertyPath: m_selectedHighlight
       value: 
@@ -894,6 +1287,54 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7427945798875979704, guid: 52ca45a5eddcf3648bdd0352c2dd251a, type: 3}
   m_PrefabInstance: {fileID: 1673762722}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1725762881
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1725762882}
+  - component: {fileID: 1725762883}
+  m_Layer: 0
+  m_Name: BuildableDefinitionLibrary
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1725762882
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1725762881}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 598480231}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1725762883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1725762881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75b413eed0172b94eb0ca3e859bd150d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColonyBuildingSim::ColonyBuildingSim.Buildables.BuildableDefinitionLibrary
+  m_buildableDefinitions:
+  - {fileID: 11400000, guid: 2a26e544b9e33d748853d0d85e4ee05b, type: 2}
+  - {fileID: 11400000, guid: 97a3b5e98161c8a498a4b96629a191d7, type: 2}
+  - {fileID: 11400000, guid: 1827eda02348c524aa3a8857c00fa055, type: 2}
 --- !u!114 &1835373146 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2740474468001957010, guid: 24c00f5e18304534f9fdd99f8a663076, type: 3}
@@ -905,6 +1346,122 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65fb07106d747d74a857e79fc4f873b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ColonyBuildingSim::PawnCommandManager
+--- !u!1 &1841883525
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1841883526}
+  - component: {fileID: 1841883527}
+  m_Layer: 0
+  m_Name: CropManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1841883526
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1841883525}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1267577036}
+  m_Father: {fileID: 1883169320}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1841883527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1841883525}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba9a005f604933d4e81ca85bffd579a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColonyBuildingSim::ColonyBuildingSim.Crops.CropManager
+  m_gridManager: {fileID: 2116594060}
+  m_worldContextManager: {fileID: 673831365}
+  m_workOrderManager: {fileID: 0}
+  m_crops: []
+--- !u!1 &1870528457
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1870528458}
+  m_Layer: 0
+  m_Name: Inventory
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1870528458
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1870528457}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 895069511}
+  m_Father: {fileID: 1883169320}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1883169319
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1883169320}
+  m_Layer: 0
+  m_Name: _ColonySystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1883169320
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1883169319}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 197990037}
+  - {fileID: 598480231}
+  - {fileID: 1841883526}
+  - {fileID: 1870528458}
+  m_Father: {fileID: 921610415}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1999388326
 GameObject:
   m_ObjectHideFlags: 0
@@ -1186,7 +1743,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5657035160101154088, guid: 548d7b630f4dd7847b2b93371623d81d, type: 3}
       propertyPath: m_Name
-      value: GameFlowSystem
+      value: _GameFlowSystem
       objectReference: {fileID: 0}
     - target: {fileID: 8429730642174978791, guid: 548d7b630f4dd7847b2b93371623d81d, type: 3}
       propertyPath: m_pawnManager

@@ -293,6 +293,60 @@ public class GridManager : MonoBehaviour
 
         return tile.TerrainType;
     }
+    
+    /// <summary>
+    /// Returns the movement speed multiplier for the terrain at the given coordinates.
+    /// Water is walkable but slows pawn movement in the prototype.
+    /// </summary>
+    public float GetTerrainMovementSpeedMultiplier(Vector2Int coordinates)
+    {
+        TileTerrainType terrainType = GetTerrainType(coordinates);
+
+        switch (terrainType)
+        {
+            case TileTerrainType.Water:
+                return 0.45f;
+
+            case TileTerrainType.ForestFloor:
+                return 0.9f;
+
+            case TileTerrainType.Dirt:
+                return 1.0f;
+
+            case TileTerrainType.Grass:
+                return 1.0f;
+
+            default:
+                return 1.0f;
+        }
+    }
+    
+    /// <summary>
+    /// Returns the pathfinding traversal cost multiplier for the terrain at the given coordinates.
+    /// Higher values make A* prefer other routes when they are reasonably available.
+    /// </summary>
+    public float GetTerrainTraversalCostMultiplier(Vector2Int coordinates)
+    {
+        TileTerrainType terrainType = GetTerrainType(coordinates);
+
+        switch (terrainType)
+        {
+            case TileTerrainType.Water:
+                return 2.25f;
+
+            case TileTerrainType.ForestFloor:
+                return 1.10f;
+
+            case TileTerrainType.Dirt:
+                return 1.0f;
+
+            case TileTerrainType.Grass:
+                return 1.0f;
+
+            default:
+                return 1.0f;
+        }
+    }
 
     /// <summary>
     /// Returns the current water-distance band for the tile at the given coordinates.

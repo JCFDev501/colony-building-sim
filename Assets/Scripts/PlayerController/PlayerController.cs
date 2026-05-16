@@ -2,6 +2,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using ColonyBuildingSim.Work;
+using ColonyBuildingSim.Buildables;
+using ColonyBuildingSim.Crops;
 
 /// <summary>
 /// Handles player interaction with the grid for the prototype.
@@ -16,6 +19,22 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PawnSelectionManager m_pawnSelectionManager;
     [SerializeField] private PawnDeputizationManager m_pawnDeputizationManager;
     [SerializeField] private PawnMoveCommandExecutor m_pawnMoveCommandExecutor;
+    [SerializeField] private WorkOrderManager m_workOrderManager;
+    [SerializeField] private CropManager m_cropManager;
+    [SerializeField] private CropDefinitionLibrary m_cropDefinitionLibrary;
+    
+    [Header("Work Order Input")]
+    [SerializeField] private Key m_markCutWorkKey = Key.C;
+    [SerializeField] private Key m_markMineWorkKey = Key.M;
+
+    [Header("Build Placement Input")]
+    [SerializeField] private Key m_placeCampfireKey = Key.B;
+    [SerializeField] private Key m_placeWoodenWallKey = Key.V;
+    [SerializeField] private Key m_placeWoodenDoorKey = Key.N;
+    
+    [Header("Plant Placement Input")]
+    [SerializeField] private Key m_placePlantWorkKey = Key.P;
+    [SerializeField] private CropType m_defaultCropType = CropType.BerryBush;
 
     [Header("Hover State")]
     [SerializeField] private bool m_hasHoveredTile = false;
@@ -133,6 +152,11 @@ public class PlayerController : MonoBehaviour
         {
             Debug.LogError("PlayerController is missing a PawnMoveCommandExecutor reference.", this);
         }
+        
+        if (m_workOrderManager == null)
+        {
+            Debug.LogError("PlayerController is missing a WorkOrderManager reference.", this);
+        }
 
         if (m_hoverHighlight == null)
         {
@@ -158,6 +182,16 @@ public class PlayerController : MonoBehaviour
         {
             Debug.LogError("PlayerController is missing a drag selection canvas reference.", this);
         }
+        
+        if (m_cropManager == null)
+        {
+            m_cropManager = FindFirstObjectByType<CropManager>();
+        }
+
+        if (m_cropDefinitionLibrary == null)
+        {
+            m_cropDefinitionLibrary = FindFirstObjectByType<CropDefinitionLibrary>();
+        }
 
         ConfigureDragSelectionBox();
         HideDragSelectionBox();
@@ -172,6 +206,10 @@ public class PlayerController : MonoBehaviour
         UpdateLeftMouseSelectionInput();
         UpdateDeputizationInput();
         UpdateMoveCommandInput();
+        UpdateCutWorkOrderInput();
+        UpdateMineWorkOrderInput();
+        UpdateBuildPlacementInput();
+        UpdatePlantPlacementInput();
         UpdateHoverHighlight();
         UpdateSelectedHighlight();
     }
@@ -285,13 +323,24 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// Finishes the active click or drag selection gesture.
     /// Clicks use existing click-selection rules.
-    /// Drags use box-selection rules.
+    /// Drags can either select pawns or mark work depending on held input.
     /// </summary>
     private void EndLeftSelectionGesture()
     {
         if (m_isDragSelecting)
         {
-            ExecuteDragSelection();
+            if (IsCutWorkKeyHeld())
+            {
+                ExecuteCutWorkDragMarking();
+            }
+            else if (IsMineWorkKeyHeld())
+            {
+                ExecuteMineWorkDragMarking();
+            }
+            else
+            {
+                ExecuteDragSelection();
+            }
         }
         else
         {
@@ -365,6 +414,111 @@ public class PlayerController : MonoBehaviour
         }
 
         m_pawnSelectionManager.SelectPawns(pawnsInsideSelection);
+    }
+    
+    /// <summary>
+    /// Marks all valid tree tiles inside the current drag rectangle as Cut work.
+    /// This is a prototype batch-marking shortcut and does not select pawns.
+    /// </summary>
+    private void ExecuteCutWorkDragMarking()
+    {
+        if (m_gridManager == null || m_workOrderManager == null || m_playerCamera == null)
+        {
+            return;
+        }
+
+        Rect dragRect = GetCurrentDragScreenRect();
+        int createdWorkOrderCount = 0;
+
+        foreach (KeyValuePair<Vector2Int, GridTile> tilePair in m_gridManager.Tiles)
+        {
+            Vector2Int tileCoordinates = tilePair.Key;
+
+            if (!WorkTargetValidator.IsValidCutTarget(m_gridManager, tileCoordinates))
+            {
+                continue;
+            }
+
+            Vector3 tileWorldPosition = m_gridManager.GetWorldPosition(tileCoordinates);
+            Vector3 tileScreenPosition = m_playerCamera.WorldToScreenPoint(tileWorldPosition);
+
+            if (tileScreenPosition.z < 0.0f)
+            {
+                continue;
+            }
+
+            Vector2 tileScreenPoint = new Vector2(tileScreenPosition.x, tileScreenPosition.y);
+
+            if (!dragRect.Contains(tileScreenPoint))
+            {
+                continue;
+            }
+
+            WorkOrder cutWorkOrder = new WorkOrder(WorkType.Cut, tileCoordinates);
+            cutWorkOrder.MarkReady();
+
+            if (m_workOrderManager.AddWorkOrder(cutWorkOrder))
+            {
+                ++createdWorkOrderCount;
+            }
+        }
+
+        Debug.Log($"Created {createdWorkOrderCount} Cut work orders from drag selection.", this);
+    }
+
+    /// <summary>
+    /// Marks all valid exposed stone block tiles inside the current drag rectangle as Mine work.
+    /// This is a prototype batch-marking shortcut and does not select pawns.
+    /// </summary>
+    private void ExecuteMineWorkDragMarking()
+    {
+        if (m_gridManager == null || m_workOrderManager == null || m_playerCamera == null)
+        {
+            return;
+        }
+
+        Rect dragRect = GetCurrentDragScreenRect();
+        int createdWorkOrderCount = 0;
+
+        foreach (KeyValuePair<Vector2Int, GridTile> tilePair in m_gridManager.Tiles)
+        {
+            Vector2Int tileCoordinates = tilePair.Key;
+
+            if (!WorkTargetValidator.IsValidMineTarget(m_gridManager, tileCoordinates))
+            {
+                continue;
+            }
+
+            Vector3 tileWorldPosition = m_gridManager.GetWorldPosition(tileCoordinates);
+            Vector3 tileScreenPosition = m_playerCamera.WorldToScreenPoint(tileWorldPosition);
+
+            if (tileScreenPosition.z < 0.0f)
+            {
+                continue;
+            }
+
+            Vector2 tileScreenPoint = new Vector2(tileScreenPosition.x, tileScreenPosition.y);
+
+            if (!dragRect.Contains(tileScreenPoint))
+            {
+                continue;
+            }
+
+            if (m_workOrderManager.HasDuplicateActiveWorkOrder(WorkType.Mine, tileCoordinates))
+            {
+                continue;
+            }
+
+            WorkOrder mineWorkOrder = new WorkOrder(WorkType.Mine, tileCoordinates);
+            mineWorkOrder.MarkReady();
+
+            if (m_workOrderManager.AddWorkOrder(mineWorkOrder))
+            {
+                ++createdWorkOrderCount;
+            }
+        }
+
+        Debug.Log($"Created {createdWorkOrderCount} Mine work orders from drag selection.", this);
     }
 
     /// <summary>
@@ -531,6 +685,32 @@ public class PlayerController : MonoBehaviour
 
         return Keyboard.current.leftShiftKey.isPressed || Keyboard.current.rightShiftKey.isPressed;
     }
+    
+    /// <summary>
+    /// Returns whether the configured Cut work key is currently held.
+    /// </summary>
+    private bool IsCutWorkKeyHeld()
+    {
+        if (Keyboard.current == null)
+        {
+            return false;
+        }
+
+        return Keyboard.current[m_markCutWorkKey].isPressed;
+    }
+
+    /// <summary>
+    /// Returns whether the configured Mine work key is currently held.
+    /// </summary>
+    private bool IsMineWorkKeyHeld()
+    {
+        if (Keyboard.current == null)
+        {
+            return false;
+        }
+
+        return Keyboard.current[m_markMineWorkKey].isPressed;
+    }
 
     /// <summary>
     /// Updates the hover highlight visibility and position based on current hover state.
@@ -677,6 +857,317 @@ public class PlayerController : MonoBehaviour
         }
 
         m_pawnMoveCommandExecutor.TryExecuteMoveCommand();
+    }
+    
+    /// <summary>
+    /// Handles prototype input for marking the hovered tree tile as Cut work.
+    /// Press the configured Cut work key while hovering a valid tree target.
+    /// </summary>
+    private void UpdateCutWorkOrderInput()
+    {
+        if (Keyboard.current == null)
+        {
+            return;
+        }
+
+        if (!Keyboard.current[m_markCutWorkKey].wasPressedThisFrame)
+        {
+            return;
+        }
+
+        TryCreateCutWorkOrder();
+    }
+
+    /// <summary>
+    /// Handles prototype input for marking the hovered stone block tile as Mine work.
+    /// Press the configured Mine work key while hovering a valid exposed stone block target.
+    /// </summary>
+    private void UpdateMineWorkOrderInput()
+    {
+        if (Keyboard.current == null)
+        {
+            return;
+        }
+
+        if (!Keyboard.current[m_markMineWorkKey].wasPressedThisFrame)
+        {
+            return;
+        }
+
+        Debug.Log("Mine key pressed.", this);
+
+        TryCreateMineWorkOrder();
+    }
+    
+    /// <summary>
+    /// Handles prototype input for placing construction work orders on the hovered tile.
+    /// </summary>
+    private void UpdateBuildPlacementInput()
+    {
+        if (Keyboard.current == null)
+        {
+            return;
+        }
+
+        if (Keyboard.current[m_placeCampfireKey].wasPressedThisFrame)
+        {
+            TryCreateBuildWorkOrder(BuildableType.Campfire);
+            return;
+        }
+
+        if (Keyboard.current[m_placeWoodenWallKey].wasPressedThisFrame)
+        {
+            TryCreateBuildWorkOrder(BuildableType.WoodenWall);
+            return;
+        }
+
+        if (Keyboard.current[m_placeWoodenDoorKey].wasPressedThisFrame)
+        {
+            TryCreateBuildWorkOrder(BuildableType.WoodenDoor);
+        }
+    }
+    
+    /// <summary>
+    /// Handles prototype input for placing Plant work orders on the hovered tile.
+    /// </summary>
+    private void UpdatePlantPlacementInput()
+    {
+        if (Keyboard.current == null)
+        {
+            return;
+        }
+
+        if (!Keyboard.current[m_placePlantWorkKey].wasPressedThisFrame)
+        {
+            return;
+        }
+
+        TryCreatePlantWorkOrder(m_defaultCropType);
+    }
+
+    /// <summary>
+    /// Attempts to create a Cut work order on the hovered tile.
+    /// </summary>
+    private void TryCreateCutWorkOrder()
+    {
+        if (m_workOrderManager == null || m_gridManager == null)
+        {
+            return;
+        }
+
+        if (!m_hasHoveredTile)
+        {
+            return;
+        }
+
+        if (!WorkTargetValidator.IsValidCutTarget(m_gridManager, m_hoveredTileCoordinates))
+        {
+            Debug.Log("Cannot mark Cut work. Hovered tile is not a valid tree target.", this);
+            return;
+        }
+
+        WorkOrder cutWorkOrder = new WorkOrder(WorkType.Cut, m_hoveredTileCoordinates);
+        cutWorkOrder.MarkReady();
+
+        if (!m_workOrderManager.AddWorkOrder(cutWorkOrder))
+        {
+            Debug.Log("Cannot mark Cut work. A Cut work order already exists for this tile.", this);
+            return;
+        }
+
+        Debug.Log($"Created Cut work order at {m_hoveredTileCoordinates}.", this);
+    }
+
+    /// <summary>
+    /// Attempts to create a Mine work order on the hovered tile.
+    /// </summary>
+    private void TryCreateMineWorkOrder()
+    {
+        if (m_workOrderManager == null || m_gridManager == null)
+        {
+            Debug.Log("Cannot mark Mine work. Missing WorkOrderManager or GridManager.", this);
+            return;
+        }
+
+        if (!m_hasHoveredTile)
+        {
+            Debug.Log("Cannot mark Mine work. No hovered tile.", this);
+            return;
+        }
+
+        BlockType hoveredBlockType = m_gridManager.GetBlockType(m_hoveredTileCoordinates);
+
+        Debug.Log(
+            "Trying Mine at "
+            + m_hoveredTileCoordinates
+            + " BlockType: "
+            + hoveredBlockType,
+            this);
+
+        if (!WorkTargetValidator.IsValidMineTarget(m_gridManager, m_hoveredTileCoordinates))
+        {
+            Debug.Log("Cannot mark Mine work. Hovered tile is not a valid exposed stone block target.", this);
+            return;
+        }
+
+        if (m_workOrderManager.HasDuplicateActiveWorkOrder(WorkType.Mine, m_hoveredTileCoordinates))
+        {
+            Debug.Log("Cannot mark Mine work. A Mine work order already exists for this tile.", this);
+            return;
+        }
+
+        WorkOrder mineWorkOrder = new WorkOrder(WorkType.Mine, m_hoveredTileCoordinates);
+        mineWorkOrder.MarkReady();
+
+        if (!m_workOrderManager.AddWorkOrder(mineWorkOrder))
+        {
+            Debug.Log("Cannot mark Mine work. Work order could not be added.", this);
+            return;
+        }
+
+        Debug.Log($"Created Mine work order at {m_hoveredTileCoordinates}.", this);
+    }
+    
+    /// <summary>
+    /// Attempts to create a Construct work order for the requested buildable type on the hovered tile.
+    /// </summary>
+    private void TryCreateBuildWorkOrder(BuildableType buildableType)
+    {
+        if (m_workOrderManager == null || m_gridManager == null)
+        {
+            return;
+        }
+
+        if (!m_hasHoveredTile)
+        {
+            return;
+        }
+
+        if (!WorkTargetValidator.IsValidConstructTarget(m_gridManager, m_hoveredTileCoordinates))
+        {
+            Debug.Log("Cannot place " + buildableType + ". Hovered tile is not a valid construction target.", this);
+            return;
+        }
+
+        if (m_workOrderManager.HasDuplicateActiveWorkOrder(WorkType.Construct, m_hoveredTileCoordinates))
+        {
+            Debug.Log("Cannot place " + buildableType + ". A Construct work order already exists for this tile.", this);
+            return;
+        }
+
+        WorkOrder constructWorkOrder = new WorkOrder(
+            WorkType.Construct,
+            m_hoveredTileCoordinates,
+            buildableType);
+
+        constructWorkOrder.MarkReady();
+
+        if (!m_workOrderManager.AddWorkOrder(constructWorkOrder))
+        {
+            Debug.Log("Cannot place " + buildableType + ". Work order could not be added.", this);
+            return;
+        }
+
+        Debug.Log("Created " + buildableType + " construction work order at " + m_hoveredTileCoordinates + ".", this);
+    }
+    
+    /// <summary>
+    /// Attempts to create a Plant work order for the requested crop type on the hovered tile.
+    /// </summary>
+    private void TryCreatePlantWorkOrder(CropType cropType)
+    {
+        if (m_workOrderManager == null || m_gridManager == null || m_cropManager == null || m_cropDefinitionLibrary == null)
+        {
+            return;
+        }
+
+        if (!m_hasHoveredTile)
+        {
+            return;
+        }
+
+        if (!m_cropDefinitionLibrary.TryGetDefinition(cropType, out CropDefinition cropDefinition))
+        {
+            Debug.Log("Cannot place Plant work. Missing CropDefinition for " + cropType + ".", this);
+            return;
+        }
+
+        if (!IsValidPlantPlacementTarget(m_hoveredTileCoordinates))
+        {
+            Debug.Log("Cannot place " + cropType + ". Hovered tile is not a valid planting target.", this);
+            return;
+        }
+
+        if (m_workOrderManager.HasDuplicateActiveWorkOrder(WorkType.Plant, m_hoveredTileCoordinates))
+        {
+            Debug.Log("Cannot place " + cropType + ". A Plant work order already exists for this tile.", this);
+            return;
+        }
+
+        WorkOrder plantWorkOrder = new WorkOrder(
+            WorkType.Plant,
+            m_hoveredTileCoordinates,
+            cropType,
+            PlantWorkAction.PlantCrop);
+
+        plantWorkOrder.MarkReady();
+
+        if (!m_workOrderManager.AddWorkOrder(plantWorkOrder))
+        {
+            Debug.Log("Cannot place " + cropType + ". Work order could not be added.", this);
+            return;
+        }
+
+        Debug.Log("Created " + cropDefinition.DisplayName + " Plant work order at " + m_hoveredTileCoordinates + ".", this);
+    }
+    
+    /// <summary>
+    /// Returns whether the requested tile can receive a new crop planting work order.
+    /// </summary>
+    private bool IsValidPlantPlacementTarget(Vector2Int targetCoordinates)
+    {
+        if (m_gridManager == null || m_cropManager == null)
+        {
+            return false;
+        }
+
+        if (!m_gridManager.IsInBounds(targetCoordinates))
+        {
+            return false;
+        }
+
+        if (m_gridManager.GetTerrainType(targetCoordinates) == TileTerrainType.Water)
+        {
+            return false;
+        }
+
+        if (!m_gridManager.CanEnterTile(targetCoordinates))
+        {
+            return false;
+        }
+
+        if (m_gridManager.GetBlockType(targetCoordinates) != BlockType.None)
+        {
+            return false;
+        }
+
+        if (m_gridManager.GetWorldObjectType(targetCoordinates) != WorldObjectType.None)
+        {
+            return false;
+        }
+
+        if (m_gridManager.GetContentType(targetCoordinates) != TileContentType.Empty)
+        {
+            return false;
+        }
+
+        if (m_cropManager.TryGetCropAt(targetCoordinates, out CropInstance existingCrop)
+            && existingCrop != null)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     /// <summary>

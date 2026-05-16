@@ -30,6 +30,7 @@ public class Pawn : MonoBehaviour
 
     private PawnManager m_pPawnManager;
     private PawnMovementController m_pMovementController;
+    private PawnNeedsController m_pNeedsController;
 
     /// <summary>
     /// Gets the pawn's ID/reference string.
@@ -61,6 +62,114 @@ public class Pawn : MonoBehaviour
     public bool IsDeputized
     {
         get { return m_isDeputized; }
+    }
+
+    /// <summary>
+    /// Gets the pawn's current movement speed multiplier from need state.
+    /// </summary>
+    public float NeedMoveSpeedMultiplier
+    {
+        get
+        {
+            EnsureNeedsController();
+
+            if (m_pNeedsController == null)
+            {
+                return 1.0f;
+            }
+
+            return m_pNeedsController.NeedMoveSpeedMultiplier;
+        }
+    }
+
+    /// <summary>
+    /// Gets the pawn's current work speed multiplier from need state.
+    /// </summary>
+    public float NeedWorkSpeedMultiplier
+    {
+        get
+        {
+            EnsureNeedsController();
+
+            if (m_pNeedsController == null)
+            {
+                return 1.0f;
+            }
+
+            return m_pNeedsController.NeedWorkSpeedMultiplier;
+        }
+    }
+    
+    /// <summary>
+    /// Gets whether this pawn should try to eat based on its current Food need.
+    /// </summary>
+    public bool ShouldEat
+    {
+        get
+        {
+            EnsureNeedsController();
+
+            if (m_pNeedsController == null)
+            {
+                return false;
+            }
+
+            return m_pNeedsController.ShouldEat;
+        }
+    }
+
+    /// <summary>
+    /// Gets whether this pawn's Food need is critically low.
+    /// </summary>
+    public bool IsFoodCritical
+    {
+        get
+        {
+            EnsureNeedsController();
+
+            if (m_pNeedsController == null)
+            {
+                return false;
+            }
+
+            return m_pNeedsController.IsFoodCritical;
+        }
+    }
+
+    /// <summary>
+    /// Gets whether this pawn should try to sleep based on its current Sleep need.
+    /// </summary>
+    public bool ShouldSleep
+    {
+        get
+        {
+            EnsureNeedsController();
+
+            if (m_pNeedsController == null)
+            {
+                return false;
+            }
+
+            return m_pNeedsController.ShouldSleep;
+        }
+    }
+
+    /// <summary>
+    /// Gets whether this pawn's Sleep need is critically low.
+    /// </summary>
+    public bool IsSleepCritical
+    {
+        get
+        {
+            EnsureNeedsController();
+
+            if (m_pNeedsController == null)
+            {
+                return false;
+            }
+
+            return m_pNeedsController.IsSleepCritical;
+        }
     }
 
     /// <summary>
@@ -143,12 +252,89 @@ public class Pawn : MonoBehaviour
             return m_pMovementController.MovementDestinationCoordinates;
         }
     }
+    
+    /// <summary>
+    /// Restores this pawn's Food need to the configured target value.
+    /// </summary>
+    public void RestoreFoodToTarget()
+    {
+        EnsureNeedsController();
+
+        if (m_pNeedsController == null)
+        {
+            return;
+        }
+
+        m_pNeedsController.RestoreFoodToTarget();
+    }
+
+    /// <summary>
+    /// Restores this pawn's Sleep need to the configured target value.
+    /// </summary>
+    public void RestoreSleepToTarget()
+    {
+        EnsureNeedsController();
+
+        if (m_pNeedsController == null)
+        {
+            return;
+        }
+
+        m_pNeedsController.RestoreSleepToTarget();
+    }
+    
+    /// <summary>
+    /// Starts this pawn's gradual Sleep recovery.
+    /// </summary>
+    public void BeginSleepRecovery()
+    {
+        EnsureNeedsController();
+
+        if (m_pNeedsController == null)
+        {
+            return;
+        }
+
+        m_pNeedsController.BeginSleepRecovery();
+    }
+
+    /// <summary>
+    /// Stops this pawn's gradual Sleep recovery.
+    /// </summary>
+    public void EndSleepRecovery()
+    {
+        EnsureNeedsController();
+
+        if (m_pNeedsController == null)
+        {
+            return;
+        }
+
+        m_pNeedsController.EndSleepRecovery();
+    }
+
+    /// <summary>
+    /// Recovers this pawn's Sleep need based on in-game minutes slept.
+    /// Returns true when the sleep target has been reached.
+    /// </summary>
+    public bool RecoverSleepForGameMinutes(float gameMinutes)
+    {
+        EnsureNeedsController();
+
+        if (m_pNeedsController == null)
+        {
+            return false;
+        }
+
+        return m_pNeedsController.RecoverSleepForGameMinutes(gameMinutes);
+    }
 
     private void Awake()
     {
         m_pPawnManager = FindFirstObjectByType<PawnManager>();
 
         EnsureMovementController();
+        EnsureNeedsController();
 
         if (m_pMovementController != null)
         {
@@ -168,6 +354,7 @@ public class Pawn : MonoBehaviour
         }
 
         EnsureMovementController();
+        EnsureNeedsController();
 
         if (m_pPawnManager != null)
         {
@@ -222,6 +409,7 @@ public class Pawn : MonoBehaviour
         m_pawnId = profile.PawnId;
 
         EnsureMovementController();
+        EnsureNeedsController();
 
         if (m_pMovementController != null)
         {
@@ -263,7 +451,7 @@ public class Pawn : MonoBehaviour
 
         m_pMovementController.StopMovement();
     }
-    
+
     /// <summary>
     /// Cancels current movement without snapping the pawn to a tile center.
     /// </summary>
@@ -464,6 +652,25 @@ public class Pawn : MonoBehaviour
         if (m_pMovementController == null)
         {
             m_pMovementController = gameObject.AddComponent<PawnMovementController>();
+        }
+    }
+
+    /// <summary>
+    /// Ensures this pawn has a needs controller component available.
+    /// Existing prefabs are supported by adding the component at runtime when missing.
+    /// </summary>
+    private void EnsureNeedsController()
+    {
+        if (m_pNeedsController != null)
+        {
+            return;
+        }
+
+        m_pNeedsController = GetComponent<PawnNeedsController>();
+
+        if (m_pNeedsController == null)
+        {
+            m_pNeedsController = gameObject.AddComponent<PawnNeedsController>();
         }
     }
 

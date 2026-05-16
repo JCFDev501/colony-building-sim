@@ -59,6 +59,55 @@ namespace ColonyBuildingSim.WorldContext
             get { return m_worldTimeScale; }
         }
 
+        /// <summary>
+        /// Gets the numeric world time multiplier used by simulation systems.
+        /// </summary>
+        public float WorldTimeScaleMultiplier
+        {
+            get { return GetWorldTimeScaleMultiplier(); }
+        }
+
+        /// <summary>
+        /// Gets delta time adjusted by world pause and world time scale.
+        /// Simulation systems such as pawn movement, work progress, and needs should use this value.
+        /// </summary>
+        public float SimulationDeltaTime
+        {
+            get
+            {
+                if (m_isWorldPaused)
+                {
+                    return 0.0f;
+                }
+
+                return Time.deltaTime * GetWorldTimeScaleMultiplier();
+            }
+        }
+
+        /// <summary>
+        /// Gets the amount of in-game minutes that passed this frame.
+        /// Systems that care about world-clock time, such as sleep recovery, should use this value.
+        /// </summary>
+        public float SimulationGameMinutesDeltaTime
+        {
+            get
+            {
+                if (m_isWorldPaused)
+                {
+                    return 0.0f;
+                }
+
+                float realSecondsPerGameMinute = GetRealSecondsPerGameMinute();
+
+                if (realSecondsPerGameMinute <= 0.0f)
+                {
+                    return 0.0f;
+                }
+
+                return Time.deltaTime / realSecondsPerGameMinute;
+            }
+        }
+
         private void Awake()
         {
             InitializeWorldContext();

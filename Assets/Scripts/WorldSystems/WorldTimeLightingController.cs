@@ -4,7 +4,6 @@ namespace ColonyBuildingSim.WorldContext
 {
     /// <summary>
     /// Updates world lighting based on the current world time phase.
-    /// This keeps time-based lighting separate from world context data.
     /// </summary>
     public class WorldTimeLightingController : MonoBehaviour
     {

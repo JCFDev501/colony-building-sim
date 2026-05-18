@@ -5,8 +5,7 @@ using UnityEngine;
 namespace ColonyBuildingSim.Inventory
 {
     /// <summary>
-    /// Stores colony-level resource counts for the prototype.
-    /// This manager is generic and does not know which gameplay system produced or consumes resources.
+    /// Stores colony-level resource counts.
     /// </summary>
     public class ColonyInventoryManager : MonoBehaviour
     {

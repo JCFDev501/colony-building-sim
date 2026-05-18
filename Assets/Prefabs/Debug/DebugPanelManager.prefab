@@ -1,0 +1,355 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &38765693833591617
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3537516231650364328}
+  - component: {fileID: 7728104938137069163}
+  m_Layer: 0
+  m_Name: PawnProfileDebugPanel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3537516231650364328
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 38765693833591617}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7842474841628780004}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7728104938137069163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 38765693833591617}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5d3c6abd600dfa4591d5e249811340c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColonyBuildingSim::PawnProfileDebugPanel
+  m_pawnManager: {fileID: 0}
+  m_worldContextManager: {fileID: 0}
+  m_showPawnProfilePanel: 1
+  m_showSelection: 1
+  m_showSimulation: 1
+  m_showBrain: 1
+  m_showIdentity: 1
+  m_showBackgroundAndTraits: 1
+  m_showSkills: 1
+  m_showWorkPriorities: 1
+  m_showCondition: 1
+  m_showMovement: 1
+  m_windowId: 1001
+  m_panelX: 1400
+  m_panelY: 10
+  m_panelWidth: 460
+  m_maxPanelHeight: 720
+  m_lineHeight: 20
+  m_padding: 10
+--- !u!1 &5322944193096701864
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1206844085090187389}
+  - component: {fileID: 2402877797450531764}
+  m_Layer: 0
+  m_Name: WorldContextDebugPanel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1206844085090187389
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5322944193096701864}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7842474841628780004}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2402877797450531764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5322944193096701864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46734a9fa48e77c4eb8bcb1f1961508b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColonyBuildingSim::ColonyBuildingSim.WorldContext.WorldContextDebug
+  m_worldContextManager: {fileID: 0}
+  m_showWorldContextPanel: 1
+  m_windowId: 1003
+  m_panelX: 500
+  m_panelY: 10
+  m_panelWidth: 380
+  m_maxPanelHeight: 420
+  m_lineHeight: 20
+  m_padding: 10
+--- !u!1 &5581668678562087460
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1501985687519101004}
+  - component: {fileID: 2258344899185213012}
+  m_Layer: 0
+  m_Name: WorkTaskDebugPanel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1501985687519101004
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5581668678562087460}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7842474841628780004}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2258344899185213012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5581668678562087460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bcfca9710f5a364bb2c049e69249a5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColonyBuildingSim::ColonyBuildingSim.Work.WorkTaskDebugPanel
+  m_workOrderManager: {fileID: 0}
+  m_taskManager: {fileID: 0}
+  m_showWorkTaskPanel: 1
+  m_showWorkOrders: 1
+  m_showTasks: 1
+  m_maxRowsPerSection: 8
+  m_windowId: 1005
+  m_panelX: 865
+  m_panelY: 10
+  m_panelWidth: 520
+  m_maxPanelHeight: 520
+  m_lineHeight: 20
+  m_padding: 10
+--- !u!1 &6915156787945037542
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 234542361574316854}
+  - component: {fileID: 7056090809122576513}
+  m_Layer: 0
+  m_Name: InventoryDebugPanel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &234542361574316854
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6915156787945037542}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7842474841628780004}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7056090809122576513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6915156787945037542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 065b7019c7535954e8a51949697dea8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColonyBuildingSim::ColonyBuildingSim.Inventory.ColonyInventoryDebugPanel
+  m_colonyInventoryManager: {fileID: 0}
+  m_showInventoryPanel: 1
+  m_windowId: 1004
+  m_panelX: 950
+  m_panelY: 230
+  m_panelWidth: 260
+  m_maxPanelHeight: 360
+  m_lineHeight: 20
+  m_padding: 10
+--- !u!1 &7144498416237515103
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7842474841628780004}
+  - component: {fileID: 7355686113660991352}
+  m_Layer: 0
+  m_Name: DebugPanelManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7842474841628780004
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7144498416237515103}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3537516231650364328}
+  - {fileID: 5892252877199880680}
+  - {fileID: 1206844085090187389}
+  - {fileID: 234542361574316854}
+  - {fileID: 1501985687519101004}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7355686113660991352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7144498416237515103}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a72091eded4f47a4680ca9736ec1073b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColonyBuildingSim::DebugPanelManager
+  m_allDebugPanels:
+  - {fileID: 38765693833591617}
+  - {fileID: 8593022973179323926}
+  - {fileID: 5322944193096701864}
+  - {fileID: 6915156787945037542}
+  - {fileID: 5581668678562087460}
+  m_pawnProfilePanel: {fileID: 38765693833591617}
+  m_tileDebugPanel: {fileID: 8593022973179323926}
+  m_worldContextPanel: {fileID: 5322944193096701864}
+  m_inventoryPanel: {fileID: 6915156787945037542}
+  m_workTaskPanel: {fileID: 5581668678562087460}
+  m_showPanelsInEditorOnStart: 0
+  m_showPanelsInPlayerOnStart: 0
+  m_allowRuntimeToggle: 1
+  m_toggleAllPanelsKey: 94
+  m_togglePawnProfilePanelKey: 95
+  m_toggleTileDebugPanelKey: 96
+  m_toggleWorldContextPanelKey: 97
+  m_toggleInventoryPanelKey: 99
+  m_toggleWorkTaskPanelKey: 100
+--- !u!1 &8593022973179323926
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5892252877199880680}
+  - component: {fileID: 797397004044436603}
+  m_Layer: 0
+  m_Name: PlayerControllerDebugPanel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5892252877199880680
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8593022973179323926}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7842474841628780004}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &797397004044436603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8593022973179323926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f29f0818ed864fa40bd01718cc9e1cb7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColonyBuildingSim::PlayerControllerDebug
+  m_playerController: {fileID: 0}
+  m_logHoveredTileChanges: 0
+  m_showTileDebugPanel: 1
+  m_showTileWorldPosition: 1
+  m_showTileState: 1
+  m_showTileNeighbors: 1
+  m_logSelectedTileChanges: 0
+  m_windowId: 1002
+  m_panelX: 10
+  m_panelY: 10
+  m_panelWidth: 500
+  m_maxPanelHeight: 620
+  m_lineHeight: 20
+  m_padding: 10

@@ -4,7 +4,6 @@ namespace ColonyBuildingSim.Crops
 {
     /// <summary>
     /// Defines authored crop data for planting, growth, and harvesting.
-    /// Crop definitions let farming systems support new crop types without hardcoding every crop.
     /// </summary>
     [CreateAssetMenu(
         fileName = "CropDefinition",

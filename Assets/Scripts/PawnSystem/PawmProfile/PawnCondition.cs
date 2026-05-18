@@ -3,7 +3,6 @@ using UnityEngine;
 
 /// <summary>
 /// Stores high-level pawn need and condition values.
-/// These values are generated and displayed only in V1 and do not tick down yet.
 /// </summary>
 [Serializable]
 public class PawnCondition

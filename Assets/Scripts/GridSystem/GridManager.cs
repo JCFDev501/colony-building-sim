@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// Manages generation, storage, and debug visualization of a square grid.
 /// The owning GameObject's transform position is used as the center of the grid.
-/// This class also provides helper methods for querying and updating tile gameplay state.
+/// Also provides helper methods for querying and updating tile gameplay state.
 /// </summary>
 public class GridManager : MonoBehaviour
 {
@@ -171,7 +171,6 @@ public class GridManager : MonoBehaviour
 
     /// <summary>
     /// Attempts to intersect a ray with the grid plane.
-    /// The grid plane is assumed to lie flat on the XZ plane at this transform's Y level.
     /// </summary>
     public bool TryGetWorldPositionFromRay(Ray ray, out Vector3 worldPosition)
     {
@@ -499,10 +498,7 @@ public class GridManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Returns whether the tile can currently be entered while ignoring pawn
-    /// occupancy and reservation. This is useful for the prototype pass where
-    /// pawns are allowed to move through each other but should still respect
-    /// walkability and world blockers.
+    /// Returns whether the tile can currently be entered while ignoring pawn occupancy and reservation.
     /// </summary>
     public bool CanEnterTileIgnoringPawns(Vector2Int coordinates)
     {
@@ -669,7 +665,6 @@ public class GridManager : MonoBehaviour
 
     /// <summary>
     /// Applies a simple resource state to the tile.
-    /// This keeps the tile walkability explicit instead of hardcoding one rule forever.
     /// </summary>
     public bool SetResourceTile(Vector2Int coordinates, bool isWalkable)
     {
@@ -814,7 +809,6 @@ public class GridManager : MonoBehaviour
 
     /// <summary>
     /// Returns the valid orthogonal neighbor coordinates that can currently be entered.
-    /// This is useful for prototype movement before diagonal traversal rules are applied.
     /// </summary>
     public List<Vector2Int> GetEnterableOrthogonalNeighborCoordinates(Vector2Int coordinates)
     {
@@ -833,7 +827,6 @@ public class GridManager : MonoBehaviour
 
     /// <summary>
     /// Returns the valid orthogonal neighbor tiles that can currently be entered.
-    /// This is useful for prototype movement before diagonal traversal rules are applied.
     /// </summary>
     public List<GridTile> GetEnterableOrthogonalNeighborTiles(Vector2Int coordinates)
     {

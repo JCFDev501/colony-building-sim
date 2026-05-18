@@ -2,9 +2,6 @@ using UnityEngine;
 
 /// <summary>
 /// Renders tile terrain from the grid onto a target ground material using a generated texture.
-/// Instead of debug colors, this version paints source terrain textures into each tile region.
-/// This keeps terrain visualization separate from world generation logic while preserving
-/// the single-plane rendering approach.
 /// </summary>
 public class WorldTerrainRenderer : MonoBehaviour
 {

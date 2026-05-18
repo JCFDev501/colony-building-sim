@@ -2,7 +2,6 @@ using UnityEngine;
 
 /// <summary>
 /// Debug helper for testing pawn name generation in the Unity Console.
-/// This is not part of the final pawn generation flow.
 /// </summary>
 public class PawnNameGeneratorDebugTester : MonoBehaviour
 {

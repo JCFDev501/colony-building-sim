@@ -3,8 +3,6 @@ using UnityEngine;
 
 /// <summary>
 /// Tracks active pawns in the scene and owns pawn spawning for the prototype.
-/// This manager does not generate the world and does not control game startup flow.
-/// GameFlowManager coordinates when this manager should spawn starter pawns.
 /// </summary>
 public class PawnManager : MonoBehaviour
 {

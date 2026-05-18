@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// Temporary prototype helper that sends the current anchor pawn along
+/// helper that sends the current anchor pawn along
 /// a computed path to the currently resolved preview destination.
 /// This is used to validate smooth path-following before full command execution is added.
 /// </summary>

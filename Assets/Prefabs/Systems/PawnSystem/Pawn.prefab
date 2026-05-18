@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 5201234600269863918}
   - component: {fileID: 5149102500944439452}
   - component: {fileID: 980673464702420270}
+  - component: {fileID: 319966891160277351}
+  - component: {fileID: 7319916967159788011}
   m_Layer: 0
   m_Name: Pawn
   m_TagString: Untagged
@@ -149,12 +151,14 @@ MonoBehaviour:
       m_construct: 0
       m_cook: 0
       m_craft: 0
+      m_mine: 0
     m_workPriorities:
       m_plantPriority: 4
       m_cutPriority: 4
       m_constructPriority: 4
       m_cookPriority: 4
       m_craftPriority: 4
+      m_minePriority: 4
     m_condition:
       m_mobility: 0
       m_food: 100
@@ -172,6 +176,9 @@ MonoBehaviour:
   m_selectedMaterial: {fileID: 2100000, guid: 60334ee4042b79f4fab83ea049971e41, type: 2}
   m_deputizedMaterial: {fileID: 2100000, guid: 9ff064d7438b80b4ea206b908263f2eb, type: 2}
   m_selectedAndDeputizedMaterial: {fileID: 2100000, guid: ad5fd3a9acd4c7b4d893c26a464e8488, type: 2}
+  m_deadMaterial: {fileID: 2100000, guid: 53b65233f80030448b8a00115e281d86, type: 2}
+  m_sleepingMaterial: {fileID: 2100000, guid: 0525dd002998939449f4ceaba5c4106b, type: 2}
+  m_deadEulerRotation: {x: 90, y: 0, z: 0}
   m_destinationPreviewHighlight: {fileID: 9035229160313330073}
   m_destinationPreviewRenderer: {fileID: 4402255665217241568}
   m_destinationPreviewMaterial: {fileID: 2100000, guid: a47123e063271404da9ede71bbb71055, type: 2}
@@ -193,12 +200,138 @@ MonoBehaviour:
   m_pPawnPathfinder: {fileID: 0}
   m_pWorldContextManager: {fileID: 0}
   m_pTaskManager: {fileID: 0}
+  m_pColonyInventoryManager: {fileID: 0}
+  m_pPawnWorkAudio: {fileID: 0}
   m_currentState: 1
+  m_currentUtilityGoal: 3
   m_enableIdleWandering: 1
   m_thinkIntervalSeconds: 2
   m_localWanderRadius: 4
   m_maxWanderTargetAttempts: 12
+  m_sleepEulerRotation: {x: 90, y: 0, z: 0}
   m_logWanderTargetSearch: 0
+--- !u!82 &319966891160277351
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4363377204090426836}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &7319916967159788011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4363377204090426836}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abd97352036dc7545baf29da99564a67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColonyBuildingSim::PawnWorkAudio
+  m_audioSource: {fileID: 319966891160277351}
+  m_cutSoundClip: {fileID: 8300000, guid: dbca57da6e547b345bffbf14ec1e61e9, type: 3}
+  m_mineSoundClip: {fileID: 8300000, guid: 696497359c807274bb8f532ab301bd51, type: 3}
+  m_constructSoundClip: {fileID: 8300000, guid: 39fb6dd7f02419949ada2167e9820bc8, type: 3}
+  m_plantSoundClip: {fileID: 8300000, guid: 2c95fbf770a54c24b95d428f5037f148, type: 3}
+  m_cookSoundClip: {fileID: 8300000, guid: 9d542f0bf50ffa04d93972f5d9f3acdd, type: 3}
+  m_defaultRepeatInterval: 0.75
+  m_cutRepeatInterval: 0.7
+  m_mineRepeatInterval: 0.85
+  m_constructRepeatInterval: 0.8
+  m_plantRepeatInterval: 0.9
+  m_cookRepeatInterval: 1
+  m_workSoundVolume: 0.75
 --- !u!1 &7964510187968750387
 GameObject:
   m_ObjectHideFlags: 0

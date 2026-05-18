@@ -17,6 +17,7 @@ public class PawnBrain : MonoBehaviour
     [SerializeField] private WorldContextManager m_pWorldContextManager;
     [SerializeField] private TaskManager m_pTaskManager;
     [SerializeField] private ColonyInventoryManager m_pColonyInventoryManager;
+    [SerializeField] private PawnWorkAudio m_pPawnWorkAudio;
 
     [Header("Brain State")]
     [SerializeField] private PawnBrainState m_currentState = PawnBrainState.Idle;
@@ -82,6 +83,12 @@ public class PawnBrain : MonoBehaviour
     /// </summary>
     private void Update()
     {
+        if (PauseMenuController.IsSystemPaused)
+        {
+            StopPawnWorkAudio();
+            return;
+        }
+
         if (m_pPawn != null && m_pPawn.IsDeputized)
         {
             CancelAutonomousMovementForPlayerControl();
@@ -95,6 +102,8 @@ public class PawnBrain : MonoBehaviour
 
         if (!CanRunBrain())
         {
+            StopPawnWorkAudio();
+
             if (IsPawnDead())
             {
                 CancelClaimedTaskForInvalidState();
@@ -160,6 +169,8 @@ public class PawnBrain : MonoBehaviour
             return;
         }
 
+        StopPawnWorkAudio();
+
         if (TryEatMeal())
         {
             ResetThinkTimer();
@@ -190,6 +201,8 @@ public class PawnBrain : MonoBehaviour
         {
             return;
         }
+
+        StopPawnWorkAudio();
 
         if (m_pClaimedTask.ClaimedPawn == m_pPawn)
         {
@@ -242,6 +255,11 @@ public class PawnBrain : MonoBehaviour
         if (m_pColonyInventoryManager == null)
         {
             m_pColonyInventoryManager = FindFirstObjectByType<ColonyInventoryManager>();
+        }
+
+        if (m_pPawnWorkAudio == null)
+        {
+            m_pPawnWorkAudio = GetComponent<PawnWorkAudio>();
         }
     }
 
@@ -948,6 +966,8 @@ public class PawnBrain : MonoBehaviour
             return;
         }
 
+        StopPawnWorkAudio();
+
         if (m_pClaimedTask.ClaimedPawn == m_pPawn)
         {
             m_pClaimedTask.Release();
@@ -965,6 +985,7 @@ public class PawnBrain : MonoBehaviour
     {
         if (m_pClaimedTask == null)
         {
+            StopPawnWorkAudio();
             return;
         }
 
@@ -982,6 +1003,7 @@ public class PawnBrain : MonoBehaviour
 
         if (m_pClaimedTask.ClaimedPawn != m_pPawn)
         {
+            StopPawnWorkAudio();
             m_pClaimedTask = null;
             m_taskInteractionCoordinates = Vector2Int.zero;
             m_hasTaskInteractionCoordinates = false;
@@ -996,6 +1018,7 @@ public class PawnBrain : MonoBehaviour
 
         if (m_pPawn.GridCoordinate != m_taskInteractionCoordinates)
         {
+            StopPawnWorkAudio();
             return;
         }
 
@@ -1006,8 +1029,11 @@ public class PawnBrain : MonoBehaviour
 
         if (m_pClaimedTask.State != TaskState.InProgress)
         {
+            StopPawnWorkAudio();
             return;
         }
+
+        StartPawnWorkAudio(m_pClaimedTask.ParentWorkType);
 
         float workDeltaTime = GetWorkDeltaTime();
 
@@ -1021,6 +1047,8 @@ public class PawnBrain : MonoBehaviour
 
         if (m_pClaimedTask.State == TaskState.Complete)
         {
+            StopPawnWorkAudio();
+
             if (m_pTaskManager != null)
             {
                 m_pTaskManager.CompleteTask(m_pClaimedTask);
@@ -1036,6 +1064,32 @@ public class PawnBrain : MonoBehaviour
             m_taskInteractionCoordinates = Vector2Int.zero;
             m_hasTaskInteractionCoordinates = false;
         }
+    }
+
+    /// <summary>
+    /// Starts pawn-positioned work audio for the requested work type.
+    /// </summary>
+    private void StartPawnWorkAudio(WorkType workType)
+    {
+        if (m_pPawnWorkAudio == null)
+        {
+            return;
+        }
+
+        m_pPawnWorkAudio.StartWorkAudio(workType);
+    }
+
+    /// <summary>
+    /// Stops any pawn-positioned work audio currently playing for this pawn.
+    /// </summary>
+    private void StopPawnWorkAudio()
+    {
+        if (m_pPawnWorkAudio == null)
+        {
+            return;
+        }
+
+        m_pPawnWorkAudio.StopWorkAudio();
     }
 
     /// <summary>
@@ -1420,6 +1474,8 @@ public class PawnBrain : MonoBehaviour
             m_hasActiveAutonomousMovement = false;
             return;
         }
+
+        StopPawnWorkAudio();
 
         m_pPawn.CancelMovementInPlace();
         m_hasActiveAutonomousMovement = false;

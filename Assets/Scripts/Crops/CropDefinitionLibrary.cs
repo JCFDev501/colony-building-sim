@@ -5,7 +5,6 @@ namespace ColonyBuildingSim.Crops
 {
     /// <summary>
     /// Provides lookup access from CropType to CropDefinition.
-    /// This keeps farming systems from hardcoding individual crop assets.
     /// </summary>
     public class CropDefinitionLibrary : MonoBehaviour
     {

@@ -11,7 +11,10 @@ namespace ColonyBuildingSim.Work
     {
         [SerializeField] private List<WorkOrder> m_workOrders = new List<WorkOrder>();
 
-        public IReadOnlyList<WorkOrder> WorkOrders { get { return m_workOrders; } }
+        public IReadOnlyList<WorkOrder> WorkOrders
+        {
+            get { return m_workOrders; }
+        }
 
         /// <summary>
         /// Adds a new work order if another active order of the same type does not already exist on the target tile.
@@ -87,6 +90,24 @@ namespace ColonyBuildingSim.Work
         }
 
         /// <summary>
+        /// Returns the number of active work orders matching the requested work type.
+        /// </summary>
+        public int CountActiveWorkOrdersByType(WorkType workType)
+        {
+            int activeCount = 0;
+
+            foreach (WorkOrder pWorkOrder in m_workOrders)
+            {
+                if (IsActiveWorkOrder(pWorkOrder) && pWorkOrder.WorkType == workType)
+                {
+                    ++activeCount;
+                }
+            }
+
+            return activeCount;
+        }
+
+        /// <summary>
         /// Returns true when an active work order already exists for the same target tile and work type.
         /// </summary>
         public bool HasDuplicateActiveWorkOrder(WorkType workType, Vector2Int targetCoordinates)
@@ -102,6 +123,23 @@ namespace ColonyBuildingSim.Work
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Attempts to find a stored work order by its unique ID.
+        /// </summary>
+        public bool TryGetWorkOrderById(string workOrderId, out WorkOrder pWorkOrder)
+        {
+            pWorkOrder = FindWorkOrderById(workOrderId);
+            return pWorkOrder != null;
+        }
+
+        /// <summary>
+        /// Returns true when the provided work order is still active.
+        /// </summary>
+        public bool IsWorkOrderActive(WorkOrder pWorkOrder)
+        {
+            return IsActiveWorkOrder(pWorkOrder);
         }
 
         /// <summary>

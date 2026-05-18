@@ -17,8 +17,8 @@ MonoBehaviour:
   m_growingPrefab: {fileID: 3961048508442685911, guid: 04093a213647e634984ec03d26fabb7e, type: 3}
   m_maturePrefab: {fileID: 6813219139310645592, guid: 0aa638357fde19f469dcb1a116acb22e, type: 3}
   m_placementOffset: {x: 0, y: 0, z: 0}
-  m_plantWorkDuration: 3
+  m_plantWorkDuration: 10
   m_harvestWorkDuration: 3
-  m_growthDuration: 45
+  m_growthDuration: 1200
   m_foodYield: 3
   m_blocksMovement: 0

@@ -4,7 +4,7 @@ namespace ColonyBuildingSim.WorldContext
 {
     /// <summary>
     /// Stores the current world context for the simulation.
-    /// Other systems should read from this manager, but only this manager should modify the values.
+    /// Other systems read from this manager, but only this manager should modify the values.
     /// </summary>
     public class WorldContextManager : MonoBehaviour
     {
@@ -407,5 +407,31 @@ namespace ColonyBuildingSim.WorldContext
 
             return 1.0f;
         }
+        
+        /// <summary>
+        /// Sets whether world simulation is paused.
+        /// </summary>
+        public void SetWorldPaused(bool isPaused)
+        {
+            m_isWorldPaused = isPaused;
+        }
+
+        /// <summary>
+        /// Toggles world simulation pause state.
+        /// </summary>
+        public void ToggleWorldPaused()
+        {
+            m_isWorldPaused = !m_isWorldPaused;
+        }
+
+        /// <summary>
+        /// Sets the current world time scale.
+        /// </summary>
+        public void SetWorldTimeScale(WorldTimeScale worldTimeScale)
+        {
+            m_worldTimeScale = worldTimeScale;
+        }
     }
+    
+    
 }

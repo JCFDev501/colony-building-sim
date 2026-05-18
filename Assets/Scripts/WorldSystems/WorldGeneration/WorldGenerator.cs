@@ -364,7 +364,6 @@ public class WorldGenerator : MonoBehaviour
 
     /// <summary>
     /// Clears mutable tile state before staged generation runs.
-    /// This keeps repeated test generation predictable.
     /// Generated identity layers such as blocks and world objects are also reset here
     /// so regeneration starts from a clean world-state baseline.
     /// </summary>
@@ -1475,7 +1474,6 @@ public class WorldGenerator : MonoBehaviour
 
     /// <summary>
     /// Refreshes the terrain renderer after generation completes.
-    /// This is optional so world generation can still run without a visual layer assigned.
     /// </summary>
     private void RefreshTerrainRenderer()
     {
@@ -1493,7 +1491,6 @@ public class WorldGenerator : MonoBehaviour
 
     /// <summary>
     /// Refreshes rendered block visuals after generation completes.
-    /// This is optional so world generation can still run without a block visual layer assigned.
     /// </summary>
     private void RefreshBlockRenderer()
     {
@@ -1511,7 +1508,6 @@ public class WorldGenerator : MonoBehaviour
 
     /// <summary>
     /// Refreshes rendered world object visuals after generation completes.
-    /// This is optional so world generation can still run without a world object visual layer assigned.
     /// </summary>
     private void RefreshWorldObjectRenderer()
     {

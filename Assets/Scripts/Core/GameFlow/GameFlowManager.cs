@@ -41,7 +41,7 @@ public class GameFlowManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Runs the current V1 startup sequence:
+    /// Runs the current startup sequence:
     /// generate starter pawn profiles, generate world, spawn generated starter pawns,
     /// then mark the game as ready.
     /// </summary>

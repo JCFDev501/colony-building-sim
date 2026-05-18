@@ -17,6 +17,7 @@ MonoBehaviour:
   m_prefab: {fileID: 667991824686306384, guid: fdf53b294491e5849847f09253c2cfd0, type: 3}
   m_placementOffset: {x: 0, y: 1, z: 0}
   m_requiredWood: 3
-  m_workDuration: 3
+  m_requiredStone: 0
+  m_workDuration: 16
   m_blocksMovement: 0
   m_blocksBuilding: 1

@@ -4,7 +4,6 @@ namespace ColonyBuildingSim.Buildables
 {
     /// <summary>
     /// Defines authored construction data for a buildable structure.
-    /// Buildable definitions let construction systems support new structures without hardcoding each one.
     /// </summary>
     [CreateAssetMenu(
         fileName = "BuildableDefinition",

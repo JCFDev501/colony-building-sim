@@ -5,7 +5,7 @@ using UnityEngine;
 namespace ColonyBuildingSim.Inventory
 {
     /// <summary>
-    /// Displays a simple runtime debug panel for colony inventory resources.
+    /// Displays a runtime debug panel for colony inventory resources.
     /// This panel is read-only and does not modify inventory data.
     /// </summary>
     public class ColonyInventoryDebugPanel : MonoBehaviour
@@ -17,11 +17,16 @@ namespace ColonyBuildingSim.Inventory
         [SerializeField] private bool m_showInventoryPanel = true;
 
         [Header("Panel Layout")]
+        [SerializeField] private int m_windowId = 1004;
         [SerializeField] private float m_panelX = 950.0f;
         [SerializeField] private float m_panelY = 230.0f;
-        [SerializeField] private float m_panelWidth = 260.0f;
+        [SerializeField] private float m_panelWidth = 300.0f;
+        [SerializeField] private float m_maxPanelHeight = 360.0f;
         [SerializeField] private float m_lineHeight = 20.0f;
         [SerializeField] private float m_padding = 10.0f;
+
+        private Rect m_panelRect;
+        private Vector2 m_scrollPosition = Vector2.zero;
 
         /// <summary>
         /// Finds required references if they were not assigned in the Inspector.
@@ -37,6 +42,12 @@ namespace ColonyBuildingSim.Inventory
             {
                 Debug.LogError("ColonyInventoryDebugPanel is missing a ColonyInventoryManager reference.", this);
             }
+
+            m_panelRect = new Rect(
+                m_panelX,
+                m_panelY,
+                m_panelWidth,
+                CalculatePanelHeight());
         }
 
         /// <summary>
@@ -54,14 +65,61 @@ namespace ColonyBuildingSim.Inventory
                 return;
             }
 
-            float panelHeight = CalculatePanelHeight();
-            GUI.Box(new Rect(m_panelX, m_panelY, m_panelWidth, panelHeight), "Colony Inventory");
+            float calculatedHeight = CalculatePanelHeight();
+            m_panelRect.height = Mathf.Min(calculatedHeight, m_maxPanelHeight);
 
-            float currentY = m_panelY + 25.0f;
-            float contentX = m_panelX + m_padding;
-            float contentWidth = m_panelWidth - (m_padding * 2.0f);
+            if (m_panelRect.Contains(Event.current.mousePosition))
+            {
+                DebugPanelInputBlocker.BlockPointerInput();
+            }
+
+            m_panelRect = GUI.Window(m_windowId, m_panelRect, DrawInventoryWindow, "Colony Inventory");
+        }
+
+        /// <summary>
+        /// Draws the draggable GUI window contents.
+        /// </summary>
+        private void DrawInventoryWindow(int windowId)
+        {
+            float contentHeight = CalculatePanelHeight();
+
+            Rect viewRect = new Rect(
+                0.0f,
+                0.0f,
+                m_panelRect.width - 25.0f,
+                contentHeight);
+
+            Rect scrollRect = new Rect(
+                0.0f,
+                22.0f,
+                m_panelRect.width,
+                m_panelRect.height - 22.0f);
+
+            m_scrollPosition = GUI.BeginScrollView(scrollRect, m_scrollPosition, viewRect);
+
+            float currentY = 5.0f;
+            float contentX = m_padding;
+            float contentWidth = viewRect.width - (m_padding * 2.0f);
+
+            DrawInventorySummary(contentX, contentWidth, ref currentY);
+            currentY += 5.0f;
 
             DrawInventoryLines(contentX, contentWidth, ref currentY);
+
+            GUI.EndScrollView();
+            GUI.DragWindow(new Rect(0.0f, 0.0f, m_panelRect.width, 22.0f));
+        }
+
+        /// <summary>
+        /// Draws high-level inventory debug information.
+        /// </summary>
+        private void DrawInventorySummary(float x, float width, ref float y)
+        {
+            Dictionary<ResourceType, int> resourceAmounts = m_colonyInventoryManager.GetAllResourceAmounts();
+
+            DrawLine(x, ref y, width, "Inventory Summary");
+            DrawLine(x + 10.0f, ref y, width, "Tracked Resource Types: " + Enum.GetValues(typeof(ResourceType)).Length);
+            DrawLine(x + 10.0f, ref y, width, "Stored Resource Entries: " + resourceAmounts.Count);
         }
 
         /// <summary>
@@ -70,6 +128,8 @@ namespace ColonyBuildingSim.Inventory
         private void DrawInventoryLines(float x, float width, ref float y)
         {
             Dictionary<ResourceType, int> resourceAmounts = m_colonyInventoryManager.GetAllResourceAmounts();
+
+            DrawLine(x, ref y, width, "Resources");
 
             foreach (ResourceType resourceType in Enum.GetValues(typeof(ResourceType)))
             {
@@ -80,7 +140,7 @@ namespace ColonyBuildingSim.Inventory
                     amount = storedAmount;
                 }
 
-                DrawLine(x, ref y, width, resourceType + ": " + amount);
+                DrawLine(x + 10.0f, ref y, width, resourceType + ": " + amount);
             }
         }
 
@@ -94,12 +154,21 @@ namespace ColonyBuildingSim.Inventory
         }
 
         /// <summary>
-        /// Calculates panel height based on the number of resource types.
+        /// Calculates panel height based on the number of resource types and summary lines.
         /// </summary>
         private float CalculatePanelHeight()
         {
             int resourceTypeCount = Enum.GetValues(typeof(ResourceType)).Length;
-            return 35.0f + (resourceTypeCount * m_lineHeight);
+
+            float totalHeight = 35.0f;
+
+            totalHeight += m_lineHeight * 3.0f;
+            totalHeight += 5.0f;
+
+            totalHeight += m_lineHeight;
+            totalHeight += resourceTypeCount * m_lineHeight;
+
+            return totalHeight;
         }
     }
 }

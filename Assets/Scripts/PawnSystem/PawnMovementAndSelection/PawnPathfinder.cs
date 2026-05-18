@@ -313,11 +313,7 @@ public class PawnPathfinder : MonoBehaviour
         reversedPath.Reverse();
         return reversedPath;
     }
-
-    /// <summary>
-    /// Returns the movement cost between two adjacent tiles.
-    /// Orthogonal steps cost 10 and diagonal steps cost 14.
-    /// </summary>
+    
     /// <summary>
     /// Returns the movement cost between two adjacent tiles.
     /// Orthogonal steps cost 10 and diagonal steps cost 14 before terrain traversal cost is applied.

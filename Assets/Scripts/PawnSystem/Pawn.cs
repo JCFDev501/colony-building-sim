@@ -21,6 +21,9 @@ public class Pawn : MonoBehaviour
     [SerializeField] private Material m_selectedMaterial;
     [SerializeField] private Material m_deputizedMaterial;
     [SerializeField] private Material m_selectedAndDeputizedMaterial;
+    [SerializeField] private Material m_deadMaterial;
+    [SerializeField] private Material m_sleepingMaterial;
+    [SerializeField] private Vector3 m_deadEulerRotation = new Vector3(90.0f, 0.0f, 0.0f);
 
     [Header("Destination Preview")]
     [SerializeField] private GameObject m_destinationPreviewHighlight;
@@ -31,6 +34,9 @@ public class Pawn : MonoBehaviour
     private PawnManager m_pPawnManager;
     private PawnMovementController m_pMovementController;
     private PawnNeedsController m_pNeedsController;
+    private Quaternion m_aliveRotation = Quaternion.identity;
+    private bool m_hasCachedAliveRotation = false;
+    private bool m_isDeadPoseApplied = false;
 
     /// <summary>
     /// Gets the pawn's ID/reference string.
@@ -62,6 +68,24 @@ public class Pawn : MonoBehaviour
     public bool IsDeputized
     {
         get { return m_isDeputized; }
+    }
+    
+    /// <summary>
+    /// Gets whether this pawn is currently recovering Sleep.
+    /// </summary>
+    public bool IsRecoveringSleep
+    {
+        get
+        {
+            EnsureNeedsController();
+
+            if (m_pNeedsController == null)
+            {
+                return false;
+            }
+
+            return m_pNeedsController.IsRecoveringSleep;
+        }
     }
 
     /// <summary>
@@ -335,6 +359,7 @@ public class Pawn : MonoBehaviour
 
         EnsureMovementController();
         EnsureNeedsController();
+        CacheAliveRotation();
 
         if (m_pMovementController != null)
         {
@@ -355,6 +380,7 @@ public class Pawn : MonoBehaviour
 
         EnsureMovementController();
         EnsureNeedsController();
+        CacheAliveRotation();
 
         if (m_pPawnManager != null)
         {
@@ -388,10 +414,18 @@ public class Pawn : MonoBehaviour
 
     private void Update()
     {
+        if (IsDead())
+        {
+            HandleDeadState();
+            return;
+        }
+
         if (m_pMovementController != null)
         {
             m_pMovementController.HandlePawnUpdate();
         }
+
+        UpdateStateIndicator();
     }
 
     /// <summary>
@@ -677,14 +711,40 @@ public class Pawn : MonoBehaviour
     /// <summary>
     /// Updates the state indicator visibility and material based on pawn state.
     /// Green = selected and deputized.
-    /// Red = deputized only.
+    /// Orange = deputized only
+    /// Red = dead.
     /// Blue = selected only.
-    /// Hidden = neither.
+    /// Purple = sleep
+    /// Hidden = Alive and Moving.
     /// </summary>
     private void UpdateStateIndicator()
     {
         if (m_stateIndicator == null)
         {
+            return;
+        }
+
+        if (IsDead())
+        {
+            m_stateIndicator.SetActive(true);
+
+            if (m_stateIndicatorRenderer != null && m_deadMaterial != null)
+            {
+                m_stateIndicatorRenderer.material = m_deadMaterial;
+            }
+
+            return;
+        }
+        
+        if (IsRecoveringSleep)
+        {
+            m_stateIndicator.SetActive(true);
+
+            if (m_stateIndicatorRenderer != null && m_sleepingMaterial != null)
+            {
+                m_stateIndicatorRenderer.material = m_sleepingMaterial;
+            }
+
             return;
         }
 
@@ -728,5 +788,63 @@ public class Pawn : MonoBehaviour
                 m_stateIndicatorRenderer.material = m_selectedMaterial;
             }
         }
+    }
+    
+    /// <summary>
+    /// Stores the pawn's normal standing rotation so death pose can apply consistently.
+    /// </summary>
+    private void CacheAliveRotation()
+    {
+        if (m_hasCachedAliveRotation)
+        {
+            return;
+        }
+
+        m_aliveRotation = transform.rotation;
+        m_hasCachedAliveRotation = true;
+    }
+
+    /// <summary>
+    /// Returns true when this pawn's profile health state is Dead.
+    /// </summary>
+    private bool IsDead()
+    {
+        if (m_profile == null || m_profile.Condition == null)
+        {
+            return false;
+        }
+
+        return m_profile.Condition.Health == PawnHealthState.Dead;
+    }
+
+    /// <summary>
+    /// Applies dead pawn movement and visual state.
+    /// </summary>
+    private void HandleDeadState()
+    {
+        if (m_pMovementController != null && m_pMovementController.IsMoving)
+        {
+            m_pMovementController.CancelMovementInPlace();
+        }
+
+        HideDestinationPreview();
+        ApplyDeadPose();
+        UpdateStateIndicator();
+    }
+
+    /// <summary>
+    /// Rotates the pawn onto the ground after death.
+    /// </summary>
+    private void ApplyDeadPose()
+    {
+        if (m_isDeadPoseApplied)
+        {
+            return;
+        }
+
+        CacheAliveRotation();
+
+        transform.rotation = m_aliveRotation * Quaternion.Euler(m_deadEulerRotation);
+        m_isDeadPoseApplied = true;
     }
 }

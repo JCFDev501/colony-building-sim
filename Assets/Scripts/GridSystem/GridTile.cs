@@ -26,7 +26,7 @@ public enum TileWaterDistanceBand
 
 /// <summary>
 /// Describes what gameplay content currently occupies a tile.
-/// This stays intentionally simple for the prototype so tiles can change state
+/// I'm making this simple for the prototype so tiles can change state
 /// without requiring many specialized tile classes.
 /// </summary>
 public enum TileContentType
@@ -115,7 +115,7 @@ public class GridTile
 
     /// <summary>
     /// Gets or sets the broad water-distance band for this tile.
-    /// This is used later for terrain assignment. Water tiles should generally use None.
+    /// This is used for terrain assignment. Water tiles should generally use None.
     /// </summary>
     public TileWaterDistanceBand WaterDistanceBand
     {

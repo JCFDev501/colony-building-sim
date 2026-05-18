@@ -5,7 +5,6 @@ namespace ColonyBuildingSim.Buildables
 {
     /// <summary>
     /// Provides lookup access from BuildableType to BuildableDefinition.
-    /// This keeps construction systems from hardcoding individual buildable assets.
     /// </summary>
     public class BuildableDefinitionLibrary : MonoBehaviour
     {

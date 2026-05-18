@@ -1,6 +1,5 @@
 /// <summary>
 /// Defines the first-pass runtime state for pawn autonomous behavior.
-/// This is intentionally small, but now includes personal need behavior states.
 /// </summary>
 public enum PawnBrainState
 {

@@ -3,7 +3,6 @@ using UnityEngine;
 
 /// <summary>
 /// Ticks pawn needs over world simulation time.
-/// This component updates PawnCondition data but does not decide pawn behavior like eating or sleeping.
 /// </summary>
 public class PawnNeedsController : MonoBehaviour
 {
@@ -12,8 +11,8 @@ public class PawnNeedsController : MonoBehaviour
     [SerializeField] private WorldContextManager m_pWorldContextManager;
 
     [Header("Need Decay Per Simulation Second")]
-    [SerializeField] private float m_foodDecayPerSecond = 0.02f;
-    [SerializeField] private float m_sleepDecayPerSecond = 0.01f;
+    [SerializeField] private float m_foodDecayPerSecond = 0.03f;
+    [SerializeField] private float m_sleepDecayPerSecond = 0.03f;
 
     [Header("Need Thresholds")]
     [SerializeField] private int m_eatThreshold = 35;
@@ -25,6 +24,9 @@ public class PawnNeedsController : MonoBehaviour
 
     [Header("Sleep Recovery")]
     [SerializeField] private float m_fullSleepRecoveryGameHours = 8.0f;
+
+    [Header("Starvation")]
+    [SerializeField] private float m_starvationDeathGameHours = 12.0f;
 
     [Header("Need Speed Penalties")]
     [SerializeField] private float m_hungryWorkSpeedPenalty = 0.10f;
@@ -40,6 +42,7 @@ public class PawnNeedsController : MonoBehaviour
     private bool m_isRecoveringSleep = false;
     private float m_currentFoodValue = 100.0f;
     private float m_currentSleepValue = 100.0f;
+    private float m_starvationGameMinutes = 0.0f;
 
     /// <summary>
     /// Gets the current movement speed multiplier caused by pawn needs.
@@ -114,6 +117,22 @@ public class PawnNeedsController : MonoBehaviour
     }
 
     /// <summary>
+    /// Gets how many in-game minutes this pawn has been at 0 Food.
+    /// </summary>
+    public float StarvationGameMinutes
+    {
+        get { return m_starvationGameMinutes; }
+    }
+
+    /// <summary>
+    /// Gets how many in-game minutes this pawn can survive at 0 Food before death.
+    /// </summary>
+    public float StarvationDeathGameMinutes
+    {
+        get { return Mathf.Max(1.0f, m_starvationDeathGameHours) * kGameMinutesPerHour; }
+    }
+
+    /// <summary>
     /// Finds required references if they were not assigned in the Inspector.
     /// </summary>
     private void Awake()
@@ -142,7 +161,14 @@ public class PawnNeedsController : MonoBehaviour
         InitializeNeedValuesIfNeeded(condition);
 
         m_currentFoodValue = Mathf.Clamp(m_foodRestoreTarget, 0.0f, 100.0f);
+        m_starvationGameMinutes = 0.0f;
+
         condition.Food = Mathf.FloorToInt(m_currentFoodValue);
+
+        if (condition.Health == PawnHealthState.AtRisk)
+        {
+            condition.Health = PawnHealthState.Stable;
+        }
     }
 
     /// <summary>
@@ -266,6 +292,52 @@ public class PawnNeedsController : MonoBehaviour
 
         condition.Food = Mathf.FloorToInt(m_currentFoodValue);
         condition.Sleep = Mathf.FloorToInt(m_currentSleepValue);
+
+        TickStarvation(condition);
+    }
+
+    /// <summary>
+    /// Tracks how long the pawn has been at 0 Food and kills the pawn after the configured starvation duration.
+    /// </summary>
+    private void TickStarvation(PawnCondition condition)
+    {
+        if (condition == null || condition.Health == PawnHealthState.Dead)
+        {
+            return;
+        }
+
+        if (condition.Food > 0)
+        {
+            m_starvationGameMinutes = 0.0f;
+
+            if (condition.Health == PawnHealthState.AtRisk)
+            {
+                condition.Health = PawnHealthState.Stable;
+            }
+
+            return;
+        }
+
+        condition.Health = PawnHealthState.AtRisk;
+
+        float gameMinutesDeltaTime = GetSimulationGameMinutesDeltaTime();
+
+        if (gameMinutesDeltaTime <= 0.0f)
+        {
+            return;
+        }
+
+        m_starvationGameMinutes += gameMinutesDeltaTime;
+
+        if (m_starvationGameMinutes < StarvationDeathGameMinutes)
+        {
+            return;
+        }
+
+        condition.Health = PawnHealthState.Dead;
+        m_isRecoveringSleep = false;
+
+        Debug.Log("Pawn died from starvation: " + GetPawnDebugName(), this);
     }
 
     /// <summary>
@@ -285,6 +357,7 @@ public class PawnNeedsController : MonoBehaviour
 
         m_currentFoodValue = condition.Food;
         m_currentSleepValue = condition.Sleep;
+        m_starvationGameMinutes = 0.0f;
         m_hasInitializedNeedValues = true;
     }
 
@@ -299,6 +372,19 @@ public class PawnNeedsController : MonoBehaviour
         }
 
         return m_pWorldContextManager.SimulationDeltaTime;
+    }
+
+    /// <summary>
+    /// Gets in-game minutes passed this frame from world context when available.
+    /// </summary>
+    private float GetSimulationGameMinutesDeltaTime()
+    {
+        if (m_pWorldContextManager == null)
+        {
+            return Time.deltaTime / kGameMinutesPerHour;
+        }
+
+        return m_pWorldContextManager.SimulationGameMinutesDeltaTime;
     }
 
     /// <summary>
@@ -403,5 +489,23 @@ public class PawnNeedsController : MonoBehaviour
         }
 
         return Mathf.Max(0.1f, multiplier);
+    }
+
+    /// <summary>
+    /// Returns a readable pawn name for debug logs.
+    /// </summary>
+    private string GetPawnDebugName()
+    {
+        if (m_pPawn == null)
+        {
+            return "Unknown";
+        }
+
+        if (m_pPawn.Profile != null && !string.IsNullOrWhiteSpace(m_pPawn.Profile.DisplayName))
+        {
+            return m_pPawn.Profile.DisplayName;
+        }
+
+        return m_pPawn.PawnId;
     }
 }

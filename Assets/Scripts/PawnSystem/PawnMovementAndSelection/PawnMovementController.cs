@@ -388,7 +388,7 @@ public class PawnMovementController : MonoBehaviour
 
     /// <summary>
     /// Updates smooth movement along the active path.
-    /// In this prototype pass, pawns do not reserve tiles and do not block each other.
+    /// pawns do not reserve tiles and do not block each other.
     /// </summary>
     private void UpdateMovement()
     {

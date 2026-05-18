@@ -4,7 +4,6 @@ namespace ColonyBuildingSim.WorldContext
 {
     /// <summary>
     /// Draws world context debug information on screen.
-    /// This keeps debug display separate from the core world context logic.
     /// </summary>
     public class WorldContextDebug : MonoBehaviour
     {
@@ -14,6 +13,43 @@ namespace ColonyBuildingSim.WorldContext
         [Header("Debug")]
         [SerializeField] private bool m_showWorldContextPanel = true;
 
+        [Header("Panel Layout")]
+        [SerializeField] private int m_windowId = 1003;
+        [SerializeField] private float m_panelX = 500.0f;
+        [SerializeField] private float m_panelY = 10.0f;
+        [SerializeField] private float m_panelWidth = 380.0f;
+        [SerializeField] private float m_maxPanelHeight = 420.0f;
+        [SerializeField] private float m_lineHeight = 20.0f;
+        [SerializeField] private float m_padding = 10.0f;
+
+        private Rect m_panelRect;
+        private Vector2 m_scrollPosition = Vector2.zero;
+
+        /// <summary>
+        /// Finds required references and initializes panel layout.
+        /// </summary>
+        private void Start()
+        {
+            if (m_worldContextManager == null)
+            {
+                m_worldContextManager = FindFirstObjectByType<WorldContextManager>();
+            }
+
+            if (m_worldContextManager == null)
+            {
+                Debug.LogError("WorldContextDebug is missing a WorldContextManager reference.", this);
+            }
+
+            m_panelRect = new Rect(
+                m_panelX,
+                m_panelY,
+                m_panelWidth,
+                CalculatePanelHeight());
+        }
+
+        /// <summary>
+        /// Draws the world context debug panel.
+        /// </summary>
         private void OnGUI()
         {
             if (!m_showWorldContextPanel)
@@ -26,40 +62,116 @@ namespace ColonyBuildingSim.WorldContext
                 return;
             }
 
-            const float panelX = 500.0f;
-            const float panelY = 10.0f;
-            const float panelWidth = 340.0f;
-            const float panelHeight = 210.0f;
-            const float lineHeight = 20.0f;
-            const float padding = 10.0f;
+            float calculatedHeight = CalculatePanelHeight();
+            m_panelRect.height = Mathf.Min(calculatedHeight, m_maxPanelHeight);
 
-            GUI.Box(new Rect(panelX, panelY, panelWidth, panelHeight), "World Context Debug");
+            if (m_panelRect.Contains(Event.current.mousePosition))
+            {
+                DebugPanelInputBlocker.BlockPointerInput();
+            }
 
-            float currentY = panelY + 25.0f;
-            float labelX = panelX + padding;
+            m_panelRect = GUI.Window(m_windowId, m_panelRect, DrawWorldContextWindow, "World Context Debug");
+        }
 
-            GUI.Label(new Rect(labelX, currentY, panelWidth, lineHeight), "Date: " + BuildDateTimeString());
-            currentY += lineHeight;
+        /// <summary>
+        /// Draws the draggable GUI window contents.
+        /// </summary>
+        private void DrawWorldContextWindow(int windowId)
+        {
+            float contentHeight = CalculatePanelHeight();
 
-            GUI.Label(new Rect(labelX, currentY, panelWidth, lineHeight), "Time: " + BuildTimeString());
-            currentY += lineHeight;
+            Rect viewRect = new Rect(
+                0.0f,
+                0.0f,
+                m_panelRect.width - 25.0f,
+                contentHeight);
 
-            GUI.Label(new Rect(labelX, currentY, panelWidth, lineHeight), "Day: " + m_worldContextManager.Day);
-            currentY += lineHeight;
+            Rect scrollRect = new Rect(
+                0.0f,
+                22.0f,
+                m_panelRect.width,
+                m_panelRect.height - 22.0f);
 
-            GUI.Label(new Rect(labelX, currentY, panelWidth, lineHeight), "Month: " + m_worldContextManager.WorldMonth + " (" + m_worldContextManager.Month + ")");
-            currentY += lineHeight;
+            m_scrollPosition = GUI.BeginScrollView(scrollRect, m_scrollPosition, viewRect);
 
-            GUI.Label(new Rect(labelX, currentY, panelWidth, lineHeight), "Year: " + m_worldContextManager.Year);
-            currentY += lineHeight;
+            float currentY = 5.0f;
+            float contentX = m_padding;
+            float contentWidth = viewRect.width - (m_padding * 2.0f);
 
-            GUI.Label(new Rect(labelX, currentY, panelWidth, lineHeight), "Season: " + m_worldContextManager.Season);
-            currentY += lineHeight;
+            DrawDateTimeSection(contentX, contentWidth, ref currentY);
+            currentY += 5.0f;
 
-            GUI.Label(new Rect(labelX, currentY, panelWidth, lineHeight), "Time Phase: " + m_worldContextManager.TimePhase);
-            currentY += lineHeight;
+            DrawSeasonSection(contentX, contentWidth, ref currentY);
+            currentY += 5.0f;
 
-            GUI.Label(new Rect(labelX, currentY, panelWidth, lineHeight), "Temperature: " + m_worldContextManager.Temperature + "°F");
+            DrawSimulationSection(contentX, contentWidth, ref currentY);
+
+            GUI.EndScrollView();
+            GUI.DragWindow(new Rect(0.0f, 0.0f, m_panelRect.width, 22.0f));
+        }
+
+        /// <summary>
+        /// Draws current world date and time information.
+        /// </summary>
+        private void DrawDateTimeSection(float x, float width, ref float y)
+        {
+            DrawLine(x, ref y, width, "Date / Time");
+            DrawLine(x + 10.0f, ref y, width, "Date: " + BuildDateTimeString());
+            DrawLine(x + 10.0f, ref y, width, "Time: " + BuildTimeString());
+            DrawLine(x + 10.0f, ref y, width, "Day: " + m_worldContextManager.Day);
+            DrawLine(x + 10.0f, ref y, width, "Month: " + m_worldContextManager.WorldMonth + " (" + m_worldContextManager.Month + ")");
+            DrawLine(x + 10.0f, ref y, width, "Year: " + m_worldContextManager.Year);
+        }
+
+        /// <summary>
+        /// Draws current season, phase, and temperature information.
+        /// </summary>
+        private void DrawSeasonSection(float x, float width, ref float y)
+        {
+            DrawLine(x, ref y, width, "Environment");
+            DrawLine(x + 10.0f, ref y, width, "Season: " + m_worldContextManager.Season);
+            DrawLine(x + 10.0f, ref y, width, "Time Phase: " + m_worldContextManager.TimePhase);
+            DrawLine(x + 10.0f, ref y, width, "Temperature: " + m_worldContextManager.Temperature + "°F");
+        }
+
+        /// <summary>
+        /// Draws simulation timing and speed information.
+        /// </summary>
+        private void DrawSimulationSection(float x, float width, ref float y)
+        {
+            DrawLine(x, ref y, width, "Simulation");
+            DrawLine(x + 10.0f, ref y, width, "Paused: " + m_worldContextManager.IsWorldPaused);
+            DrawLine(x + 10.0f, ref y, width, "Time Scale: " + m_worldContextManager.TimeScale);
+            DrawLine(x + 10.0f, ref y, width, "World Speed Multiplier: " + m_worldContextManager.WorldTimeScaleMultiplier.ToString("F2"));
+            DrawLine(x + 10.0f, ref y, width, "Simulation Delta: " + m_worldContextManager.SimulationDeltaTime.ToString("F4"));
+            DrawLine(x + 10.0f, ref y, width, "Game Minutes Delta: " + m_worldContextManager.SimulationGameMinutesDeltaTime.ToString("F2"));
+        }
+
+        /// <summary>
+        /// Draws one text line in the debug panel.
+        /// </summary>
+        private void DrawLine(float x, ref float y, float width, string text)
+        {
+            GUI.Label(new Rect(x, y, width, m_lineHeight), text);
+            y += m_lineHeight;
+        }
+
+        /// <summary>
+        /// Calculates the debug panel height based on the displayed sections.
+        /// </summary>
+        private float CalculatePanelHeight()
+        {
+            float totalHeight = 35.0f;
+
+            totalHeight += m_lineHeight * 6.0f;
+            totalHeight += 5.0f;
+
+            totalHeight += m_lineHeight * 4.0f;
+            totalHeight += 5.0f;
+
+            totalHeight += m_lineHeight * 6.0f;
+
+            return totalHeight;
         }
 
         /// <summary>

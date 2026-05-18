@@ -3,8 +3,6 @@ using UnityEngine;
 
 /// <summary>
 /// Renders non-block world object visuals from grid tile data.
-/// This stays separate from world generation so it can rebuild visuals
-/// whenever tile world-object data changes.
 /// </summary>
 public class WorldObjectRenderer : MonoBehaviour
 {

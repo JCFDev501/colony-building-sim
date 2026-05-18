@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &340852101148406600
+--- !u!1 &1396964561547120304
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,8 +8,152 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6254815888817239423}
-  - component: {fileID: 548066275588719575}
+  - component: {fileID: 848301445648115483}
+  - component: {fileID: 1241017120926629926}
+  m_Layer: 0
+  m_Name: PawnPathFinder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &848301445648115483
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1396964561547120304}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 2.0597, y: 0, z: -0.5559799}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8456598265455837201}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1241017120926629926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1396964561547120304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8a7eb256302d4b45a506eac008a92ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColonyBuildingSim::PawnPathfinder
+--- !u!1 &2305320363831450345
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4940719773331268005}
+  - component: {fileID: 2205919858819003332}
+  m_Layer: 0
+  m_Name: PawnMovePreviewManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4940719773331268005
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2305320363831450345}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8456598265455837201}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2205919858819003332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2305320363831450345}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d12025a663f481b4db37f5f6eec235ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColonyBuildingSim::PawnMovePreviewManager
+  m_playerController: {fileID: 0}
+  m_pawnCommandManager: {fileID: 5784559892703793936}
+  m_gridManager: {fileID: 0}
+  m_movePreviewHighlight: {fileID: 7640138130676659826, guid: a9cb14dd8de448a40892a6b5bd303b6e, type: 3}
+  m_movePreviewRenderer: {fileID: 3058885459580399115, guid: a9cb14dd8de448a40892a6b5bd303b6e, type: 3}
+  m_validPreviewMaterial: {fileID: 2100000, guid: a47123e063271404da9ede71bbb71055, type: 2}
+  m_invalidPreviewMaterial: {fileID: 2100000, guid: 2b23474a25fe2dc4095634cbd9b9d3e3, type: 2}
+  m_previewYOffset: 0.03
+  m_maxFallbackSearchDistance: 8
+--- !u!1 &2579235274349980448
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 824390695102098100}
+  - component: {fileID: 5784559892703793936}
+  m_Layer: 0
+  m_Name: PawnCommandManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &824390695102098100
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2579235274349980448}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8456598265455837201}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5784559892703793936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2579235274349980448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65fb07106d747d74a857e79fc4f873b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColonyBuildingSim::PawnCommandManager
+  m_pawnSelectionManager: {fileID: 717853036047067167}
+  m_pawnDeputizationManager: {fileID: 1410442401959199163}
+  m_logCommandedPawnState: 1
+--- !u!1 &2940838121690904589
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1724255623135586353}
+  - component: {fileID: 6470097251621059663}
   m_Layer: 0
   m_Name: PawnGenerationManager
   m_TagString: Untagged
@@ -17,28 +161,28 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6254815888817239423
+--- !u!4 &1724255623135586353
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 340852101148406600}
+  m_GameObject: {fileID: 2940838121690904589}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3182673909703491633}
+  m_Father: {fileID: 8456598265455837201}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &548066275588719575
+--- !u!114 &6470097251621059663
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 340852101148406600}
+  m_GameObject: {fileID: 2940838121690904589}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5e76897a41d159644bfb67a6f538dd6f, type: 3}
@@ -103,6 +247,14 @@ MonoBehaviour:
       m_construct: 9
       m_cook: 1
       m_craft: 3
+      m_mine: 0
+    m_workPriorities:
+      m_plantPriority: 4
+      m_cutPriority: 4
+      m_constructPriority: 4
+      m_cookPriority: 4
+      m_craftPriority: 4
+      m_minePriority: 4
     m_condition:
       m_mobility: 0
       m_food: 95
@@ -134,6 +286,14 @@ MonoBehaviour:
       m_construct: 4
       m_cook: 4
       m_craft: 1
+      m_mine: 0
+    m_workPriorities:
+      m_plantPriority: 4
+      m_cutPriority: 4
+      m_constructPriority: 4
+      m_cookPriority: 4
+      m_craftPriority: 4
+      m_minePriority: 4
     m_condition:
       m_mobility: 0
       m_food: 96
@@ -163,6 +323,14 @@ MonoBehaviour:
       m_construct: 5
       m_cook: 2
       m_craft: 3
+      m_mine: 0
+    m_workPriorities:
+      m_plantPriority: 4
+      m_cutPriority: 4
+      m_constructPriority: 4
+      m_cookPriority: 4
+      m_craftPriority: 4
+      m_minePriority: 4
     m_condition:
       m_mobility: 0
       m_food: 77
@@ -192,6 +360,14 @@ MonoBehaviour:
       m_construct: 6
       m_cook: 4
       m_craft: 3
+      m_mine: 0
+    m_workPriorities:
+      m_plantPriority: 4
+      m_cutPriority: 4
+      m_constructPriority: 4
+      m_cookPriority: 4
+      m_craftPriority: 4
+      m_minePriority: 4
     m_condition:
       m_mobility: 0
       m_food: 91
@@ -221,6 +397,14 @@ MonoBehaviour:
       m_construct: 4
       m_cook: 2
       m_craft: 1
+      m_mine: 0
+    m_workPriorities:
+      m_plantPriority: 4
+      m_cutPriority: 4
+      m_constructPriority: 4
+      m_cookPriority: 4
+      m_craftPriority: 4
+      m_minePriority: 4
     m_condition:
       m_mobility: 1
       m_food: 92
@@ -252,6 +436,14 @@ MonoBehaviour:
       m_construct: 3
       m_cook: 5
       m_craft: 4
+      m_mine: 0
+    m_workPriorities:
+      m_plantPriority: 4
+      m_cutPriority: 4
+      m_constructPriority: 4
+      m_cookPriority: 4
+      m_craftPriority: 4
+      m_minePriority: 4
     m_condition:
       m_mobility: 0
       m_food: 84
@@ -285,6 +477,14 @@ MonoBehaviour:
       m_construct: 3
       m_cook: 3
       m_craft: 0
+      m_mine: 0
+    m_workPriorities:
+      m_plantPriority: 4
+      m_cutPriority: 4
+      m_constructPriority: 4
+      m_cookPriority: 4
+      m_craftPriority: 4
+      m_minePriority: 4
     m_condition:
       m_mobility: 0
       m_food: 80
@@ -316,6 +516,14 @@ MonoBehaviour:
       m_construct: 6
       m_cook: 6
       m_craft: 1
+      m_mine: 0
+    m_workPriorities:
+      m_plantPriority: 4
+      m_cutPriority: 4
+      m_constructPriority: 4
+      m_cookPriority: 4
+      m_craftPriority: 4
+      m_minePriority: 4
     m_condition:
       m_mobility: 1
       m_food: 97
@@ -346,6 +554,14 @@ MonoBehaviour:
       m_construct: 4
       m_cook: 2
       m_craft: 5
+      m_mine: 0
+    m_workPriorities:
+      m_plantPriority: 4
+      m_cutPriority: 4
+      m_constructPriority: 4
+      m_cookPriority: 4
+      m_craftPriority: 4
+      m_minePriority: 4
     m_condition:
       m_mobility: 0
       m_food: 97
@@ -377,6 +593,14 @@ MonoBehaviour:
       m_construct: 2
       m_cook: 3
       m_craft: 7
+      m_mine: 0
+    m_workPriorities:
+      m_plantPriority: 4
+      m_cutPriority: 4
+      m_constructPriority: 4
+      m_cookPriority: 4
+      m_craftPriority: 4
+      m_minePriority: 4
     m_condition:
       m_mobility: 0
       m_food: 80
@@ -406,6 +630,14 @@ MonoBehaviour:
       m_construct: 1
       m_cook: 3
       m_craft: 3
+      m_mine: 0
+    m_workPriorities:
+      m_plantPriority: 4
+      m_cutPriority: 4
+      m_constructPriority: 4
+      m_cookPriority: 4
+      m_craftPriority: 4
+      m_minePriority: 4
     m_condition:
       m_mobility: 0
       m_food: 70
@@ -435,6 +667,14 @@ MonoBehaviour:
       m_construct: 7
       m_cook: 3
       m_craft: 0
+      m_mine: 0
+    m_workPriorities:
+      m_plantPriority: 4
+      m_cutPriority: 4
+      m_constructPriority: 4
+      m_cookPriority: 4
+      m_craftPriority: 4
+      m_minePriority: 4
     m_condition:
       m_mobility: 0
       m_food: 77
@@ -449,7 +689,7 @@ MonoBehaviour:
   m_logSelectedBackground: 0
   m_logSelectedTraits: 0
   m_logRejectedTraitConflicts: 0
---- !u!1 &854975283577581171
+--- !u!1 &3697690614192495183
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -457,96 +697,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8717011478133762605}
-  - component: {fileID: 5894360779888527194}
-  m_Layer: 0
-  m_Name: PawnDeputizationManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8717011478133762605
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 854975283577581171}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3182673909703491633}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5894360779888527194
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 854975283577581171}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c69cb7f34e14492449bacf218826eeb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: ColonyBuildingSim::PawnDeputizationManager
---- !u!1 &4070129688268610563
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 737071256624625457}
-  - component: {fileID: 4714594137045201865}
-  m_Layer: 0
-  m_Name: PawnPathFinder
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &737071256624625457
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4070129688268610563}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.0597, y: 0, z: -0.5559799}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3182673909703491633}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4714594137045201865
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4070129688268610563}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b8a7eb256302d4b45a506eac008a92ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: ColonyBuildingSim::PawnPathfinder
---- !u!1 &4405908983935666580
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6397407965413204246}
-  - component: {fileID: 6304148525120494204}
+  - component: {fileID: 4646847019931441411}
+  - component: {fileID: 3012226915201473599}
   m_Layer: 0
   m_Name: PawnPathPreviewManager
   m_TagString: Untagged
@@ -554,45 +706,45 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6397407965413204246
+--- !u!4 &4646847019931441411
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4405908983935666580}
+  m_GameObject: {fileID: 3697690614192495183}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 374804436449994630}
-  m_Father: {fileID: 3182673909703491633}
+  - {fileID: 5033080795146826097}
+  m_Father: {fileID: 8456598265455837201}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6304148525120494204
+--- !u!114 &3012226915201473599
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4405908983935666580}
+  m_GameObject: {fileID: 3697690614192495183}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4c7710b24ef641b4592f8de1586057d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ColonyBuildingSim::PawnPathPreviewManager
   m_playerController: {fileID: 0}
-  m_pawnCommandManager: {fileID: 2740474468001957010}
-  m_pawnMovePreviewManager: {fileID: 3505635456942391191}
-  m_pawnDestinationAssignmentManager: {fileID: 7352971393735567507}
-  m_pawnPathfinder: {fileID: 4714594137045201865}
+  m_pawnCommandManager: {fileID: 5784559892703793936}
+  m_pawnMovePreviewManager: {fileID: 2205919858819003332}
+  m_pawnDestinationAssignmentManager: {fileID: 6007957338434241030}
+  m_pawnPathfinder: {fileID: 1241017120926629926}
   m_gridManager: {fileID: 0}
   m_pathMarkerPrefab: {fileID: 2358384439968262828, guid: f115ce2379fb4c445ac6ff718bb07d67, type: 3}
-  m_markerParent: {fileID: 374804436449994630}
+  m_markerParent: {fileID: 5033080795146826097}
   m_markerPoolSize: 64
   m_markerYOffset: 0.01
---- !u!1 &4518909871140362163
+--- !u!1 &4150838066730501655
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -600,153 +752,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3182673909703491633}
-  m_Layer: 0
-  m_Name: _PawnSystem
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3182673909703491633
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4518909871140362163}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 6924107133801782459}
-  - {fileID: 7001592885452746307}
-  - {fileID: 8717011478133762605}
-  - {fileID: 3133121278384188881}
-  - {fileID: 5318322671483182005}
-  - {fileID: 7876505954814795350}
-  - {fileID: 2939772690780482837}
-  - {fileID: 6397407965413204246}
-  - {fileID: 737071256624625457}
-  - {fileID: 6254815888817239423}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &4533315602795237548
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5318322671483182005}
-  - component: {fileID: 3505635456942391191}
-  m_Layer: 0
-  m_Name: PawnMovePreviewManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5318322671483182005
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4533315602795237548}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3182673909703491633}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3505635456942391191
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4533315602795237548}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d12025a663f481b4db37f5f6eec235ac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: ColonyBuildingSim::PawnMovePreviewManager
-  m_playerController: {fileID: 0}
-  m_pawnCommandManager: {fileID: 2740474468001957010}
-  m_gridManager: {fileID: 0}
-  m_movePreviewHighlight: {fileID: 7640138130676659826, guid: a9cb14dd8de448a40892a6b5bd303b6e, type: 3}
-  m_movePreviewRenderer: {fileID: 3058885459580399115, guid: a9cb14dd8de448a40892a6b5bd303b6e, type: 3}
-  m_validPreviewMaterial: {fileID: 2100000, guid: a47123e063271404da9ede71bbb71055, type: 2}
-  m_invalidPreviewMaterial: {fileID: 2100000, guid: 2b23474a25fe2dc4095634cbd9b9d3e3, type: 2}
-  m_previewYOffset: 0.03
-  m_maxFallbackSearchDistance: 8
---- !u!1 &5017201963863705302
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2939772690780482837}
-  - component: {fileID: 777397305253573251}
-  m_Layer: 0
-  m_Name: PawnDestinationPreviewManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2939772690780482837
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5017201963863705302}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3182673909703491633}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &777397305253573251
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5017201963863705302}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce5b3196873c23546bbe6cdf8f93c96b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: ColonyBuildingSim::PawnDestinationPreviewManager
-  m_playerController: {fileID: 0}
-  m_pawnManager: {fileID: 1684923538790590789}
-  m_pawnCommandManager: {fileID: 2740474468001957010}
-  m_pawnMovePreviewManager: {fileID: 3505635456942391191}
-  m_pawnDestinationAssignmentManager: {fileID: 7352971393735567507}
-  m_gridManager: {fileID: 0}
-  m_markerYOffset: 0.03
---- !u!1 &5869623744332819491
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7001592885452746307}
-  - component: {fileID: 7413314884856634519}
+  - component: {fileID: 3616644605630038386}
+  - component: {fileID: 717853036047067167}
   m_Layer: 0
   m_Name: PawnSelectionManager
   m_TagString: Untagged
@@ -754,34 +761,34 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7001592885452746307
+--- !u!4 &3616644605630038386
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5869623744332819491}
+  m_GameObject: {fileID: 4150838066730501655}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3182673909703491633}
+  m_Father: {fileID: 8456598265455837201}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7413314884856634519
+--- !u!114 &717853036047067167
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5869623744332819491}
+  m_GameObject: {fileID: 4150838066730501655}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbc07bc241da18f49af849050bfdc341, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ColonyBuildingSim::PawnSelectionManager
---- !u!1 &5947168927062941751
+--- !u!1 &5765333865985094326
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -789,39 +796,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 374804436449994630}
-  m_Layer: 0
-  m_Name: PathPreviewMarkers
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &374804436449994630
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5947168927062941751}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6397407965413204246}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &7040976240002079205
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7876505954814795350}
-  - component: {fileID: 7352971393735567507}
+  - component: {fileID: 1403662967052070256}
+  - component: {fileID: 6007957338434241030}
   m_Layer: 0
   m_Name: PawnDestinationAssignmentManager
   m_TagString: Untagged
@@ -829,34 +805,34 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7876505954814795350
+--- !u!4 &1403662967052070256
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7040976240002079205}
+  m_GameObject: {fileID: 5765333865985094326}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3182673909703491633}
+  m_Father: {fileID: 8456598265455837201}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7352971393735567507
+--- !u!114 &6007957338434241030
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7040976240002079205}
+  m_GameObject: {fileID: 5765333865985094326}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bc0e1e17bb9f84446b4a21e3b7c08135, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ColonyBuildingSim::PawnDestinationAssignmentManager
---- !u!1 &7122587465541561911
+--- !u!1 &6092971705598458252
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -864,8 +840,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6924107133801782459}
-  - component: {fileID: 1684923538790590789}
+  - component: {fileID: 5852798100420389986}
+  - component: {fileID: 4982697388658308625}
   m_Layer: 0
   m_Name: PawnManager
   m_TagString: Untagged
@@ -873,29 +849,28 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6924107133801782459
+--- !u!4 &5852798100420389986
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7122587465541561911}
+  m_GameObject: {fileID: 6092971705598458252}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 8943569166201477683}
-  m_Father: {fileID: 3182673909703491633}
+  m_Children: []
+  m_Father: {fileID: 8456598265455837201}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1684923538790590789
+--- !u!114 &4982697388658308625
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7122587465541561911}
+  m_GameObject: {fileID: 6092971705598458252}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9e093a3210391a94c900908b47e7dfe8, type: 3}
@@ -910,7 +885,7 @@ MonoBehaviour:
   m_logRegistrationEvents: 0
   m_logSpawnEvents: 1
   m_logProfileSpawnEvents: 1
---- !u!1 &8026437872819760585
+--- !u!1 &6411543077306149608
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -918,55 +893,30 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8943569166201477683}
-  - component: {fileID: 8473344696523072197}
+  - component: {fileID: 5033080795146826097}
   m_Layer: 0
-  m_Name: PawnProfileDebugPanel
+  m_Name: PathPreviewMarkers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8943569166201477683
+--- !u!4 &5033080795146826097
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8026437872819760585}
+  m_GameObject: {fileID: 6411543077306149608}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 6924107133801782459}
+  m_Father: {fileID: 4646847019931441411}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8473344696523072197
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8026437872819760585}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5d3c6abd600dfa4591d5e249811340c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: ColonyBuildingSim::PawnProfileDebugPanel
-  m_pawnManager: {fileID: 1684923538790590789}
-  m_showPawnProfilePanel: 1
-  m_showIdentity: 1
-  m_showBackgroundAndTraits: 1
-  m_showSkills: 1
-  m_showCondition: 1
-  m_showMovement: 1
-  m_panelX: 1400
-  m_panelY: 10
-  m_panelWidth: 460
-  m_lineHeight: 20
-  m_padding: 10
---- !u!1 &9212018961322794149
+--- !u!1 &6609123624399268415
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -974,42 +924,131 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3133121278384188881}
-  - component: {fileID: 2740474468001957010}
+  - component: {fileID: 5738884697780699457}
+  - component: {fileID: 1410442401959199163}
   m_Layer: 0
-  m_Name: PawnCommandManager
+  m_Name: PawnDeputizationManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3133121278384188881
+--- !u!4 &5738884697780699457
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9212018961322794149}
+  m_GameObject: {fileID: 6609123624399268415}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3182673909703491633}
+  m_Father: {fileID: 8456598265455837201}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2740474468001957010
+--- !u!114 &1410442401959199163
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9212018961322794149}
+  m_GameObject: {fileID: 6609123624399268415}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65fb07106d747d74a857e79fc4f873b3, type: 3}
+  m_Script: {fileID: 11500000, guid: c69cb7f34e14492449bacf218826eeb1, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: ColonyBuildingSim::PawnCommandManager
-  m_pawnSelectionManager: {fileID: 7413314884856634519}
-  m_pawnDeputizationManager: {fileID: 5894360779888527194}
-  m_logCommandedPawnState: 1
+  m_EditorClassIdentifier: ColonyBuildingSim::PawnDeputizationManager
+--- !u!1 &7110177193258476724
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3538737902481582152}
+  - component: {fileID: 1111960766080601073}
+  m_Layer: 0
+  m_Name: PawnDestinationPreviewManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3538737902481582152
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7110177193258476724}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8456598265455837201}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1111960766080601073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7110177193258476724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce5b3196873c23546bbe6cdf8f93c96b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColonyBuildingSim::PawnDestinationPreviewManager
+  m_playerController: {fileID: 0}
+  m_pawnManager: {fileID: 4982697388658308625}
+  m_pawnCommandManager: {fileID: 5784559892703793936}
+  m_pawnMovePreviewManager: {fileID: 2205919858819003332}
+  m_pawnDestinationAssignmentManager: {fileID: 6007957338434241030}
+  m_gridManager: {fileID: 0}
+  m_markerYOffset: 0.03
+--- !u!1 &7304484359174176067
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8456598265455837201}
+  m_Layer: 0
+  m_Name: _PawnSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8456598265455837201
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7304484359174176067}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5852798100420389986}
+  - {fileID: 3616644605630038386}
+  - {fileID: 5738884697780699457}
+  - {fileID: 824390695102098100}
+  - {fileID: 4940719773331268005}
+  - {fileID: 1403662967052070256}
+  - {fileID: 3538737902481582152}
+  - {fileID: 4646847019931441411}
+  - {fileID: 848301445648115483}
+  - {fileID: 1724255623135586353}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

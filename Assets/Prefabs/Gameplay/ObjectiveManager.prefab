@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &759354721436915523
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3532844865365781434}
+  - component: {fileID: 3050364600189661495}
+  m_Layer: 0
+  m_Name: ObjectiveManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3532844865365781434
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 759354721436915523}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3050364600189661495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 759354721436915523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dccf38e6f5dff6c4c9966b06fcb50306, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColonyBuildingSim::ColonyBuildingSim.Objectives.ObjectiveManager
+  m_structureRegistry: {fileID: 0}
+  m_colonyInventoryManager: {fileID: 0}
+  m_objectiveTitle: Build a Starter Camp
+  m_requirements:
+  - m_displayName: Campfire
+    m_requirementType: 0
+    m_requiredAmount: 1
+    m_buildableType: 0
+    m_resourceType: 0
+  - m_displayName: Wooden Walls
+    m_requirementType: 0
+    m_requiredAmount: 16
+    m_buildableType: 1
+    m_resourceType: 0
+  - m_displayName: Wooden Door
+    m_requirementType: 0
+    m_requiredAmount: 1
+    m_buildableType: 2
+    m_resourceType: 0
+  - m_displayName: Meals
+    m_requirementType: 1
+    m_requiredAmount: 1
+    m_buildableType: 2
+    m_resourceType: 2
+  m_isObjectiveComplete: 0

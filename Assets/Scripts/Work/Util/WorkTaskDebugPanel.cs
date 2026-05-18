@@ -4,8 +4,7 @@ using UnityEngine;
 namespace ColonyBuildingSim.Work
 {
     /// <summary>
-    /// Displays a simple runtime debug panel for work orders and pawn tasks.
-    /// This is only for playtesting visibility and does not modify work/task data.
+    /// Displays a runtime debug panel for work orders and pawn tasks.
     /// </summary>
     public class WorkTaskDebugPanel : MonoBehaviour
     {
@@ -17,14 +16,19 @@ namespace ColonyBuildingSim.Work
         [SerializeField] private bool m_showWorkTaskPanel = true;
         [SerializeField] private bool m_showWorkOrders = true;
         [SerializeField] private bool m_showTasks = true;
-        [SerializeField] private int m_maxRowsPerSection = 8;
+        [SerializeField] private int m_maxRowsPerSection = 12;
 
         [Header("Panel Layout")]
+        [SerializeField] private int m_windowId = 1005;
         [SerializeField] private float m_panelX = 950.0f;
         [SerializeField] private float m_panelY = 10.0f;
-        [SerializeField] private float m_panelWidth = 520.0f;
+        [SerializeField] private float m_panelWidth = 620.0f;
+        [SerializeField] private float m_maxPanelHeight = 520.0f;
         [SerializeField] private float m_lineHeight = 20.0f;
         [SerializeField] private float m_padding = 10.0f;
+
+        private Rect m_panelRect;
+        private Vector2 m_scrollPosition = Vector2.zero;
 
         /// <summary>
         /// Finds required references if they were not assigned in the Inspector.
@@ -50,6 +54,12 @@ namespace ColonyBuildingSim.Work
             {
                 Debug.LogError("WorkTaskDebugPanel is missing a TaskManager reference.", this);
             }
+
+            m_panelRect = new Rect(
+                m_panelX,
+                m_panelY,
+                m_panelWidth,
+                CalculatePanelHeight());
         }
 
         /// <summary>
@@ -67,12 +77,44 @@ namespace ColonyBuildingSim.Work
                 return;
             }
 
-            float panelHeight = CalculatePanelHeight();
-            GUI.Box(new Rect(m_panelX, m_panelY, m_panelWidth, panelHeight), "Work / Task Debug");
+            float calculatedHeight = CalculatePanelHeight();
+            m_panelRect.height = Mathf.Min(calculatedHeight, m_maxPanelHeight);
 
-            float currentY = m_panelY + 25.0f;
-            float contentX = m_panelX + m_padding;
-            float contentWidth = m_panelWidth - (m_padding * 2.0f);
+            if (m_panelRect.Contains(Event.current.mousePosition))
+            {
+                DebugPanelInputBlocker.BlockPointerInput();
+            }
+
+            m_panelRect = GUI.Window(m_windowId, m_panelRect, DrawWorkTaskWindow, "Work / Task Debug");
+        }
+
+        /// <summary>
+        /// Draws the draggable GUI window contents.
+        /// </summary>
+        private void DrawWorkTaskWindow(int windowId)
+        {
+            float contentHeight = CalculatePanelHeight();
+
+            Rect viewRect = new Rect(
+                0.0f,
+                0.0f,
+                m_panelRect.width - 25.0f,
+                contentHeight);
+
+            Rect scrollRect = new Rect(
+                0.0f,
+                22.0f,
+                m_panelRect.width,
+                m_panelRect.height - 22.0f);
+
+            m_scrollPosition = GUI.BeginScrollView(scrollRect, m_scrollPosition, viewRect);
+
+            float currentY = 5.0f;
+            float contentX = m_padding;
+            float contentWidth = viewRect.width - (m_padding * 2.0f);
+
+            DrawSummarySection(contentX, contentWidth, ref currentY);
+            currentY += 5.0f;
 
             if (m_showWorkOrders)
             {
@@ -84,6 +126,26 @@ namespace ColonyBuildingSim.Work
             {
                 DrawTasksSection(contentX, contentWidth, ref currentY);
             }
+
+            GUI.EndScrollView();
+            GUI.DragWindow(new Rect(0.0f, 0.0f, m_panelRect.width, 22.0f));
+        }
+
+        /// <summary>
+        /// Draws high-level work/task counts.
+        /// </summary>
+        private void DrawSummarySection(float x, float width, ref float y)
+        {
+            List<WorkOrder> activeWorkOrders = m_workOrderManager.GetActiveWorkOrders();
+            IReadOnlyList<PawnTask> tasks = m_taskManager.Tasks;
+
+            DrawLine(x, ref y, width, "Summary");
+            DrawLine(x + 10.0f, ref y, width, "Active Work Orders: " + activeWorkOrders.Count);
+            DrawLine(x + 10.0f, ref y, width, "Stored Tasks: " + tasks.Count);
+            DrawLine(x + 10.0f, ref y, width, "Active Tasks: " + CountActiveTasks(tasks));
+            DrawLine(x + 10.0f, ref y, width, "Available Tasks: " + CountTasksByState(tasks, TaskState.Available));
+            DrawLine(x + 10.0f, ref y, width, "Claimed Tasks: " + CountTasksByState(tasks, TaskState.Claimed));
+            DrawLine(x + 10.0f, ref y, width, "In Progress Tasks: " + CountTasksByState(tasks, TaskState.InProgress));
         }
 
         /// <summary>
@@ -93,7 +155,7 @@ namespace ColonyBuildingSim.Work
         {
             List<WorkOrder> activeWorkOrders = m_workOrderManager.GetActiveWorkOrders();
 
-            DrawLine(x, ref y, width, "Active Work Orders: " + activeWorkOrders.Count);
+            DrawLine(x, ref y, width, "Work Orders");
 
             if (activeWorkOrders.Count == 0)
             {
@@ -103,7 +165,7 @@ namespace ColonyBuildingSim.Work
 
             int rowsToDraw = Mathf.Min(activeWorkOrders.Count, Mathf.Max(1, m_maxRowsPerSection));
 
-            for (int i = 0; i < rowsToDraw; i++)
+            for (int i = 0; i < rowsToDraw; ++i)
             {
                 WorkOrder pWorkOrder = activeWorkOrders[i];
 
@@ -133,7 +195,7 @@ namespace ColonyBuildingSim.Work
             IReadOnlyList<PawnTask> tasks = m_taskManager.Tasks;
             int activeTaskCount = CountActiveTasks(tasks);
 
-            DrawLine(x, ref y, width, "Active Tasks: " + activeTaskCount);
+            DrawLine(x, ref y, width, "Tasks");
 
             if (activeTaskCount == 0)
             {
@@ -144,7 +206,7 @@ namespace ColonyBuildingSim.Work
             int rowsDrawn = 0;
             int maxRows = Mathf.Max(1, m_maxRowsPerSection);
 
-            for (int i = 0; i < tasks.Count; i++)
+            for (int i = 0; i < tasks.Count; ++i)
             {
                 PawnTask pTask = tasks[i];
 
@@ -179,12 +241,13 @@ namespace ColonyBuildingSim.Work
         private string BuildWorkOrderLine(WorkOrder pWorkOrder)
         {
             return ShortenId(pWorkOrder.WorkOrderId)
-                + " | "
+                + " | Type "
                 + pWorkOrder.WorkType
-                + " | "
+                + " | State "
                 + pWorkOrder.State
                 + " | Target "
-                + pWorkOrder.TargetCoordinates;
+                + pWorkOrder.TargetCoordinates
+                + BuildWorkOrderExtraInfo(pWorkOrder);
         }
 
         /// <summary>
@@ -193,16 +256,39 @@ namespace ColonyBuildingSim.Work
         private string BuildTaskLine(PawnTask pTask)
         {
             return ShortenId(pTask.TaskId)
-                + " | "
+                + " | Type "
                 + pTask.TaskType
                 + " / "
                 + pTask.ParentWorkType
-                + " | "
+                + " | State "
                 + pTask.State
                 + " | Target "
                 + pTask.TargetCoordinates
                 + " | Owner "
                 + GetClaimedPawnName(pTask);
+        }
+
+        /// <summary>
+        /// Adds type-specific work order debug information when available.
+        /// </summary>
+        private string BuildWorkOrderExtraInfo(WorkOrder pWorkOrder)
+        {
+            if (pWorkOrder == null)
+            {
+                return string.Empty;
+            }
+
+            if (pWorkOrder.HasBuildableType)
+            {
+                return " | Buildable " + pWorkOrder.BuildableType;
+            }
+
+            if (pWorkOrder.HasCropType)
+            {
+                return " | Crop " + pWorkOrder.CropType + " | Action " + pWorkOrder.PlantWorkAction;
+            }
+
+            return string.Empty;
         }
 
         /// <summary>
@@ -232,7 +318,7 @@ namespace ColonyBuildingSim.Work
         {
             int activeTaskCount = 0;
 
-            for (int i = 0; i < tasks.Count; i++)
+            for (int i = 0; i < tasks.Count; ++i)
             {
                 if (IsActiveTask(tasks[i]))
                 {
@@ -241,6 +327,31 @@ namespace ColonyBuildingSim.Work
             }
 
             return activeTaskCount;
+        }
+
+        /// <summary>
+        /// Counts tasks currently in the requested task state.
+        /// </summary>
+        private int CountTasksByState(IReadOnlyList<PawnTask> tasks, TaskState taskState)
+        {
+            int matchingTaskCount = 0;
+
+            for (int i = 0; i < tasks.Count; ++i)
+            {
+                PawnTask pTask = tasks[i];
+
+                if (pTask == null)
+                {
+                    continue;
+                }
+
+                if (pTask.State == taskState)
+                {
+                    ++matchingTaskCount;
+                }
+            }
+
+            return matchingTaskCount;
         }
 
         /// <summary>
@@ -286,6 +397,9 @@ namespace ColonyBuildingSim.Work
         private float CalculatePanelHeight()
         {
             float totalHeight = 35.0f;
+
+            totalHeight += m_lineHeight * 7.0f;
+            totalHeight += 5.0f;
 
             if (m_showWorkOrders)
             {
